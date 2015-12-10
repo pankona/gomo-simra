@@ -1,0 +1,50 @@
+
+@startuml
+hide footbox
+
+participant GomobileApp
+participant Engine
+participant Scene
+participant Peer
+
+GomobileApp -> Peer : Initialize()
+activate Peer
+GomobileApp <-- Peer
+deactivate Peer
+
+GomobileApp -> Engine : Initialize()
+activate Engine
+GomobileApp <-- Engine
+deactivate Engine
+
+GomobileApp -> Engine : Start()
+activate Engine
+Engine -> Engine      : changeScene
+note over Engine      : currentScene = scene1
+Engine -> Scene       : Initialize()
+activate Scene
+Engine <-- Scene
+deactivate Scene
+GomobileApp <-- Engine
+deactivate Engine
+
+loop
+GomobileApp -> Engine : Update()
+activate Engine
+Engine -> Scene       : Update() 
+activate Scene
+Engine <-- Scene
+deactivate Scene
+GomobileApp <-- Engine
+deactivate Engine
+end
+
+Engine <-- Scene      : SceneEndCallback()
+activate Engine
+Engine -> Engine      : changeScene
+note over Engine      : currentScene = scene2
+Engine -> Scene       : Initialize()
+deactivate Engine
+
+
+@enduml
