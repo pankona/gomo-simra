@@ -23,6 +23,14 @@ Engine -> Engine      : changeScene
 note over Engine      : currentScene = scene1
 Engine -> Scene       : Initialize()
 activate Scene
+loop as much as needed
+note over Scene       : Define Sprite as variables
+Scene -> Peer         : AddSprite(Sprite)
+activate Peer
+note over Peer        : Hold sprites\nas node
+Scene <-- Peer
+deactivate Peer
+end
 Engine <-- Scene
 deactivate Scene
 GomobileApp <-- Engine
@@ -33,8 +41,14 @@ GomobileApp -> Engine : Update()
 activate Engine
 Engine -> Scene       : Update() 
 activate Scene
+note over Scene       : Calculate position\nfor every sprite
 Engine <-- Scene
 deactivate Scene
+Engine -> Peer        : Update()
+note over Peer        : Draw for every\nadded sprite
+activate Peer
+Engine <-- Peer
+deactivate Peer
 GomobileApp <-- Engine
 deactivate Engine
 end
@@ -43,8 +57,23 @@ Engine <-- Scene      : SceneEndCallback()
 activate Engine
 Engine -> Engine      : changeScene
 note over Engine      : currentScene = scene2
+Engine -> Peer        : RemoveAllSprites()
+activate Peer
+note over Peer        : remove all nodes
+Engine <-- Peer
+deactivate Peer
 Engine -> Scene       : Initialize()
 deactivate Engine
 
+GomobileApp -> Engine : Stop()
+activate Engine
+note over Engine      : currentScene = nil
+Engine -> Peer        : Finalize()
+activate Peer
+note over Peer        : Cleanup if necessary
+Engine <-- Peer
+deactivate Peer
+GomobileApp <-- Engine
+deactivate Engine
 
 @enduml
