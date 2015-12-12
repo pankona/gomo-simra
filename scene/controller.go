@@ -1,6 +1,10 @@
 package scene
 
-import "github.com/pankona/gomobile_gamelib_test/peer"
+import (
+	"fmt"
+
+	"github.com/pankona/gomobile_gamelib_test/peer"
+)
 
 type Controller struct {
 	current Driver
@@ -21,7 +25,10 @@ func (self *Controller) Initialize() {
 
 func (self *Controller) Start() {
 	if self.current != nil {
-		self.current.Initialize()
+		self.current.Initialize(func(nextScene Driver) {
+			fmt.Println("[IN] callback function")
+			self.current = nextScene
+		})
 	}
 }
 
