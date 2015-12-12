@@ -96,7 +96,7 @@ func (self *Peer) SetScreenSize(in_sz size.Event) {
 	self.sz = in_sz
 }
 
-func (self *Peer) Stop() {
+func (self *Peer) Finalize() {
 	self.eng.Release()
 	self.fps.Release()
 	self.images.Release()

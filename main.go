@@ -4,6 +4,7 @@ package main
 
 import (
 	"github.com/pankona/gomobile_gamelib_test/peer"
+	"github.com/pankona/gomobile_gamelib_test/scene"
 
 	_ "image/jpeg"
 	_ "image/png"
@@ -19,6 +20,7 @@ import (
 func main() {
 	app.Main(func(a app.App) {
 		peer := peer.GetInstance()
+		sceneCtrl := scene.GetControllerInstance()
 
 		for e := range a.Events() {
 			switch e := a.Filter(e).(type) {
@@ -26,10 +28,19 @@ func main() {
 				switch e.Crosses(lifecycle.StageVisible) {
 				case lifecycle.CrossOn:
 					glctx, _ := e.DrawContext.(gl.Context)
+
+					// initialize gl peer
 					peer.Initialize(glctx)
+
+					// initialize scene controller
+					sceneCtrl.Initialize()
+
+					// start scene controller
+					sceneCtrl.Start()
+
 					a.Send(paint.Event{})
 				case lifecycle.CrossOff:
-					peer.Stop()
+					sceneCtrl.Stop()
 				}
 			case size.Event:
 				peer.SetScreenSize(e)
@@ -38,7 +49,7 @@ func main() {
 					continue
 				}
 
-				peer.Update()
+				sceneCtrl.Update()
 
 				a.Publish()
 				a.Send(paint.Event{}) // keep animating
