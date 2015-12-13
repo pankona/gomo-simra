@@ -1,6 +1,7 @@
 package peer
 
 import (
+	"fmt"
 	"image"
 	"log"
 	"time"
@@ -72,7 +73,7 @@ func newNode() *sprite.Node {
 	return n
 }
 
-func loadTextures(assetName string, rect image.Rectangle) sprite.SubTex {
+func (self *Peer) LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex {
 
 	a, err := asset.Open(assetName)
 	if err != nil {
@@ -96,6 +97,10 @@ func (self *Peer) SetScreenSize(in_sz size.Event) {
 	self.sz = in_sz
 }
 
+func (self *Peer) GetScreenSize() size.Event {
+	return self.sz
+}
+
 func (self *Peer) Finalize() {
 	self.eng.Release()
 	self.fps.Release()
@@ -110,8 +115,51 @@ func (self *Peer) Update() {
 	self.glctx.ClearColor(1, 1, 1, 1) // white background
 	self.glctx.Clear(gl.COLOR_BUFFER_BIT)
 	now := clock.Time(time.Since(startTime) * 60 / time.Second)
+
+	self.apply()
+
 	self.eng.Render(self.scene, now, self.sz)
 	self.fps.Draw(self.sz)
+}
+
+type PeerSprite struct {
+	W float32
+	H float32
+	X float32
+	Y float32
+	R float32
+}
+
+type peerSpriteContainer struct {
+	peerSprite *PeerSprite
+	node       *sprite.Node
+}
+
+var testspc peerSpriteContainer
+
+func (self *Peer) AddSprite(ps *PeerSprite, subTex sprite.SubTex) {
+	fmt.Println("[IN] Peer.AddSprite()")
+	testspc.peerSprite = ps
+	testspc.node = newNode()
+	self.eng.SetSubTex(testspc.node, subTex)
+}
+
+func (self *Peer) apply() {
+	//fmt.Println("[IN] Peer.apply()")
+	if testspc.peerSprite == nil {
+		//fmt.Println("[OUT] peerSprite is nil.")
+		return
+	}
+	affine := &f32.Affine{
+		{1, 0, 0},
+		{0, 1, 0},
+	}
+	affine.Translate(affine, testspc.peerSprite.X, testspc.peerSprite.Y)
+	affine.Translate(affine, 0.5, 0.5)
+	affine.Rotate(affine, testspc.peerSprite.R)
+	affine.Translate(affine, -0.5, -0.5)
+	affine.Scale(affine, testspc.peerSprite.W, testspc.peerSprite.H)
+	self.eng.SetTransform(testspc.node, *affine)
 }
 
 type arrangerFunc func(e sprite.Engine, n *sprite.Node, t clock.Time)

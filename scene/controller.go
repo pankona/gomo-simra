@@ -23,12 +23,15 @@ func (self *Controller) Initialize() {
 	self.current = GetInitScene()
 }
 
+func (self *Controller) onSceneEnd(nextScene Driver) {
+	fmt.Println("[IN] callback function")
+	self.current = nextScene
+	self.current.Initialize(self.onSceneEnd)
+}
+
 func (self *Controller) Start() {
 	if self.current != nil {
-		self.current.Initialize(func(nextScene Driver) {
-			fmt.Println("[IN] callback function")
-			self.current = nextScene
-		})
+		self.current.Initialize(self.onSceneEnd)
 	}
 }
 

@@ -1,12 +1,10 @@
 package scene
 
-import "fmt"
-
 type InitScene struct {
+	notifySceneEnd func(nextScene Driver)
 }
 
 var initScene *InitScene = nil
-var sceneEndCallback func(d Driver) = nil
 
 func GetInitScene() *InitScene {
 	if initScene == nil {
@@ -15,12 +13,12 @@ func GetInitScene() *InitScene {
 	return initScene
 }
 
-func (self *InitScene) Initialize(cb func(d Driver)) {
-	fmt.Println("[InitScene.Initialize] IN")
-	sceneEndCallback = cb
+func (self *InitScene) Initialize(sceneEndCallback func(nextScene Driver)) {
+	//fmt.Println("[InitScene.Initialize] IN")
+	self.notifySceneEnd = sceneEndCallback
 }
 
 func (self *InitScene) Drive() {
-	fmt.Println("[InitScene.Drive] IN")
-	sceneEndCallback(nil) // TODO: specify first scene
+	//fmt.Println("[InitScene.Drive] IN")
+	self.notifySceneEnd(&Title{}) // TODO: specify first scene
 }

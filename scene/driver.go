@@ -1,6 +1,6 @@
 package scene
 
 type Driver interface {
-	Initialize(func(d Driver))
+	Initialize(func(nextScene Driver))
 	Drive()
 }
