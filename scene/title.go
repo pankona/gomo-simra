@@ -22,7 +22,7 @@ func (self *Title) initTitleSprite() {
 	sz := peer.GetInstance().GetScreenSize()
 	self.W = float32(sz.WidthPx)
 	self.H = float32(sz.HeightPx)
-	tex_title := peer.GetInstance().LoadTexture("title.png", image.Rect(0, 0, int(self.H), int(self.H)))
+	tex_title := peer.GetInstance().LoadTexture("title.png", image.Rect(0, 0, int(self.W), int(self.H)))
 	peer.GetInstance().AddSprite(&self.PeerSprite, tex_title)
 	fmt.Println("[OUT] Title.initTitleSprite")
 }
