@@ -54,6 +54,9 @@ func main() {
 				a.Publish()
 				a.Send(paint.Event{}) // keep animating
 			case touch.Event:
+				if e.Type == touch.TypeEnd {
+					peer.OnTouch(e.X, e.Y)
+				}
 			}
 		}
 	})

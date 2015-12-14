@@ -24,9 +24,14 @@ func (self *Title) initTitleSprite() {
 	self.H = float32(sz.HeightPx)
 	tex_title := peer.GetInstance().LoadTexture("title.png", image.Rect(0, 0, int(self.W), int(self.H)))
 	peer.GetInstance().AddSprite(&self.PeerSprite, tex_title)
+	peer.GetInstance().AddTouchListener(self)
 	fmt.Println("[OUT] Title.initTitleSprite")
 }
 
 func (self *Title) Drive() {
 	peer.GetInstance().Update()
+}
+
+func (self *Title) OnTouch(x, y float32) {
+	fmt.Println("OnTouch = ", x, y)
 }

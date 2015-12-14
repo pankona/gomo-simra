@@ -20,7 +20,7 @@ func GetControllerInstance() *Controller {
 }
 
 func (self *Controller) Initialize() {
-	self.current = GetInitScene()
+	self.current = &InitScene{}
 }
 
 func (self *Controller) onSceneEnd(nextScene Driver) {

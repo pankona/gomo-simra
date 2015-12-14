@@ -21,7 +21,12 @@ var self *Peer
 
 var startTime = time.Now()
 
+type TouchListener interface {
+	OnTouch(x, y float32)
+}
+
 type PeerSprite struct {
+	TouchListener
 	W float32
 	H float32
 	X float32
@@ -41,7 +46,8 @@ type Peer struct {
 	eng                  sprite.Engine
 	scene                *sprite.Node
 	sz                   size.Event
-	peerSpriteContainers []peerSpriteContainer
+	peerSpriteContainers []*peerSpriteContainer
+	touchListeners       []*TouchListener
 }
 
 func GetInstance() *Peer {
@@ -141,7 +147,7 @@ func (self *Peer) AddSprite(ps *PeerSprite, subTex sprite.SubTex) {
 	var psc peerSpriteContainer
 	psc.peerSprite = ps
 	psc.node = newNode()
-	self.peerSpriteContainers = append(self.peerSpriteContainers, psc)
+	self.peerSpriteContainers = append(self.peerSpriteContainers, &psc)
 	self.eng.SetSubTex(psc.node, subTex)
 }
 
@@ -167,6 +173,22 @@ func (self *Peer) apply() {
 		}
 		affine.Scale(affine, psc.peerSprite.W, psc.peerSprite.H)
 		self.eng.SetTransform(psc.node, *affine)
+	}
+}
+
+func (self *Peer) AddTouchListener(listener TouchListener) {
+	self.touchListeners = append(self.touchListeners, &listener)
+}
+
+func (self *Peer) OnTouch(x, y float32) {
+	for i := range self.touchListeners {
+		listener := self.touchListeners[i]
+		if listener == nil {
+			fmt.Println("listener is nil!")
+			continue
+		}
+
+		(*listener).OnTouch(x, y)
 	}
 }
 
