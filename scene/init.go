@@ -14,11 +14,9 @@ func GetInitScene() *InitScene {
 }
 
 func (self *InitScene) Initialize(sceneEndCallback func(nextScene Driver)) {
-	//fmt.Println("[InitScene.Initialize] IN")
 	self.notifySceneEnd = sceneEndCallback
 }
 
 func (self *InitScene) Drive() {
-	//fmt.Println("[InitScene.Drive] IN")
-	self.notifySceneEnd(&Title{}) // TODO: specify first scene
+	self.notifySceneEnd(&Title{}) // TODO: specify first scene from other package
 }

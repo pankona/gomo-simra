@@ -21,13 +21,27 @@ var self *Peer
 
 var startTime = time.Now()
 
+type PeerSprite struct {
+	W float32
+	H float32
+	X float32
+	Y float32
+	R float32
+}
+
+type peerSpriteContainer struct {
+	peerSprite *PeerSprite
+	node       *sprite.Node
+}
+
 type Peer struct {
-	glctx  gl.Context
-	images *glutil.Images
-	fps    *debug.FPS
-	eng    sprite.Engine
-	scene  *sprite.Node
-	sz     size.Event
+	glctx                gl.Context
+	images               *glutil.Images
+	fps                  *debug.FPS
+	eng                  sprite.Engine
+	scene                *sprite.Node
+	sz                   size.Event
+	peerSpriteContainers []peerSpriteContainer
 }
 
 func GetInstance() *Peer {
@@ -122,44 +136,38 @@ func (self *Peer) Update() {
 	self.fps.Draw(self.sz)
 }
 
-type PeerSprite struct {
-	W float32
-	H float32
-	X float32
-	Y float32
-	R float32
-}
-
-type peerSpriteContainer struct {
-	peerSprite *PeerSprite
-	node       *sprite.Node
-}
-
-var testspc peerSpriteContainer
-
 func (self *Peer) AddSprite(ps *PeerSprite, subTex sprite.SubTex) {
 	fmt.Println("[IN] Peer.AddSprite()")
-	testspc.peerSprite = ps
-	testspc.node = newNode()
-	self.eng.SetSubTex(testspc.node, subTex)
+	var psc peerSpriteContainer
+	psc.peerSprite = ps
+	psc.node = newNode()
+	self.peerSpriteContainers = append(self.peerSpriteContainers, psc)
+	self.eng.SetSubTex(psc.node, subTex)
 }
 
 func (self *Peer) apply() {
-	//fmt.Println("[IN] Peer.apply()")
-	if testspc.peerSprite == nil {
-		//fmt.Println("[OUT] peerSprite is nil.")
-		return
+
+	peerSpriteContainers := self.peerSpriteContainers
+
+	for i := range peerSpriteContainers {
+		psc := peerSpriteContainers[i]
+		if psc.peerSprite == nil {
+			continue
+		}
+
+		affine := &f32.Affine{
+			{1, 0, 0},
+			{0, 1, 0},
+		}
+		affine.Translate(affine, psc.peerSprite.X, psc.peerSprite.Y)
+		if psc.peerSprite.R != 0 {
+			affine.Translate(affine, 0.5, 0.5)
+			affine.Rotate(affine, psc.peerSprite.R)
+			affine.Translate(affine, -0.5, -0.5)
+		}
+		affine.Scale(affine, psc.peerSprite.W, psc.peerSprite.H)
+		self.eng.SetTransform(psc.node, *affine)
 	}
-	affine := &f32.Affine{
-		{1, 0, 0},
-		{0, 1, 0},
-	}
-	affine.Translate(affine, testspc.peerSprite.X, testspc.peerSprite.Y)
-	affine.Translate(affine, 0.5, 0.5)
-	affine.Rotate(affine, testspc.peerSprite.R)
-	affine.Translate(affine, -0.5, -0.5)
-	affine.Scale(affine, testspc.peerSprite.W, testspc.peerSprite.H)
-	self.eng.SetTransform(testspc.node, *affine)
 }
 
 type arrangerFunc func(e sprite.Engine, n *sprite.Node, t clock.Time)

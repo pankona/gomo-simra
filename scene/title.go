@@ -28,7 +28,5 @@ func (self *Title) initTitleSprite() {
 }
 
 func (self *Title) Drive() {
-	//fmt.Println("[IN] Title.Drive")
 	peer.GetInstance().Update()
-	//fmt.Println("[OUT] Title.Drive")
 }
