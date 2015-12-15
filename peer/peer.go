@@ -39,6 +39,12 @@ type peerSpriteContainer struct {
 	node       *sprite.Node
 }
 
+type screenSize struct {
+	width  float32
+	height float32
+	scale  float32
+}
+
 type Peer struct {
 	glctx                gl.Context
 	images               *glutil.Images
@@ -48,6 +54,7 @@ type Peer struct {
 	sz                   size.Event
 	peerSpriteContainers []*peerSpriteContainer
 	touchListeners       []*TouchListener
+	desiredScreenSize    screenSize
 }
 
 func GetInstance() *Peer {
@@ -93,6 +100,18 @@ func newNode() *sprite.Node {
 	return n
 }
 
+func (self *Peer) SetDesiredScreenSize(w, h float32) {
+	self.desiredScreenSize.height = h
+	self.desiredScreenSize.width = w
+	if h > w {
+		self.desiredScreenSize.scale = float32(self.sz.HeightPt) / h
+		fmt.Println("scale = ", self.desiredScreenSize.scale)
+	} else {
+		self.desiredScreenSize.scale = float32(self.sz.WidthPt) / w
+		fmt.Println("scale = ", self.desiredScreenSize.scale)
+	}
+}
+
 func (self *Peer) LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex {
 
 	a, err := asset.Open(assetName)
@@ -115,6 +134,7 @@ func (self *Peer) LoadTexture(assetName string, rect image.Rectangle) sprite.Sub
 
 func (self *Peer) SetScreenSize(in_sz size.Event) {
 	self.sz = in_sz
+	fmt.Println(in_sz)
 }
 
 func (self *Peer) GetScreenSize() size.Event {
@@ -171,7 +191,8 @@ func (self *Peer) apply() {
 			affine.Rotate(affine, psc.peerSprite.R)
 			affine.Translate(affine, -0.5, -0.5)
 		}
-		affine.Scale(affine, psc.peerSprite.W, psc.peerSprite.H)
+		affine.Scale(affine, self.desiredScreenSize.width*self.desiredScreenSize.scale,
+			self.desiredScreenSize.height*self.desiredScreenSize.scale)
 		self.eng.SetTransform(psc.node, *affine)
 	}
 }
