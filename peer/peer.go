@@ -209,7 +209,7 @@ func (self *Peer) OnTouch(x, y float32) {
 			continue
 		}
 
-		(*listener).OnTouch(x, y)
+		(*listener).OnTouch(x*self.desiredScreenSize.scale, y*self.desiredScreenSize.scale)
 	}
 }
 
