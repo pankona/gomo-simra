@@ -192,8 +192,9 @@ func (self *Peer) apply() {
 			{0, 1, 0},
 		}
 		affine.Translate(affine,
-			psc.peerSprite.X-psc.peerSprite.W/2,
-			psc.peerSprite.Y-psc.peerSprite.H/2)
+			psc.peerSprite.X*self.desiredScreenSize.scale-psc.peerSprite.W/2*self.desiredScreenSize.scale,
+			psc.peerSprite.Y*self.desiredScreenSize.scale-psc.peerSprite.H/2*self.desiredScreenSize.scale)
+		fmt.Println("x, y = ", psc.peerSprite.X, psc.peerSprite.Y)
 		if psc.peerSprite.R != 0 {
 			affine.Translate(affine, 0.5, 0.5)
 			affine.Rotate(affine, psc.peerSprite.R)
