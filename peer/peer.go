@@ -173,6 +173,7 @@ func (self *Peer) AddSprite(ps *PeerSprite, subTex sprite.SubTex) {
 
 func (self *Peer) Reset() {
 	self.peerSpriteContainers = nil
+	self.touchListeners = nil
 	loadScene()
 }
 
