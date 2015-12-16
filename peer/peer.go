@@ -191,7 +191,9 @@ func (self *Peer) apply() {
 			{1, 0, 0},
 			{0, 1, 0},
 		}
-		affine.Translate(affine, psc.peerSprite.X, psc.peerSprite.Y)
+		affine.Translate(affine,
+			psc.peerSprite.X-psc.peerSprite.W/2,
+			psc.peerSprite.Y-psc.peerSprite.H/2)
 		if psc.peerSprite.R != 0 {
 			affine.Translate(affine, 0.5, 0.5)
 			affine.Rotate(affine, psc.peerSprite.R)

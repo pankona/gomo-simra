@@ -30,6 +30,11 @@ func (self *Title) initSprite() {
 	// add background sprite
 	self.background.W = float32(1080 / 2)
 	self.background.H = float32(1920 / 2)
+
+	// put center of screen
+	self.background.X = 1080 / 2 / 2
+	self.background.Y = 1920 / 2 / 2
+
 	tex_background := peer.GetInstance().LoadTexture("title.png",
 		image.Rect(0, 0, int(self.background.W), int(self.background.H)))
 	peer.GetInstance().AddSprite(&self.background, tex_background)
