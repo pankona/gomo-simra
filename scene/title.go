@@ -8,30 +8,40 @@ import (
 )
 
 type Title struct {
-	peer.PeerSprite
+	background     peer.PeerSprite
 	notifySceneEnd func(nextScene Driver)
 }
 
 func (self *Title) Initialize(sceneEndCallback func(nextScene Driver)) {
 	self.notifySceneEnd = sceneEndCallback
-	self.initTitleSprite()
+
+	peer.GetInstance().SetDesiredScreenSize(1080/2, 1920/2)
+
+	// initialize sprites
+	self.initSprite()
+
+	// add touch event listener
+	peer.GetInstance().AddTouchListener(self)
 }
 
-func (self *Title) initTitleSprite() {
+func (self *Title) initSprite() {
 	fmt.Println("[IN] Title.initTitleSprite")
-	self.W = float32(1080 / 2)
-	self.H = float32(1920 / 2)
-	tex_title := peer.GetInstance().LoadTexture("title.png", image.Rect(0, 0, int(self.W), int(self.H)))
-	peer.GetInstance().AddSprite(&self.PeerSprite, tex_title)
-	peer.GetInstance().AddTouchListener(self)
-	peer.GetInstance().SetDesiredScreenSize(self.W, self.H)
+
+	// add background sprite
+	self.background.W = float32(1080 / 2)
+	self.background.H = float32(1920 / 2)
+	tex_background := peer.GetInstance().LoadTexture("title.png",
+		image.Rect(0, 0, int(self.background.W), int(self.background.H)))
+	peer.GetInstance().AddSprite(&self.background, tex_background)
+
 	fmt.Println("[OUT] Title.initTitleSprite")
 }
 
 func (self *Title) Drive() {
-	peer.GetInstance().Update()
+	//peer.GetInstance().Update()
 }
 
 func (self *Title) OnTouch(x, y float32) {
 	fmt.Println("OnTouch = ", x, y)
+	self.notifySceneEnd(&Stage1{})
 }

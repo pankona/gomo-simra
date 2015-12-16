@@ -171,6 +171,11 @@ func (self *Peer) AddSprite(ps *PeerSprite, subTex sprite.SubTex) {
 	self.eng.SetSubTex(psc.node, subTex)
 }
 
+func (self *Peer) Reset() {
+	self.peerSpriteContainers = nil
+	loadScene()
+}
+
 func (self *Peer) apply() {
 
 	peerSpriteContainers := self.peerSpriteContainers
@@ -191,8 +196,10 @@ func (self *Peer) apply() {
 			affine.Rotate(affine, psc.peerSprite.R)
 			affine.Translate(affine, -0.5, -0.5)
 		}
-		affine.Scale(affine, self.desiredScreenSize.width*self.desiredScreenSize.scale,
-			self.desiredScreenSize.height*self.desiredScreenSize.scale)
+		//affine.Scale(affine, self.desiredScreenSize.width*self.desiredScreenSize.scale,
+		//	self.desiredScreenSize.height*self.desiredScreenSize.scale)
+		affine.Scale(affine, psc.peerSprite.W*self.desiredScreenSize.scale,
+			psc.peerSprite.H*self.desiredScreenSize.scale)
 		self.eng.SetTransform(psc.node, *affine)
 	}
 }

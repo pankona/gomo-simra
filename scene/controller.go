@@ -25,6 +25,7 @@ func (self *Controller) Initialize() {
 
 func (self *Controller) onSceneEnd(nextScene Driver) {
 	fmt.Println("[IN] callback function")
+	peer.GetInstance().Reset()
 	self.current = nextScene
 	self.current.Initialize(self.onSceneEnd)
 }
