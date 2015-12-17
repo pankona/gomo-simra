@@ -104,7 +104,7 @@ func (self *Peer) calcScale() {
 	h := self.desiredScreenSize.height
 	w := self.desiredScreenSize.width
 
-	if h > w {
+	if h/float32(self.sz.HeightPt) > w/float32(self.sz.WidthPt) {
 		self.desiredScreenSize.scale = float32(self.sz.HeightPt) / h
 		fmt.Println("scale = ", self.desiredScreenSize.scale)
 	} else {
