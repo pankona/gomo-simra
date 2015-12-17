@@ -100,9 +100,10 @@ func newNode() *sprite.Node {
 	return n
 }
 
-func (self *Peer) SetDesiredScreenSize(w, h float32) {
-	self.desiredScreenSize.height = h
-	self.desiredScreenSize.width = w
+func (self *Peer) calcScale() {
+	h := self.desiredScreenSize.height
+	w := self.desiredScreenSize.width
+
 	if h > w {
 		self.desiredScreenSize.scale = float32(self.sz.HeightPt) / h
 		fmt.Println("scale = ", self.desiredScreenSize.scale)
@@ -110,6 +111,12 @@ func (self *Peer) SetDesiredScreenSize(w, h float32) {
 		self.desiredScreenSize.scale = float32(self.sz.WidthPt) / w
 		fmt.Println("scale = ", self.desiredScreenSize.scale)
 	}
+}
+
+func (self *Peer) SetDesiredScreenSize(w, h float32) {
+	self.desiredScreenSize.height = h
+	self.desiredScreenSize.width = w
+	self.calcScale()
 }
 
 func (self *Peer) LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex {
@@ -135,6 +142,7 @@ func (self *Peer) LoadTexture(assetName string, rect image.Rectangle) sprite.Sub
 func (self *Peer) SetScreenSize(in_sz size.Event) {
 	self.sz = in_sz
 	fmt.Println(in_sz)
+	self.calcScale()
 }
 
 func (self *Peer) GetScreenSize() size.Event {
@@ -194,7 +202,7 @@ func (self *Peer) apply() {
 		affine.Translate(affine,
 			psc.peerSprite.X*self.desiredScreenSize.scale-psc.peerSprite.W/2*self.desiredScreenSize.scale,
 			psc.peerSprite.Y*self.desiredScreenSize.scale-psc.peerSprite.H/2*self.desiredScreenSize.scale)
-		fmt.Println("x, y = ", psc.peerSprite.X, psc.peerSprite.Y)
+		//fmt.Println("x, y = ", psc.peerSprite.X, psc.peerSprite.Y)
 		if psc.peerSprite.R != 0 {
 			affine.Translate(affine, 0.5, 0.5)
 			affine.Rotate(affine, psc.peerSprite.R)
