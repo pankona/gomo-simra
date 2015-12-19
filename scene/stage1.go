@@ -53,6 +53,6 @@ func (self *Stage1) Drive() {
 
 func (self *Stage1) OnTouch(x, y float32) {
 	fmt.Println("OnTouch = ", x, y)
-	//self.gopher.X = x
-	//self.gopher.Y = y
+	self.gopher.X = x
+	self.gopher.Y = y
 }

@@ -39,10 +39,16 @@ type peerSpriteContainer struct {
 	node       *sprite.Node
 }
 
+const (
+	FIT_HEIGHT = iota
+	FIT_WIDTH
+)
+
 type screenSize struct {
 	width  float32
 	height float32
 	scale  float32
+	fitTo  int
 }
 
 type Peer struct {
@@ -106,9 +112,11 @@ func (self *Peer) calcScale() {
 
 	if h/float32(self.sz.HeightPt) > w/float32(self.sz.WidthPt) {
 		self.desiredScreenSize.scale = float32(self.sz.HeightPt) / h
+		self.desiredScreenSize.fitTo = FIT_HEIGHT
 		fmt.Println("scale = ", self.desiredScreenSize.scale)
 	} else {
 		self.desiredScreenSize.scale = float32(self.sz.WidthPt) / w
+		self.desiredScreenSize.fitTo = FIT_WIDTH
 		fmt.Println("scale = ", self.desiredScreenSize.scale)
 	}
 }
@@ -202,14 +210,11 @@ func (self *Peer) apply() {
 		affine.Translate(affine,
 			psc.peerSprite.X*self.desiredScreenSize.scale-psc.peerSprite.W/2*self.desiredScreenSize.scale,
 			psc.peerSprite.Y*self.desiredScreenSize.scale-psc.peerSprite.H/2*self.desiredScreenSize.scale)
-		//fmt.Println("x, y = ", psc.peerSprite.X, psc.peerSprite.Y)
 		if psc.peerSprite.R != 0 {
 			affine.Translate(affine, 0.5, 0.5)
 			affine.Rotate(affine, psc.peerSprite.R)
 			affine.Translate(affine, -0.5, -0.5)
 		}
-		//affine.Scale(affine, self.desiredScreenSize.width*self.desiredScreenSize.scale,
-		//	self.desiredScreenSize.height*self.desiredScreenSize.scale)
 		affine.Scale(affine, psc.peerSprite.W*self.desiredScreenSize.scale,
 			psc.peerSprite.H*self.desiredScreenSize.scale)
 		self.eng.SetTransform(psc.node, *affine)
@@ -220,7 +225,17 @@ func (self *Peer) AddTouchListener(listener TouchListener) {
 	self.touchListeners = append(self.touchListeners, &listener)
 }
 
-func (self *Peer) OnTouch(x, y float32) {
+func (self *Peer) OnTouch(pxx, pxy float32) {
+	ptx := pxx / self.sz.PixelsPerPt
+	pty := pxy / self.sz.PixelsPerPt
+
+	var scale float32
+	if self.desiredScreenSize.fitTo == FIT_HEIGHT {
+		scale = self.desiredScreenSize.height / float32(self.sz.HeightPt)
+	} else {
+		scale = self.desiredScreenSize.width / float32(self.sz.WidthPt)
+	}
+
 	for i := range self.touchListeners {
 		listener := self.touchListeners[i]
 		if listener == nil {
@@ -228,7 +243,7 @@ func (self *Peer) OnTouch(x, y float32) {
 			continue
 		}
 
-		(*listener).OnTouch(x*self.desiredScreenSize.scale, y*self.desiredScreenSize.scale)
+		(*listener).OnTouch(ptx*scale, pty*scale)
 	}
 }
 
