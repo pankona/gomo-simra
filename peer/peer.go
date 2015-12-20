@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"golang.org/x/mobile/asset"
-	"golang.org/x/mobile/event/size"
 	"golang.org/x/mobile/exp/app/debug"
 	"golang.org/x/mobile/exp/f32"
 	"golang.org/x/mobile/exp/gl/glutil"
@@ -17,16 +16,11 @@ import (
 	"golang.org/x/mobile/gl"
 )
 
-var self *Peer
+var glPeer *GLPeer
 
 var startTime = time.Now()
 
-type TouchListener interface {
-	OnTouch(x, y float32)
-}
-
 type PeerSprite struct {
-	TouchListener
 	W float32
 	H float32
 	X float32
@@ -39,54 +33,35 @@ type peerSpriteContainer struct {
 	node       *sprite.Node
 }
 
-const (
-	FIT_HEIGHT = iota
-	FIT_WIDTH
-)
-
-type screenSize struct {
-	width  float32
-	height float32
-	scale  float32
-	fitTo  int
-}
-
-type Peer struct {
+type GLPeer struct {
 	glctx                gl.Context
 	images               *glutil.Images
 	fps                  *debug.FPS
 	eng                  sprite.Engine
 	scene                *sprite.Node
-	sz                   size.Event
 	peerSpriteContainers []*peerSpriteContainer
-	touchListeners       []*TouchListener
-	desiredScreenSize    screenSize
 }
 
-func GetInstance() *Peer {
-	if self == nil {
-		self = &Peer{}
+func GetGLPeer() *GLPeer {
+	if glPeer == nil {
+		glPeer = &GLPeer{}
 	}
-	return self
+	return glPeer
 }
 
-func (self *Peer) Initialize(in_glctx gl.Context) {
+func (self *GLPeer) Initialize(in_glctx gl.Context) {
 	self.glctx = in_glctx
 
 	// transparency of png
 	self.glctx.Enable(gl.BLEND)
 	self.glctx.BlendEquation(gl.FUNC_ADD)
 	self.glctx.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
-	onStart(self.glctx)
-}
-
-func onStart(glctx gl.Context) {
-	self.images = glutil.NewImages(glctx)
+	self.images = glutil.NewImages(in_glctx)
 	self.fps = debug.NewFPS(self.images)
-	loadScene()
+	self.initEng()
 }
 
-func loadScene() {
+func (self *GLPeer) initEng() {
 	if self.eng != nil {
 		self.eng.Release()
 	}
@@ -99,35 +74,14 @@ func loadScene() {
 	})
 }
 
-func newNode() *sprite.Node {
+func (self *GLPeer) newNode() *sprite.Node {
 	n := &sprite.Node{}
 	self.eng.Register(n)
 	self.scene.AppendChild(n)
 	return n
 }
 
-func (self *Peer) calcScale() {
-	h := self.desiredScreenSize.height
-	w := self.desiredScreenSize.width
-
-	if h/float32(self.sz.HeightPt) > w/float32(self.sz.WidthPt) {
-		self.desiredScreenSize.scale = float32(self.sz.HeightPt) / h
-		self.desiredScreenSize.fitTo = FIT_HEIGHT
-		fmt.Println("scale = ", self.desiredScreenSize.scale)
-	} else {
-		self.desiredScreenSize.scale = float32(self.sz.WidthPt) / w
-		self.desiredScreenSize.fitTo = FIT_WIDTH
-		fmt.Println("scale = ", self.desiredScreenSize.scale)
-	}
-}
-
-func (self *Peer) SetDesiredScreenSize(w, h float32) {
-	self.desiredScreenSize.height = h
-	self.desiredScreenSize.width = w
-	self.calcScale()
-}
-
-func (self *Peer) LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex {
+func (self *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex {
 
 	a, err := asset.Open(assetName)
 	if err != nil {
@@ -147,24 +101,14 @@ func (self *Peer) LoadTexture(assetName string, rect image.Rectangle) sprite.Sub
 	return sprite.SubTex{t, rect}
 }
 
-func (self *Peer) SetScreenSize(in_sz size.Event) {
-	self.sz = in_sz
-	fmt.Println(in_sz)
-	self.calcScale()
-}
-
-func (self *Peer) GetScreenSize() size.Event {
-	return self.sz
-}
-
-func (self *Peer) Finalize() {
+func (self *GLPeer) Finalize() {
 	self.eng.Release()
 	self.fps.Release()
 	self.images.Release()
 	self.glctx = nil
 }
 
-func (self *Peer) Update() {
+func (self *GLPeer) Update() {
 	if self.glctx == nil {
 		return
 	}
@@ -174,26 +118,25 @@ func (self *Peer) Update() {
 
 	self.apply()
 
-	self.eng.Render(self.scene, now, self.sz)
-	self.fps.Draw(self.sz)
+	self.eng.Render(self.scene, now, sz)
+	self.fps.Draw(sz)
 }
 
-func (self *Peer) AddSprite(ps *PeerSprite, subTex sprite.SubTex) {
+func (self *GLPeer) AddSprite(ps *PeerSprite, subTex sprite.SubTex) {
 	fmt.Println("[IN] Peer.AddSprite()")
 	var psc peerSpriteContainer
 	psc.peerSprite = ps
-	psc.node = newNode()
+	psc.node = self.newNode()
 	self.peerSpriteContainers = append(self.peerSpriteContainers, &psc)
 	self.eng.SetSubTex(psc.node, subTex)
 }
 
-func (self *Peer) Reset() {
+func (self *GLPeer) Reset() {
 	self.peerSpriteContainers = nil
-	self.touchListeners = nil
-	loadScene()
+	self.initEng()
 }
 
-func (self *Peer) apply() {
+func (self *GLPeer) apply() {
 
 	peerSpriteContainers := self.peerSpriteContainers
 
@@ -208,42 +151,16 @@ func (self *Peer) apply() {
 			{0, 1, 0},
 		}
 		affine.Translate(affine,
-			psc.peerSprite.X*self.desiredScreenSize.scale-psc.peerSprite.W/2*self.desiredScreenSize.scale,
-			psc.peerSprite.Y*self.desiredScreenSize.scale-psc.peerSprite.H/2*self.desiredScreenSize.scale)
+			psc.peerSprite.X*desiredScreenSize.scale-psc.peerSprite.W/2*desiredScreenSize.scale,
+			psc.peerSprite.Y*desiredScreenSize.scale-psc.peerSprite.H/2*desiredScreenSize.scale)
 		if psc.peerSprite.R != 0 {
 			affine.Translate(affine, 0.5, 0.5)
 			affine.Rotate(affine, psc.peerSprite.R)
 			affine.Translate(affine, -0.5, -0.5)
 		}
-		affine.Scale(affine, psc.peerSprite.W*self.desiredScreenSize.scale,
-			psc.peerSprite.H*self.desiredScreenSize.scale)
+		affine.Scale(affine, psc.peerSprite.W*desiredScreenSize.scale,
+			psc.peerSprite.H*desiredScreenSize.scale)
 		self.eng.SetTransform(psc.node, *affine)
-	}
-}
-
-func (self *Peer) AddTouchListener(listener TouchListener) {
-	self.touchListeners = append(self.touchListeners, &listener)
-}
-
-func (self *Peer) OnTouch(pxx, pxy float32) {
-	ptx := pxx / self.sz.PixelsPerPt
-	pty := pxy / self.sz.PixelsPerPt
-
-	var scale float32
-	if self.desiredScreenSize.fitTo == FIT_HEIGHT {
-		scale = self.desiredScreenSize.height / float32(self.sz.HeightPt)
-	} else {
-		scale = self.desiredScreenSize.width / float32(self.sz.WidthPt)
-	}
-
-	for i := range self.touchListeners {
-		listener := self.touchListeners[i]
-		if listener == nil {
-			fmt.Println("listener is nil!")
-			continue
-		}
-
-		(*listener).OnTouch(ptx*scale, pty*scale)
 	}
 }
 

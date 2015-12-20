@@ -19,7 +19,8 @@ import (
 
 func main() {
 	app.Main(func(a app.App) {
-		peer := peer.GetInstance()
+		glPeer := peer.GetGLPeer()
+		touchPeer := peer.GetTouchPeer()
 		sceneCtrl := scene.GetControllerInstance()
 
 		for e := range a.Events() {
@@ -30,7 +31,7 @@ func main() {
 					glctx, _ := e.DrawContext.(gl.Context)
 
 					// initialize gl peer
-					peer.Initialize(glctx)
+					glPeer.Initialize(glctx)
 
 					// initialize scene controller
 					sceneCtrl.Initialize()
@@ -54,8 +55,14 @@ func main() {
 				a.Publish()
 				a.Send(paint.Event{}) // keep animating
 			case touch.Event:
-				if e.Type == touch.TypeEnd {
-					peer.OnTouch(e.X, e.Y)
+				switch e.Type {
+				case touch.TypeBegin:
+					touchPeer.OnTouchBegin(e.X, e.Y)
+				case touch.TypeMove:
+					touchPeer.OnTouchMove(e.X, e.Y)
+				case touch.TypeEnd:
+					touchPeer.OnTouchEnd(e.X, e.Y)
+				default:
 				}
 			}
 		}

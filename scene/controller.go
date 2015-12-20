@@ -25,7 +25,8 @@ func (self *Controller) Initialize() {
 
 func (self *Controller) onSceneEnd(nextScene Driver) {
 	fmt.Println("[IN] callback function")
-	peer.GetInstance().Reset()
+	peer.GetGLPeer().Reset()
+	peer.GetTouchPeer().RemoveAllTouchListener()
 	self.current = nextScene
 	self.current.Initialize(self.onSceneEnd)
 }
@@ -39,11 +40,11 @@ func (self *Controller) Start() {
 func (self *Controller) Update() {
 	if self.current != nil {
 		self.current.Drive()
-		peer.GetInstance().Update()
+		peer.GetGLPeer().Update()
 	}
 }
 
 func (self *Controller) Stop() {
 	self.current = nil
-	peer.GetInstance().Finalize()
+	peer.GetGLPeer().Finalize()
 }

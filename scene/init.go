@@ -12,5 +12,11 @@ func (self *InitScene) Drive() {
 	self.notifySceneEnd(&Title{}) // TODO: specify first scene from other package
 }
 
-func (self *InitScene) OnTouch(x, y float32) {
+func (self *InitScene) OnTouchBegin(x, y float32) {
+}
+
+func (self *InitScene) OnTouchMove(x, y float32) {
+}
+
+func (self *InitScene) OnTouchEnd(x, y float32) {
 }
