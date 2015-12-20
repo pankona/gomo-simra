@@ -46,12 +46,12 @@ func (self *Title) Drive() {
 }
 
 func (self *Title) OnTouchBegin(x, y float32) {
-	fmt.Println("OnTouchBegin = ", x, y)
-	self.notifySceneEnd(&Stage1{})
 }
 
 func (self *Title) OnTouchMove(x, y float32) {
 }
 
 func (self *Title) OnTouchEnd(x, y float32) {
+	fmt.Println("OnTouchBegin = ", x, y)
+	self.notifySceneEnd(&Stage1{})
 }
