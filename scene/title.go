@@ -16,12 +16,10 @@ func (self *Title) Initialize(sceneEndCallback func(nextScene Driver)) {
 	self.notifySceneEnd = sceneEndCallback
 
 	peer.SetDesiredScreenSize(1080/2, 1920/2)
+	peer.GetTouchPeer().AddTouchListener(self)
 
 	// initialize sprites
 	self.initSprite()
-
-	// add touch event listener
-	peer.GetTouchPeer().AddTouchListener(self)
 }
 
 func (self *Title) initSprite() {
