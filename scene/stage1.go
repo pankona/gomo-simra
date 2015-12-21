@@ -3,6 +3,7 @@ package scene
 import (
 	"fmt"
 	"image"
+	"math"
 
 	"github.com/pankona/gomobile_gamelib_test/peer"
 )
@@ -45,12 +46,17 @@ func (self *Stage1) initGopher() {
 	peer.GetGLPeer().AddSprite(&self.gopher, tex_gopher)
 }
 
+var degree float32 = 0
+
 func (self *Stage1) Drive() {
-	//peer.GetInstance().Update()
+	degree += 1
+	if degree >= 360 {
+		degree = 0
+	}
+	self.gopher.R = float32(degree) * math.Pi / 180
 }
 
 func (self *Stage1) OnTouchBegin(x, y float32) {
-	fmt.Println("OnTouch = ", x, y)
 	self.gopher.X = x
 	self.gopher.Y = y
 }
