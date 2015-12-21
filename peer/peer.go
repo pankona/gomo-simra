@@ -154,11 +154,16 @@ func (self *GLPeer) apply() {
 			psc.peerSprite.X*desiredScreenSize.scale-psc.peerSprite.W/2*desiredScreenSize.scale,
 			psc.peerSprite.Y*desiredScreenSize.scale-psc.peerSprite.H/2*desiredScreenSize.scale)
 		if psc.peerSprite.R != 0 {
-			affine.Translate(affine, 0.5, 0.5)
+			affine.Translate(affine,
+				0.5*psc.peerSprite.W*desiredScreenSize.scale,
+				0.5*psc.peerSprite.H*desiredScreenSize.scale)
 			affine.Rotate(affine, psc.peerSprite.R)
-			affine.Translate(affine, -0.5, -0.5)
+			affine.Translate(affine,
+				-0.5*psc.peerSprite.W*desiredScreenSize.scale,
+				-0.5*psc.peerSprite.H*desiredScreenSize.scale)
 		}
-		affine.Scale(affine, psc.peerSprite.W*desiredScreenSize.scale,
+		affine.Scale(affine,
+			psc.peerSprite.W*desiredScreenSize.scale,
 			psc.peerSprite.H*desiredScreenSize.scale)
 		self.eng.SetTransform(psc.node, *affine)
 	}
