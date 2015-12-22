@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"image"
 
-	"github.com/pankona/gomobile_gamelib_test/peer"
+	"github.com/pankona/gomo-simra/peer"
 )
 
 type Title struct {

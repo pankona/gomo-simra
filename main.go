@@ -3,8 +3,8 @@
 package main
 
 import (
-	"github.com/pankona/gomobile_gamelib_test/peer"
-	"github.com/pankona/gomobile_gamelib_test/scene"
+	"github.com/pankona/gomo-simra/peer"
+	"github.com/pankona/gomo-simra/scene"
 
 	_ "image/jpeg"
 	_ "image/png"

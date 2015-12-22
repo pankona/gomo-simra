@@ -3,7 +3,7 @@ package scene
 import (
 	"fmt"
 
-	"github.com/pankona/gomobile_gamelib_test/peer"
+	"github.com/pankona/gomo-simra/peer"
 )
 
 type Controller struct {
