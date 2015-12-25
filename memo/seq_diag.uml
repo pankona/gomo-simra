@@ -3,20 +3,20 @@
 hide footbox
 
 participant main
-participant Scenes as scene
+participant "Driver\n(interface)" as driver
 participant Engine as engine
 participant GomobileApp as gomo
 participant Peer as peer
 
-main -> engine : Initialize(Scene)
+main -> engine         : Initialize(driver)
 activate engine
 
-engine -> gomo : Initialize()
+engine -> gomo         : Initialize()
 activate gomo
 engine <-- gomo
 deactivate gomo
 
-engine -> peer : Initialize()
+engine -> peer         : Initialize()
 activate peer
 engine <-- peer
 deactivate peer
@@ -24,23 +24,23 @@ deactivate peer
 main <-- engine
 deactivate engine
 
-main -> engine : Start()
+main -> engine         : Start()
 activate engine
-engine -> engine      : changescene
-note over engine      : currentscene = scene1
-engine -> scene       : Initialize()
-activate scene
+engine -> engine       : changedriver
+note over engine       : currentdriver = driver1
+engine -> driver       : Initialize()
+activate driver
 loop as much as needed
-note over scene       : Define Sprite as variables
-scene -> peer         : AddSprite(Sprite)
+note over driver       : Define Sprite as variables
+driver -> peer         : AddSprite(Sprite)
 activate peer
-note over peer        : Hold sprites\nas node
-scene <-- peer
+note over peer         : Hold sprites\nas node
+driver <-- peer
 deactivate peer
 end
-engine <-- scene
-deactivate scene
-engine -> gomo        : Start()
+engine <-- driver
+deactivate driver
+engine -> gomo         : Start()
 activate gomo
 engine <-- gomo
 deactivate gomo
@@ -48,15 +48,15 @@ main <-- engine
 deactivate engine
 
 loop
-gomo -> engine : Update()
+gomo -> engine         : Update()
 activate engine
-engine -> scene       : Update() 
-activate scene
-note over scene       : Calculate position\nfor every sprite
-engine <-- scene
-deactivate scene
-engine -> peer        : Update()
-note over peer        : Draw for every\nadded sprite
+engine -> driver       : Update() 
+activate driver
+note over driver       : Calculate position\nfor every sprite
+engine <-- driver
+deactivate driver
+engine -> peer         : Update()
+note over peer         : Draw for every\nadded sprite
 activate peer
 engine <-- peer
 deactivate peer
@@ -64,27 +64,45 @@ gomo <-- engine
 deactivate engine
 end
 
-engine <-- scene      : sceneEnd(NextScene)
+engine <- driver      : driverEnd(Nextdriver)
 activate engine
-engine -> engine      : changescene
-note over engine      : currentscene = scene2
-engine -> peer        : RemoveAllSprites()
+engine -> gomo         : Pause()
+activate gomo 
+note over gomo         : pause to call Update()
+engine <-- gomo 
+deactivate gomo
+
+engine -> peer         : RemoveAllSprites()
 activate peer
-note over peer        : remove all nodes
+note over peer         : remove all nodes
 engine <-- peer
 deactivate peer
-engine -> scene       : Initialize()
+
+engine -> engine       : changedriver
+note over engine       : currentdriver = driver2
+
+engine -> driver       : Initialize()
+activate driver
+note over driver       : add sprites as well
+driver -> peer
+engine <-- driver
+deactivate driver
+engine -> gomo         : Start()
+activate gomo
+engine <-- gomo
+deactivate gomo
+driver <-- engine
 deactivate engine
 
-scene -> engine : Stop()
+driver -> engine       : Stop()
 activate engine
-note over engine      : currentscene = nil
-engine -> peer        : Finalize()
+note over engine       : currentdriver = nil
+engine -> peer         : Finalize()
 activate peer
-note over peer        : Cleanup if necessary
+note over peer         : Cleanup if necessary
 engine <-- peer
 deactivate peer
-scene <-- engine
+driver <-- engine
 deactivate engine
 
 @enduml
