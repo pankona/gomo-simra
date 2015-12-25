@@ -19,22 +19,12 @@ func GetControllerInstance() *Controller {
 	return controller
 }
 
-func (self *Controller) Initialize() {
-	self.current = &InitScene{}
-}
-
 func (self *Controller) onSceneEnd(nextScene Driver) {
 	fmt.Println("[IN] callback function")
 	peer.GetGLPeer().Reset()
 	peer.GetTouchPeer().RemoveAllTouchListener()
 	self.current = nextScene
 	self.current.Initialize(self.onSceneEnd)
-}
-
-func (self *Controller) Start() {
-	if self.current != nil {
-		self.current.Initialize(self.onSceneEnd)
-	}
 }
 
 func (self *Controller) Update() {
