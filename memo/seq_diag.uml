@@ -2,78 +2,89 @@
 @startuml
 hide footbox
 
-participant GomobileApp
-participant Engine
-participant CurrentScene as Scene
-participant Peer
+participant main
+participant Scenes as scene
+participant Engine as engine
+participant GomobileApp as gomo
+participant Peer as peer
 
-GomobileApp -> Peer : Initialize()
-activate Peer
-GomobileApp <-- Peer
-deactivate Peer
+main -> engine : Initialize(Scene)
+activate engine
 
-GomobileApp -> Engine : Initialize()
-activate Engine
-GomobileApp <-- Engine
-deactivate Engine
+engine -> gomo : Initialize()
+activate gomo
+engine <-- gomo
+deactivate gomo
 
-GomobileApp -> Engine : Start()
-activate Engine
-Engine -> Engine      : changeScene
-note over Engine      : currentScene = scene1
-Engine -> Scene       : Initialize()
-activate Scene
+engine -> peer : Initialize()
+activate peer
+engine <-- peer
+deactivate peer
+
+main <-- engine
+deactivate engine
+
+main -> engine : Start()
+activate engine
+engine -> engine      : changescene
+note over engine      : currentscene = scene1
+engine -> scene       : Initialize()
+activate scene
 loop as much as needed
-note over Scene       : Define Sprite as variables
-Scene -> Peer         : AddSprite(Sprite)
-activate Peer
-note over Peer        : Hold sprites\nas node
-Scene <-- Peer
-deactivate Peer
+note over scene       : Define Sprite as variables
+scene -> peer         : AddSprite(Sprite)
+activate peer
+note over peer        : Hold sprites\nas node
+scene <-- peer
+deactivate peer
 end
-Engine <-- Scene
-deactivate Scene
-GomobileApp <-- Engine
-deactivate Engine
+engine <-- scene
+deactivate scene
+engine -> gomo        : Start()
+activate gomo
+engine <-- gomo
+deactivate gomo
+main <-- engine
+deactivate engine
 
 loop
-GomobileApp -> Engine : Update()
-activate Engine
-Engine -> Scene       : Update() 
-activate Scene
-note over Scene       : Calculate position\nfor every sprite
-Engine <-- Scene
-deactivate Scene
-Engine -> Peer        : Update()
-note over Peer        : Draw for every\nadded sprite
-activate Peer
-Engine <-- Peer
-deactivate Peer
-GomobileApp <-- Engine
-deactivate Engine
+gomo -> engine : Update()
+activate engine
+engine -> scene       : Update() 
+activate scene
+note over scene       : Calculate position\nfor every sprite
+engine <-- scene
+deactivate scene
+engine -> peer        : Update()
+note over peer        : Draw for every\nadded sprite
+activate peer
+engine <-- peer
+deactivate peer
+gomo <-- engine
+deactivate engine
 end
 
-Engine <-- Scene      : SceneEndCallback()
-activate Engine
-Engine -> Engine      : changeScene
-note over Engine      : currentScene = scene2
-Engine -> Peer        : RemoveAllSprites()
-activate Peer
-note over Peer        : remove all nodes
-Engine <-- Peer
-deactivate Peer
-Engine -> Scene       : Initialize()
-deactivate Engine
+engine <-- scene      : sceneEnd(NextScene)
+activate engine
+engine -> engine      : changescene
+note over engine      : currentscene = scene2
+engine -> peer        : RemoveAllSprites()
+activate peer
+note over peer        : remove all nodes
+engine <-- peer
+deactivate peer
+engine -> scene       : Initialize()
+deactivate engine
 
-GomobileApp -> Engine : Stop()
-activate Engine
-note over Engine      : currentScene = nil
-Engine -> Peer        : Finalize()
-activate Peer
-note over Peer        : Cleanup if necessary
-Engine <-- Peer
-deactivate Peer
-GomobileApp <-- Engine
-deactivate Engine
+scene -> engine : Stop()
+activate engine
+note over engine      : currentscene = nil
+engine -> peer        : Finalize()
+activate peer
+note over peer        : Cleanup if necessary
+engine <-- peer
+deactivate peer
+scene <-- engine
+deactivate engine
 
 @enduml
