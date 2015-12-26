@@ -28,7 +28,7 @@ main -> engine         : Start()
 activate engine
 engine -> engine       : changedriver
 note over engine       : currentdriver = driver1
-engine -> driver       : Initialize()
+driver <- engine       : Initialize()
 activate driver
 loop as much as needed
 note over driver       : Define Sprite as variables
@@ -38,7 +38,7 @@ note over peer         : Hold sprites\nas node
 driver <-- peer
 deactivate peer
 end
-engine <-- driver
+driver --> engine
 deactivate driver
 engine -> gomo         : Start()
 activate gomo
@@ -48,23 +48,23 @@ main <-- engine
 deactivate engine
 
 loop
-gomo -> engine         : Update()
+engine <- gomo         : Update()
 activate engine
-engine -> driver       : Update() 
+driver <- engine       : Update() 
 activate driver
 note over driver       : Calculate position\nfor every sprite
-engine <-- driver
+driver --> engine
 deactivate driver
 engine -> peer         : Update()
 note over peer         : Draw for every\nadded sprite
 activate peer
 engine <-- peer
 deactivate peer
-gomo <-- engine
+engine --> gomo
 deactivate engine
 end
 
-engine <- driver      : driverEnd(Nextdriver)
+driver -> engine       : driverEnd(Nextdriver)
 activate engine
 engine -> gomo         : Pause()
 activate gomo 
@@ -81,11 +81,11 @@ deactivate peer
 engine -> engine       : changedriver
 note over engine       : currentdriver = driver2
 
-engine -> driver       : Initialize()
+driver <- engine       : Initialize()
 activate driver
 note over driver       : add sprites as well
 driver -> peer
-engine <-- driver
+driver --> engine
 deactivate driver
 engine -> gomo         : Start()
 activate gomo
