@@ -1,4 +1,4 @@
-package scene
+package simra
 
 import (
 	"fmt"
@@ -9,13 +9,11 @@ import (
 )
 
 type Stage1 struct {
-	gopher         peer.PeerSprite
-	ball           peer.PeerSprite
-	notifySceneEnd func(nextScene Driver)
+	gopher peer.PeerSprite
+	ball   peer.PeerSprite
 }
 
-func (self *Stage1) Initialize(sceneEndCallback func(nextScene Driver)) {
-	self.notifySceneEnd = sceneEndCallback
+func (self *Stage1) Initialize() {
 
 	peer.SetDesiredScreenSize(1080/2, 1920/2)
 	peer.GetTouchPeer().AddTouchListener(self)

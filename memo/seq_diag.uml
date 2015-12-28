@@ -13,13 +13,12 @@ activate engine
 
 engine -> gomo         : Initialize()
 activate gomo
+gomo -> peer           : Initialize()
+activate peer
+gomo <-- peer
+deactivate peer
 engine <-- gomo
 deactivate gomo
-
-engine -> peer         : Initialize()
-activate peer
-engine <-- peer
-deactivate peer
 
 main <-- engine
 deactivate engine

@@ -1,4 +1,4 @@
-package scene
+package simra
 
 import (
 	"fmt"
@@ -8,22 +8,19 @@ import (
 )
 
 type Title struct {
-	background     peer.PeerSprite
-	notifySceneEnd func(nextScene Driver)
+	background peer.PeerSprite
 }
 
-func (self *Title) Initialize(sceneEndCallback func(nextScene Driver)) {
-	self.notifySceneEnd = sceneEndCallback
-
+func (self *Title) Initialize() {
 	peer.SetDesiredScreenSize(1080/2, 1920/2)
 	peer.GetTouchPeer().AddTouchListener(self)
 
 	// initialize sprites
-	self.initSprite()
+	self.initialize()
 }
 
-func (self *Title) initSprite() {
-	fmt.Println("[IN] Title.initTitleSprite")
+func (self *Title) initialize() {
+	fmt.Println("[IN] Title.initialize")
 
 	// add background sprite
 	self.background.W = float32(1080 / 2)
@@ -37,7 +34,7 @@ func (self *Title) initSprite() {
 		image.Rect(0, 0, int(self.background.W), int(self.background.H)))
 	peer.GetGLPeer().AddSprite(&self.background, tex_background)
 
-	fmt.Println("[OUT] Title.initTitleSprite")
+	fmt.Println("[OUT] Title.initialize")
 }
 
 func (self *Title) Drive() {
@@ -51,5 +48,4 @@ func (self *Title) OnTouchMove(x, y float32) {
 
 func (self *Title) OnTouchEnd(x, y float32) {
 	fmt.Println("OnTouchBegin = ", x, y)
-	self.notifySceneEnd(&Stage1{})
 }

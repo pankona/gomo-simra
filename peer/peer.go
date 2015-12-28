@@ -50,6 +50,7 @@ func GetGLPeer() *GLPeer {
 }
 
 func (self *GLPeer) Initialize(in_glctx gl.Context) {
+	fmt.Println("[IN] GLPeer.Initialize")
 	self.glctx = in_glctx
 
 	// transparency of png
@@ -59,6 +60,7 @@ func (self *GLPeer) Initialize(in_glctx gl.Context) {
 	self.images = glutil.NewImages(in_glctx)
 	self.fps = debug.NewFPS(self.images)
 	self.initEng()
+	fmt.Println("[OUT] GLPeer.Initialize")
 }
 
 func (self *GLPeer) initEng() {

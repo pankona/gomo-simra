@@ -6,12 +6,12 @@ import (
 	"golang.org/x/mobile/event/size"
 )
 
-type Touch struct {
+type TouchPeer struct {
 	touchListeners []*TouchListener
 	sz             size.Event
 }
 
-var touchPeer *Touch
+var touchPeer *TouchPeer
 
 type TouchListener interface {
 	OnTouchBegin(x, y float32)
@@ -19,18 +19,18 @@ type TouchListener interface {
 	OnTouchEnd(x, y float32)
 }
 
-func GetTouchPeer() *Touch {
+func GetTouchPeer() *TouchPeer {
 	if touchPeer == nil {
-		touchPeer = &Touch{}
+		touchPeer = &TouchPeer{}
 	}
 	return touchPeer
 }
 
-func (self *Touch) AddTouchListener(listener TouchListener) {
+func (self *TouchPeer) AddTouchListener(listener TouchListener) {
 	self.touchListeners = append(self.touchListeners, &listener)
 }
 
-func (self *Touch) RemoveAllTouchListener() {
+func (self *TouchPeer) RemoveAllTouchListener() {
 	self.touchListeners = nil
 }
 
@@ -48,7 +48,7 @@ func calcTouchedPosition(pxx, pxy float32) (float32, float32) {
 	return ptx * scale, pty * scale
 }
 
-func (self *Touch) OnTouchBegin(pxx, pxy float32) {
+func (self *TouchPeer) OnTouchBegin(pxx, pxy float32) {
 
 	x, y := calcTouchedPosition(pxx, pxy)
 
@@ -63,7 +63,7 @@ func (self *Touch) OnTouchBegin(pxx, pxy float32) {
 	}
 }
 
-func (self *Touch) OnTouchMove(pxx, pxy float32) {
+func (self *TouchPeer) OnTouchMove(pxx, pxy float32) {
 
 	x, y := calcTouchedPosition(pxx, pxy)
 
@@ -78,7 +78,7 @@ func (self *Touch) OnTouchMove(pxx, pxy float32) {
 	}
 }
 
-func (self *Touch) OnTouchEnd(pxx, pxy float32) {
+func (self *TouchPeer) OnTouchEnd(pxx, pxy float32) {
 
 	x, y := calcTouchedPosition(pxx, pxy)
 

@@ -2,13 +2,11 @@
 
 package main
 
-import (
-	"github.com/pankona/gomo-simra/gomo"
-	"github.com/pankona/gomo-simra/scene"
-)
+import "github.com/pankona/gomo-simra/simra"
 
 func main() {
-	gomo := gomo.GetInstance()
-	gomo.SetScene(&scene.InitScene{})
-	gomo.Start()
+	engine := simra.GetInstance()
+
+	engine.Initialize()
+	engine.Start(&simra.Title{})
 }
