@@ -12,6 +12,7 @@ type Title struct {
 }
 
 func (self *Title) Initialize() {
+	fmt.Println("[IN] Title.Initialize()")
 	peer.SetDesiredScreenSize(1080/2, 1920/2)
 	peer.GetTouchPeer().AddTouchListener(self)
 
