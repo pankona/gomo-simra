@@ -1,9 +1,6 @@
 package simra
 
-import (
-	"github.com/pankona/gomo-simra/gomo"
-	"github.com/pankona/gomo-simra/peer"
-)
+import "github.com/pankona/gomo-simra/gomo"
 
 type Simra struct {
 	driver Driver
@@ -22,7 +19,6 @@ func (self *Simra) onUpdate() {
 	if self.driver != nil {
 		self.driver.Drive()
 	}
-	peer.GetGLPeer().Update()
 }
 
 func (self *Simra) Start(startedCallback func()) {

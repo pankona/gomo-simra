@@ -66,6 +66,7 @@ func (self *Gomo) Start(startedCallback func()) {
 				}
 
 				self.updateCallback()
+				self.glPeer.Update()
 
 				a.Publish()
 				a.Send(paint.Event{}) // keep animating
