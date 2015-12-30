@@ -49,4 +49,5 @@ func (self *Title) OnTouchMove(x, y float32) {
 
 func (self *Title) OnTouchEnd(x, y float32) {
 	fmt.Println("OnTouchBegin = ", x, y)
+	GetInstance().SetScene(&Stage1{})
 }
