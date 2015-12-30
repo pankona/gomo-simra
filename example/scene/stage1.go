@@ -1,4 +1,4 @@
-package simra
+package scene
 
 import (
 	"fmt"

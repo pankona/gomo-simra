@@ -6,13 +6,14 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/pankona/gomo-simra/example/scene"
 	"github.com/pankona/gomo-simra/simra"
 )
 
 func onStarted() {
 	fmt.Println("[IN] onStarted()")
 	engine := simra.GetInstance()
-	engine.SetScene(&simra.Title{})
+	engine.SetScene(&scene.Title{})
 	fmt.Println("[OUT] onStarted()")
 }
 

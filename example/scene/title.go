@@ -1,10 +1,11 @@
-package simra
+package scene
 
 import (
 	"fmt"
 	"image"
 
 	"github.com/pankona/gomo-simra/peer"
+	"github.com/pankona/gomo-simra/simra"
 )
 
 type Title struct {
@@ -49,5 +50,5 @@ func (self *Title) OnTouchMove(x, y float32) {
 
 func (self *Title) OnTouchEnd(x, y float32) {
 	fmt.Println("OnTouchBegin = ", x, y)
-	GetInstance().SetScene(&Stage1{})
+	simra.GetInstance().SetScene(&Stage1{})
 }
