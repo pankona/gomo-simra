@@ -11,7 +11,8 @@ GOMObile SIMple wRApper
     * wraps usage of f32.affine.
     * calculates scale to fit to any device's screen automatically.
     * provides easy scene transition
-* Everything is under development.
+* everything is under construction.
+* see `example` directory to know how to use.
 
 # License
 
