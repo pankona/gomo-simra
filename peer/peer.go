@@ -1,7 +1,6 @@
 package peer
 
 import (
-	"fmt"
 	"image"
 	"log"
 	"time"
@@ -43,14 +42,16 @@ type GLPeer struct {
 }
 
 func GetGLPeer() *GLPeer {
+	LogDebug("IN")
 	if glPeer == nil {
 		glPeer = &GLPeer{}
 	}
+	LogDebug("OUT")
 	return glPeer
 }
 
 func (self *GLPeer) Initialize(in_glctx gl.Context) {
-	fmt.Println("[IN] GLPeer.Initialize")
+	LogDebug("IN")
 	self.glctx = in_glctx
 
 	// transparency of png
@@ -60,7 +61,7 @@ func (self *GLPeer) Initialize(in_glctx gl.Context) {
 	self.images = glutil.NewImages(in_glctx)
 	self.fps = debug.NewFPS(self.images)
 	self.initEng()
-	fmt.Println("[OUT] GLPeer.Initialize")
+	LogDebug("OUT")
 }
 
 func (self *GLPeer) initEng() {
@@ -84,7 +85,7 @@ func (self *GLPeer) newNode() *sprite.Node {
 }
 
 func (self *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex {
-
+	LogDebug("IN")
 	a, err := asset.Open(assetName)
 	if err != nil {
 		log.Fatal(err)
@@ -100,14 +101,17 @@ func (self *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.S
 		log.Fatal(err)
 	}
 
+	LogDebug("OUT")
 	return sprite.SubTex{t, rect}
 }
 
 func (self *GLPeer) Finalize() {
+	LogDebug("IN")
 	self.eng.Release()
 	self.fps.Release()
 	self.images.Release()
 	self.glctx = nil
+	LogDebug("OUT")
 }
 
 func (self *GLPeer) Update() {
@@ -125,17 +129,20 @@ func (self *GLPeer) Update() {
 }
 
 func (self *GLPeer) AddSprite(ps *PeerSprite, subTex sprite.SubTex) {
-	fmt.Println("[IN] Peer.AddSprite()")
+	LogDebug("IN")
 	var psc peerSpriteContainer
 	psc.peerSprite = ps
 	psc.node = self.newNode()
 	self.peerSpriteContainers = append(self.peerSpriteContainers, &psc)
 	self.eng.SetSubTex(psc.node, subTex)
+	LogDebug("OUT")
 }
 
 func (self *GLPeer) Reset() {
+	LogDebug("IN")
 	self.peerSpriteContainers = nil
 	self.initEng()
+	LogDebug("OUT")
 }
 
 func (self *GLPeer) apply() {

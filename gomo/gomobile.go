@@ -3,8 +3,6 @@
 package gomo
 
 import (
-	"fmt"
-
 	"github.com/pankona/gomo-simra/peer"
 
 	_ "image/jpeg"
@@ -27,21 +25,24 @@ type Gomo struct {
 var gomo *Gomo = nil
 
 func GetInstance() *Gomo {
+	peer.LogDebug("IN")
 	if gomo == nil {
 		gomo = &Gomo{}
 	}
+	peer.LogDebug("OUT")
 	return gomo
 }
 
 func (self *Gomo) Initialize(updateCallback func()) {
-	fmt.Println("[IN] gomo.initialize")
+	peer.LogDebug("IN")
 	self.glPeer = peer.GetGLPeer()
 	self.touchPeer = peer.GetTouchPeer()
 	self.updateCallback = updateCallback
-	fmt.Println("[OUT] gomo.initialize")
+	peer.LogDebug("OUT")
 }
 
 func (self *Gomo) Start(startedCallback func()) {
+	peer.LogDebug("IN")
 	go app.Main(func(a app.App) {
 		for e := range a.Events() {
 			switch e := a.Filter(e).(type) {
@@ -56,7 +57,7 @@ func (self *Gomo) Start(startedCallback func()) {
 
 					a.Send(paint.Event{})
 				case lifecycle.CrossOff:
-					// sceneCtrl.Stop()
+					// TODO: notify to simra
 				}
 			case size.Event:
 				peer.SetScreenSize(e)
@@ -69,7 +70,7 @@ func (self *Gomo) Start(startedCallback func()) {
 				self.glPeer.Update()
 
 				a.Publish()
-				a.Send(paint.Event{}) // keep animating
+				a.Send(paint.Event{})
 			case touch.Event:
 				switch e.Type {
 				case touch.TypeBegin:
@@ -83,4 +84,5 @@ func (self *Gomo) Start(startedCallback func()) {
 			}
 		}
 	})
+	peer.LogDebug("OUT")
 }

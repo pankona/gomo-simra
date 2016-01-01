@@ -20,18 +20,24 @@ type TouchListener interface {
 }
 
 func GetTouchPeer() *TouchPeer {
+	LogDebug("IN")
 	if touchPeer == nil {
 		touchPeer = &TouchPeer{}
 	}
+	LogDebug("OUT")
 	return touchPeer
 }
 
 func (self *TouchPeer) AddTouchListener(listener TouchListener) {
+	LogDebug("IN")
 	self.touchListeners = append(self.touchListeners, &listener)
+	LogDebug("OUT")
 }
 
 func (self *TouchPeer) RemoveAllTouchListener() {
+	LogDebug("IN")
 	self.touchListeners = nil
+	LogDebug("OUT")
 }
 
 func calcTouchedPosition(pxx, pxy float32) (float32, float32) {
@@ -49,9 +55,9 @@ func calcTouchedPosition(pxx, pxy float32) (float32, float32) {
 }
 
 func (self *TouchPeer) OnTouchBegin(pxx, pxy float32) {
+	LogDebug("IN")
 
 	x, y := calcTouchedPosition(pxx, pxy)
-
 	for i := range self.touchListeners {
 		listener := self.touchListeners[i]
 		if listener == nil {
@@ -61,9 +67,11 @@ func (self *TouchPeer) OnTouchBegin(pxx, pxy float32) {
 
 		(*listener).OnTouchBegin(x, y)
 	}
+	LogDebug("OUT")
 }
 
 func (self *TouchPeer) OnTouchMove(pxx, pxy float32) {
+	LogDebug("IN")
 
 	x, y := calcTouchedPosition(pxx, pxy)
 
@@ -76,9 +84,11 @@ func (self *TouchPeer) OnTouchMove(pxx, pxy float32) {
 
 		(*listener).OnTouchMove(x, y)
 	}
+	LogDebug("OUT")
 }
 
 func (self *TouchPeer) OnTouchEnd(pxx, pxy float32) {
+	LogDebug("IN")
 
 	x, y := calcTouchedPosition(pxx, pxy)
 
@@ -91,4 +101,5 @@ func (self *TouchPeer) OnTouchEnd(pxx, pxy float32) {
 
 		(*listener).OnTouchEnd(x, y)
 	}
+	LogDebug("OUT")
 }

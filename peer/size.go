@@ -1,10 +1,6 @@
 package peer
 
-import (
-	"fmt"
-
-	"golang.org/x/mobile/event/size"
-)
+import "golang.org/x/mobile/event/size"
 
 var sz size.Event
 
@@ -23,18 +19,24 @@ type screenSize struct {
 var desiredScreenSize screenSize
 
 func SetScreenSize(in_sz size.Event) {
+	LogDebug("IN")
 	sz = in_sz
 	calcScale()
+	LogDebug("OUT")
 }
 
 func GetScreenSize() size.Event {
+	LogDebug("IN")
+	LogDebug("OUT")
 	return sz
 }
 
 func SetDesiredScreenSize(w, h float32) {
+	LogDebug("IN")
 	desiredScreenSize.height = h
 	desiredScreenSize.width = w
 	calcScale()
+	LogDebug("OUT")
 }
 
 func calcScale() {
@@ -44,10 +46,9 @@ func calcScale() {
 	if h/float32(sz.HeightPt) > w/float32(sz.WidthPt) {
 		desiredScreenSize.scale = float32(sz.HeightPt) / h
 		desiredScreenSize.fitTo = FIT_HEIGHT
-		fmt.Println("scale = ", desiredScreenSize.scale)
 	} else {
 		desiredScreenSize.scale = float32(sz.WidthPt) / w
 		desiredScreenSize.fitTo = FIT_WIDTH
-		fmt.Println("scale = ", desiredScreenSize.scale)
 	}
+	LogDebug("scale = %f", desiredScreenSize.scale)
 }

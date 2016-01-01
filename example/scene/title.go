@@ -50,5 +50,6 @@ func (self *Title) OnTouchMove(x, y float32) {
 
 func (self *Title) OnTouchEnd(x, y float32) {
 	fmt.Println("OnTouchBegin = ", x, y)
+	// scene end. go to next scene
 	simra.GetInstance().SetScene(&Stage1{})
 }
