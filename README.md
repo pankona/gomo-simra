@@ -14,6 +14,11 @@ GOMObile SIMple wRApper
 * everything is under construction.
 * see `example` directory to know how to use.
 
+# Build
+
+* For Release build, `go build -tags=release` or `gomobile build -tags=release`
+  * This efforts that logging for debug is disabled.
+
 # License
 
 MIT
