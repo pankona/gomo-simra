@@ -3,6 +3,8 @@ package peer
 import (
 	"fmt"
 	"runtime"
+
+	"github.com/pankona/gomo-simra/config"
 )
 
 func printLog(tag string, format string, a ...interface{}) {
@@ -20,7 +22,9 @@ func printLog(tag string, format string, a ...interface{}) {
 }
 
 func LogDebug(format string, a ...interface{}) {
-	printLog("DEBUG", format, a...)
+	if config.DEBUG {
+		printLog("DEBUG", format, a...)
+	}
 
 }
 
