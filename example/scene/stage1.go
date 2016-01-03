@@ -1,7 +1,6 @@
 package scene
 
 import (
-	"fmt"
 	"image"
 	"math"
 
@@ -14,20 +13,19 @@ type Stage1 struct {
 }
 
 func (self *Stage1) Initialize() {
+	peer.LogDebug("[IN]")
 
 	peer.SetDesiredScreenSize(1080/2, 1920/2)
 	peer.GetTouchPeer().AddTouchListener(self)
 
 	// initialize sprites
 	self.initSprite()
+
+	peer.LogDebug("[OUT]")
 }
 
 func (self *Stage1) initSprite() {
-	fmt.Println("[IN] Stage1.initSprite")
-
 	self.initGopher()
-
-	fmt.Println("[OUT] Title.initTitleSprite")
 }
 
 func (self *Stage1) initGopher() {

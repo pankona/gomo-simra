@@ -107,6 +107,7 @@ func (self *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.S
 
 func (self *GLPeer) Finalize() {
 	LogDebug("IN")
+	self.peerSpriteContainers = nil
 	self.eng.Release()
 	self.fps.Release()
 	self.images.Release()

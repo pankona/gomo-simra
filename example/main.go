@@ -3,26 +3,29 @@
 package main
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/pankona/gomo-simra/example/scene"
+	"github.com/pankona/gomo-simra/peer"
 	"github.com/pankona/gomo-simra/simra"
 )
 
-func onStarted() {
-	fmt.Println("[IN] onStarted()")
-	engine := simra.GetInstance()
-	engine.SetScene(&scene.Title{})
-	fmt.Println("[OUT] onStarted()")
-}
-
 func main() {
-	fmt.Println("[IN] main()")
+	peer.LogDebug("[IN]")
 	engine := simra.GetInstance()
-	engine.Start(onStarted)
+
+	onStart := make(chan bool)
+	onStop := make(chan bool)
+
+	engine.Start(onStart, onStop)
+
 	for {
-		time.Sleep(10)
+	loop:
+		select {
+		case <-onStart:
+			engine := simra.GetInstance()
+			engine.SetScene(&scene.Title{})
+		case <-onStop:
+			break loop
+		}
 	}
-	fmt.Println("[OUT] main()")
+	peer.LogDebug("[OUT]")
 }

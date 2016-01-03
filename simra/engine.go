@@ -26,10 +26,17 @@ func (self *Simra) onUpdate() {
 	}
 }
 
-func (self *Simra) Start(startedCallback func()) {
+func (self *Simra) onStopped() {
 	peer.LogDebug("IN")
-	gomo.GetInstance().Initialize(self.onUpdate)
-	gomo.GetInstance().Start(startedCallback)
+	self.driver = nil
+	peer.GetGLPeer().Finalize()
+	peer.LogDebug("OUT")
+}
+
+func (self *Simra) Start(onStart, onStop chan bool) {
+	peer.LogDebug("IN")
+	gomo.GetInstance().Initialize(onStart, onStop, self.onUpdate)
+	gomo.GetInstance().Start()
 	peer.LogDebug("OUT")
 }
 
@@ -40,11 +47,5 @@ func (self *Simra) SetScene(driver Driver) {
 
 	self.driver = driver
 	driver.Initialize()
-	peer.LogDebug("OUT")
-}
-
-func (self *Simra) Stop() {
-	peer.LogDebug("IN")
-	// TODO implement
 	peer.LogDebug("OUT")
 }

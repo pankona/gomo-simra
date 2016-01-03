@@ -1,7 +1,6 @@
 package scene
 
 import (
-	"fmt"
 	"image"
 
 	"github.com/pankona/gomo-simra/peer"
@@ -13,17 +12,18 @@ type Title struct {
 }
 
 func (self *Title) Initialize() {
-	fmt.Println("[IN] Title.Initialize()")
+	peer.LogDebug("[IN]")
+
 	peer.SetDesiredScreenSize(1080/2, 1920/2)
 	peer.GetTouchPeer().AddTouchListener(self)
 
 	// initialize sprites
 	self.initialize()
+
+	peer.LogDebug("[OUT]")
 }
 
 func (self *Title) initialize() {
-	fmt.Println("[IN] Title.initialize")
-
 	// add background sprite
 	self.background.W = float32(1080 / 2)
 	self.background.H = float32(1920 / 2)
@@ -35,8 +35,6 @@ func (self *Title) initialize() {
 	tex_background := peer.GetGLPeer().LoadTexture("title.png",
 		image.Rect(0, 0, int(self.background.W), int(self.background.H)))
 	peer.GetGLPeer().AddSprite(&self.background, tex_background)
-
-	fmt.Println("[OUT] Title.initialize")
 }
 
 func (self *Title) Drive() {
@@ -49,7 +47,6 @@ func (self *Title) OnTouchMove(x, y float32) {
 }
 
 func (self *Title) OnTouchEnd(x, y float32) {
-	fmt.Println("OnTouchBegin = ", x, y)
 	// scene end. go to next scene
 	simra.GetInstance().SetScene(&Stage1{})
 }
