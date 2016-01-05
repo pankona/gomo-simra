@@ -8,15 +8,7 @@ import (
 	"github.com/pankona/gomo-simra/simra"
 )
 
-func main() {
-	peer.LogDebug("[IN]")
-	engine := simra.GetInstance()
-
-	onStart := make(chan bool)
-	onStop := make(chan bool)
-
-	engine.Start(onStart, onStop)
-
+func eventHandle(onStart, onStop chan bool) {
 	for {
 	loop:
 		select {
@@ -27,5 +19,15 @@ func main() {
 			break loop
 		}
 	}
+}
+
+func main() {
+	peer.LogDebug("[IN]")
+	engine := simra.GetInstance()
+
+	onStart := make(chan bool)
+	onStop := make(chan bool)
+	go eventHandle(onStart, onStop)
+	engine.Start(onStart, onStop)
 	peer.LogDebug("[OUT]")
 }

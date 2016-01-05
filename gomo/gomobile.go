@@ -47,7 +47,7 @@ func (self *Gomo) Initialize(onStart, onStop chan bool, updateCallback func()) {
 
 func (self *Gomo) Start() {
 	peer.LogDebug("IN")
-	go app.Main(func(a app.App) {
+	app.Main(func(a app.App) {
 		for e := range a.Events() {
 			switch e := a.Filter(e).(type) {
 			case lifecycle.Event:
