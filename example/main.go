@@ -13,9 +13,11 @@ func eventHandle(onStart, onStop chan bool) {
 	loop:
 		select {
 		case <-onStart:
+			peer.LogDebug("receive chan. onStart")
 			engine := simra.GetInstance()
 			engine.SetScene(&scene.Title{})
 		case <-onStop:
+			peer.LogDebug("receive chan. onStop")
 			break loop
 		}
 	}
