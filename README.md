@@ -1,3 +1,5 @@
+[![Circle CI](https://circleci.com/gh/pankona/gomo-simra/tree/master.svg?style=svg)](https://circleci.com/gh/pankona/gomo-simra/tree/master)
+
 # gomo-simra
 
 GOMObile SIMple wRApper
