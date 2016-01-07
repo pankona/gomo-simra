@@ -1,2 +1,7 @@
+dependencies:
+    pre:
+        - go get golang.org/x/mobile/cmd/gomobile
+        - gomobile init -v
+
 general:
     build_dir: example
