@@ -5,3 +5,7 @@ dependencies:
 
 general:
     build_dir: example
+
+test:
+    override:
+        - echo "test here!"
