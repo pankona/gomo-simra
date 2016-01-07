@@ -5,9 +5,11 @@ dependencies:
     pre:
         - go get golang.org/x/mobile/cmd/gomobile
         - gomobile init -v
+        - go get github.com/pankona/gomo-simra || exit 0
     override:
         - echo "dependencies here!"
         - pwd
+        - echo $GOPATH
         - gomobile build -v
 
 test:
