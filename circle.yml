@@ -1,12 +1,14 @@
+general:
+    build_dir: example
+
 dependencies:
     pre:
         - go get golang.org/x/mobile/cmd/gomobile
         - gomobile init -v
     override:
         - echo "dependencies here!"
-
-general:
-    build_dir: example
+        - pwd
+        - gomobile build -v
 
 test:
     override:
