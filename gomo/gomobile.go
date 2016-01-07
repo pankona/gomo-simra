@@ -47,8 +47,9 @@ func (self *Gomo) Initialize(onStart, onStop chan bool, updateCallback func()) {
 
 func (self *Gomo) Start() {
 	peer.LogDebug("IN")
-	go app.Main(func(a app.App) {
+	app.Main(func(a app.App) {
 		for e := range a.Events() {
+
 			switch e := a.Filter(e).(type) {
 			case lifecycle.Event:
 				switch e.Crosses(lifecycle.StageVisible) {
@@ -60,11 +61,14 @@ func (self *Gomo) Start() {
 
 					// time to set first scene
 					self.onStart <- true
-
 					a.Send(paint.Event{})
 				case lifecycle.CrossOff:
+
 					// time to stop application
 					self.onStop <- true
+
+					// finalize gl peer
+					self.glPeer.Finalize()
 				}
 			case size.Event:
 				peer.SetScreenSize(e)
@@ -73,7 +77,10 @@ func (self *Gomo) Start() {
 					continue
 				}
 
+				// update notify for simra
 				self.updateCallback()
+
+				// update notify for gl peer
 				self.glPeer.Update()
 
 				a.Publish()
@@ -86,7 +93,6 @@ func (self *Gomo) Start() {
 					self.touchPeer.OnTouchMove(e.X, e.Y)
 				case touch.TypeEnd:
 					self.touchPeer.OnTouchEnd(e.X, e.Y)
-				default:
 				}
 			}
 		}

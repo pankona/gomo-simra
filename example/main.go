@@ -8,24 +8,28 @@ import (
 	"github.com/pankona/gomo-simra/simra"
 )
 
+func eventHandle(onStart, onStop chan bool) {
+	for {
+	loop:
+		select {
+		case <-onStart:
+			peer.LogDebug("receive chan. onStart")
+			engine := simra.GetInstance()
+			engine.SetScene(&scene.Title{})
+		case <-onStop:
+			peer.LogDebug("receive chan. onStop")
+			break loop
+		}
+	}
+}
+
 func main() {
 	peer.LogDebug("[IN]")
 	engine := simra.GetInstance()
 
 	onStart := make(chan bool)
 	onStop := make(chan bool)
-
+	go eventHandle(onStart, onStop)
 	engine.Start(onStart, onStop)
-
-	for {
-	loop:
-		select {
-		case <-onStart:
-			engine := simra.GetInstance()
-			engine.SetScene(&scene.Title{})
-		case <-onStop:
-			break loop
-		}
-	}
 	peer.LogDebug("[OUT]")
 }
