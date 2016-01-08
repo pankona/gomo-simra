@@ -10,7 +10,6 @@ import (
 
 func eventHandle(onStart, onStop chan bool) {
 	for {
-	loop:
 		select {
 		case <-onStart:
 			peer.LogDebug("receive chan. onStart")
@@ -18,7 +17,6 @@ func eventHandle(onStart, onStop chan bool) {
 			engine.SetScene(&scene.Title{})
 		case <-onStop:
 			peer.LogDebug("receive chan. onStop")
-			break loop
 		}
 	}
 }
