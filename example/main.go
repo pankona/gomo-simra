@@ -14,6 +14,9 @@ func eventHandle(onStart, onStop chan bool) {
 		case <-onStart:
 			peer.LogDebug("receive chan. onStart")
 			engine := simra.GetInstance()
+			// TODO: this will be called on rotation.
+			// to keep state on rotation, SetScene must not call
+			// every onStart.
 			engine.SetScene(&scene.Title{})
 		case <-onStop:
 			peer.LogDebug("receive chan. onStop")
