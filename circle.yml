@@ -1,9 +1,11 @@
 machine:
     environment:
         IMPORT_PATH: "github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
+        GOPATH: "$HOME/go"
 
 dependencies:
     pre:
+        - mkdir -p $GOPATH
         - go get golang.org/x/mobile/cmd/gomobile
         - gomobile init -v
 
@@ -13,7 +15,7 @@ dependencies:
         - echo "$GOPATH/src/$IMPORT_PATH"
         - mkdir -p "$GOPATH/src/$IMPORT_PATH"
         - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
-        - cd "$GOPATH/src/$IMPORT_PATH/example"
+        - cd "$GOPATH/src/$IMPORT_PATH" && pwd
         - pwd
         - cd example && gomobile build -v
 
