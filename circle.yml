@@ -9,7 +9,8 @@ dependencies:
 
     pre:
         - mkdir -p $GOPATH
-        - if [[ ! -e `which gomobile` ]]; then go get golang.org/x/mobile/cmd/gomobile && gomobile init -v; fi
+        - if [[ ! -e `which gomobile` ]]; then go get golang.org/x/mobile/cmd/gomobile; fi
+        - gomobile init -v
 
     override:
         - echo $GOPATH
