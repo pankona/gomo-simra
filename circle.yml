@@ -4,10 +4,12 @@ machine:
         GOPATH: "$HOME/go"
 
 dependencies:
+    cache_directories:
+        - $GOPATH
+
     pre:
         - mkdir -p $GOPATH
-        - go get golang.org/x/mobile/cmd/gomobile
-        - gomobile init -v
+        - if [[ ! -e `which gomobile` ]]; then go get golang.org/x/mobile/cmd/gomobile && gomobile init -v; fi
 
     override:
         - echo $GOPATH
