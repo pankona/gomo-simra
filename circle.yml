@@ -1,16 +1,24 @@
-general:
-    build_dir: example
+machine:
+    environment:
+        IMPORT_PATH: "github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
+        GOPATH: "$HOME/go"
+        PATH: "$GOPATH/bin:$PATH"
 
 dependencies:
+    cache_directories:
+        - $GOPATH
+
     pre:
+        - mkdir -p $GOPATH
         - go get golang.org/x/mobile/cmd/gomobile
         - gomobile init -v
-        - go get github.com/pankona/gomo-simra || exit 0
+
     override:
-        - echo "dependencies here!"
-        - pwd
         - echo $GOPATH
-        - gomobile build -v
+        - echo "$GOPATH/src/$IMPORT_PATH"
+        - mkdir -p "$GOPATH/src/$IMPORT_PATH"
+        - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
+        - cd "$GOPATH/src/$IMPORT_PATH/example" && gomobile build -v
 
 test:
     override:
