@@ -10,11 +10,12 @@ dependencies:
     override:
         - pwd
         - echo $GOPATH
+        - echo "$GOPATH/src/$IMPORT_PATH"
         - mkdir -p "$GOPATH/src/$IMPORT_PATH"
         - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
         - cd "$GOPATH/src/$IMPORT_PATH/example"
         - pwd
-        - gomobile build -v
+        - cd example && gomobile build -v
 
 test:
     override:
