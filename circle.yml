@@ -9,9 +9,12 @@ dependencies:
     pre:
         - go get golang.org/x/mobile/cmd/gomobile
         - gomobile init -v
+
     override:
         - pwd
         - echo $GOPATH
+        - mkdir -p "$GOPATH/src/$IMPORT_PATH"
+        - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
         - gomobile build -v
 
 test:
