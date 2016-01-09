@@ -10,14 +10,11 @@ dependencies:
         - gomobile init -v
 
     override:
-        - pwd
         - echo $GOPATH
         - echo "$GOPATH/src/$IMPORT_PATH"
         - mkdir -p "$GOPATH/src/$IMPORT_PATH"
         - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
-        - cd "$GOPATH/src/$IMPORT_PATH" && pwd
-        - pwd
-        - cd example && gomobile build -v
+        - cd "$GOPATH/src/$IMPORT_PATH/example" && gomobile build -v
 
 test:
     override:
