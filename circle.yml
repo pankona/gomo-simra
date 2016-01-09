@@ -2,6 +2,7 @@ machine:
     environment:
         IMPORT_PATH: "github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
         GOPATH: "$HOME/go"
+        PATH: "$GOPATH:$PATH"
 
 dependencies:
     cache_directories:
