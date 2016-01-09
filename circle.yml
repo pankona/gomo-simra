@@ -2,7 +2,7 @@ machine:
     environment:
         IMPORT_PATH: "github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
         GOPATH: "$HOME/go"
-        PATH: "$GOPATH:$PATH"
+        PATH: "$GOPATH/bin:$PATH"
 
 dependencies:
     cache_directories:
@@ -10,7 +10,7 @@ dependencies:
 
     pre:
         - mkdir -p $GOPATH
-        - if [[ ! -e `which gomobile` ]]; then go get golang.org/x/mobile/cmd/gomobile; fi
+        - go get golang.org/x/mobile/cmd/gomobile
         - gomobile init -v
 
     override:
