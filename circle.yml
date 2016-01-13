@@ -18,7 +18,7 @@ dependencies:
         - echo "$GOPATH/src/$IMPORT_PATH"
         - mkdir -p "$GOPATH/src/$IMPORT_PATH"
         - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
-        - cd "$GOPATH/src/$IMPORT_PATH/example" && gomobile build -v
+        - cd "$GOPATH/src/$IMPORT_PATH/examples/sample1" && gomobile build -v
 
 test:
     override:
