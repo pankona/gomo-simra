@@ -13,7 +13,7 @@ type Title struct {
 func (self *Title) Initialize() {
 	peer.LogDebug("[IN]")
 
-	peer.SetDesiredScreenSize(960, 540)
+	peer.SetDesiredScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT)
 	peer.GetTouchPeer().AddTouchListener(self)
 
 	// initialize sprites
@@ -24,12 +24,12 @@ func (self *Title) Initialize() {
 
 func (self *Title) initialize() {
 	// add background sprite
-	self.background.W = float32(960)
-	self.background.H = float32(540)
+	self.background.W = float32(SCREEN_WIDTH)
+	self.background.H = float32(SCREEN_HEIGHT)
 
 	// put center of screen
-	self.background.X = 960 / 2
-	self.background.Y = 540 / 2
+	self.background.X = SCREEN_WIDTH / 2
+	self.background.Y = SCREEN_HEIGHT / 2
 
 	tex_background := peer.GetGLPeer().LoadTexture("title.png",
 		image.Rect(0, 0, int(self.background.W), int(self.background.H)))
