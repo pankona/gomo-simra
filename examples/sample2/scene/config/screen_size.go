@@ -1,4 +1,4 @@
-package scene
+package config
 
 const (
 	SCREEN_WIDTH  = 960

@@ -4,6 +4,7 @@ import (
 	"image"
 	"math"
 
+	"github.com/pankona/gomo-simra/examples/sample2/scene/config"
 	"github.com/pankona/gomo-simra/peer"
 )
 
@@ -14,7 +15,7 @@ type CtrlTrial struct {
 func (self *CtrlTrial) Initialize() {
 	peer.LogDebug("[IN]")
 
-	peer.SetDesiredScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT)
+	peer.SetDesiredScreenSize(config.SCREEN_WIDTH, config.SCREEN_HEIGHT)
 	peer.GetTouchPeer().AddTouchListener(self)
 
 	// initialize sprites
@@ -29,8 +30,8 @@ func (self *CtrlTrial) initBall() {
 	self.ball.H = float32(48)
 
 	// put center of screen at start
-	self.ball.X = SCREEN_WIDTH / 2
-	self.ball.Y = SCREEN_HEIGHT / 2
+	self.ball.X = config.SCREEN_WIDTH / 2
+	self.ball.Y = config.SCREEN_HEIGHT / 2
 
 	tex_ball := peer.GetGLPeer().LoadTexture("ball.png",
 		image.Rect(0, 0, int(self.ball.W), int(self.ball.H)))
