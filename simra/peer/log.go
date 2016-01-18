@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/pankona/gomo-simra/config"
+	"github.com/pankona/gomo-simra/simra/config"
 )
 
 func printLog(tag string, format string, a ...interface{}) {

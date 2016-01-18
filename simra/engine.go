@@ -3,8 +3,8 @@ package simra
 import (
 	"image"
 
-	"github.com/pankona/gomo-simra/gomo"
-	"github.com/pankona/gomo-simra/peer"
+	"github.com/pankona/gomo-simra/simra/gomo"
+	"github.com/pankona/gomo-simra/simra/peer"
 )
 
 type Simra struct {
