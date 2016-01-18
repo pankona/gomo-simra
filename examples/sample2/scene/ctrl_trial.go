@@ -18,7 +18,7 @@ func (self *CtrlTrial) Initialize() {
 	simra.LogDebug("[IN]")
 
 	simra.GetInstance().SetDesiredScreenSize(config.SCREEN_WIDTH, config.SCREEN_HEIGHT)
-	simra.GetInstance().AddTouchListener(self)
+	//simra.GetInstance().AddTouchListener(self)
 
 	// initialize sprites
 	self.initSprites()
@@ -67,6 +67,9 @@ func (self *CtrlTrial) initCtrlUp() {
 	simra.GetInstance().AddSprite("arrow.png",
 		image.Rect(0, 0, int(self.ctrlup.W), int(self.ctrlup.H)),
 		&self.ctrlup)
+
+	// add touch listener for sprite
+	self.ctrlup.AddTouchListener(self)
 }
 
 func (self *CtrlTrial) initCtrlDown() {
@@ -86,6 +89,9 @@ func (self *CtrlTrial) initCtrlDown() {
 	simra.GetInstance().AddSprite("arrow.png",
 		image.Rect(0, 0, int(self.ctrldown.W), int(self.ctrldown.H)),
 		&self.ctrldown)
+
+	// add touch listener for sprite
+	self.ctrlup.AddTouchListener(self)
 }
 
 var degree float32 = 0

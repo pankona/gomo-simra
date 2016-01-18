@@ -54,7 +54,7 @@ func (self *Simra) SetScene(driver Driver) {
 
 func (self *Simra) AddSprite(assetName string, rect image.Rectangle, s *Sprite) {
 	tex := peer.GetGLPeer().LoadTexture(assetName, rect)
-	peer.GetGLPeer().AddSprite(&s.PeerSprite, tex)
+	peer.GetSpriteContainer().AddSprite(&s.Sprite, tex)
 }
 
 func (self *Simra) SetDesiredScreenSize(w, h float32) {

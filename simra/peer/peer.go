@@ -19,26 +19,12 @@ var glPeer *GLPeer
 
 var startTime = time.Now()
 
-type PeerSprite struct {
-	W float32
-	H float32
-	X float32
-	Y float32
-	R float32
-}
-
-type peerSpriteContainer struct {
-	peerSprite *PeerSprite
-	node       *sprite.Node
-}
-
 type GLPeer struct {
-	glctx                gl.Context
-	images               *glutil.Images
-	fps                  *debug.FPS
-	eng                  sprite.Engine
-	scene                *sprite.Node
-	peerSpriteContainers []*peerSpriteContainer
+	glctx  gl.Context
+	images *glutil.Images
+	fps    *debug.FPS
+	eng    sprite.Engine
+	scene  *sprite.Node
 }
 
 func GetGLPeer() *GLPeer {
@@ -61,6 +47,7 @@ func (self *GLPeer) Initialize(in_glctx gl.Context) {
 	self.images = glutil.NewImages(in_glctx)
 	self.fps = debug.NewFPS(self.images)
 	self.initEng()
+
 	LogDebug("OUT")
 }
 
@@ -107,7 +94,7 @@ func (self *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.S
 
 func (self *GLPeer) Finalize() {
 	LogDebug("IN")
-	self.peerSpriteContainers = nil
+	GetSpriteContainer().RemoveSprites()
 	self.eng.Release()
 	self.fps.Release()
 	self.images.Release()
@@ -129,30 +116,20 @@ func (self *GLPeer) Update() {
 	self.fps.Draw(sz)
 }
 
-func (self *GLPeer) AddSprite(ps *PeerSprite, subTex sprite.SubTex) {
-	LogDebug("IN")
-	var psc peerSpriteContainer
-	psc.peerSprite = ps
-	psc.node = self.newNode()
-	self.peerSpriteContainers = append(self.peerSpriteContainers, &psc)
-	self.eng.SetSubTex(psc.node, subTex)
-	LogDebug("OUT")
-}
-
 func (self *GLPeer) Reset() {
 	LogDebug("IN")
-	self.peerSpriteContainers = nil
+	GetSpriteContainer().RemoveSprites()
 	self.initEng()
 	LogDebug("OUT")
 }
 
 func (self *GLPeer) apply() {
 
-	peerSpriteContainers := self.peerSpriteContainers
+	snpairs := GetSpriteContainer().spriteNodePairs
 
-	for i := range peerSpriteContainers {
-		psc := peerSpriteContainers[i]
-		if psc.peerSprite == nil {
+	for i := range snpairs {
+		sc := snpairs[i]
+		if sc.sprite == nil {
 			continue
 		}
 
@@ -161,21 +138,21 @@ func (self *GLPeer) apply() {
 			{0, 1, 0},
 		}
 		affine.Translate(affine,
-			psc.peerSprite.X*desiredScreenSize.scale-psc.peerSprite.W/2*desiredScreenSize.scale,
-			psc.peerSprite.Y*desiredScreenSize.scale-psc.peerSprite.H/2*desiredScreenSize.scale)
-		if psc.peerSprite.R != 0 {
+			sc.sprite.X*desiredScreenSize.scale-sc.sprite.W/2*desiredScreenSize.scale,
+			sc.sprite.Y*desiredScreenSize.scale-sc.sprite.H/2*desiredScreenSize.scale)
+		if sc.sprite.R != 0 {
 			affine.Translate(affine,
-				0.5*psc.peerSprite.W*desiredScreenSize.scale,
-				0.5*psc.peerSprite.H*desiredScreenSize.scale)
-			affine.Rotate(affine, psc.peerSprite.R)
+				0.5*sc.sprite.W*desiredScreenSize.scale,
+				0.5*sc.sprite.H*desiredScreenSize.scale)
+			affine.Rotate(affine, sc.sprite.R)
 			affine.Translate(affine,
-				-0.5*psc.peerSprite.W*desiredScreenSize.scale,
-				-0.5*psc.peerSprite.H*desiredScreenSize.scale)
+				-0.5*sc.sprite.W*desiredScreenSize.scale,
+				-0.5*sc.sprite.H*desiredScreenSize.scale)
 		}
 		affine.Scale(affine,
-			psc.peerSprite.W*desiredScreenSize.scale,
-			psc.peerSprite.H*desiredScreenSize.scale)
-		self.eng.SetTransform(psc.node, *affine)
+			sc.sprite.W*desiredScreenSize.scale,
+			sc.sprite.H*desiredScreenSize.scale)
+		self.eng.SetTransform(sc.node, *affine)
 	}
 }
 
