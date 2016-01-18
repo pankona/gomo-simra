@@ -1,6 +1,8 @@
 package simra
 
 import (
+	"image"
+
 	"github.com/pankona/gomo-simra/gomo"
 	"github.com/pankona/gomo-simra/peer"
 )
@@ -48,4 +50,25 @@ func (self *Simra) SetScene(driver Driver) {
 	self.driver = driver
 	driver.Initialize()
 	peer.LogDebug("OUT")
+}
+
+func (self *Simra) AddSprite(assetName string, rect image.Rectangle, s *Sprite) {
+	tex := peer.GetGLPeer().LoadTexture(assetName, rect)
+	peer.GetGLPeer().AddSprite(&s.PeerSprite, tex)
+}
+
+func (self *Simra) SetDesiredScreenSize(w, h float32) {
+	peer.SetDesiredScreenSize(w, h)
+}
+
+func (self *Simra) AddTouchListener(listener peer.TouchListener) {
+	peer.GetTouchPeer().AddTouchListener(listener)
+}
+
+func LogDebug(format string, a ...interface{}) {
+	peer.LogDebug(format, a...)
+}
+
+func LogError(format string, a ...interface{}) {
+	peer.LogError(format, a...)
 }

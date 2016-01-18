@@ -5,25 +5,25 @@ import (
 	"math"
 
 	"github.com/pankona/gomo-simra/examples/sample2/scene/config"
-	"github.com/pankona/gomo-simra/peer"
+	"github.com/pankona/gomo-simra/simra"
 )
 
 type CtrlTrial struct {
-	ball     peer.PeerSprite
-	ctrlup   peer.PeerSprite
-	ctrldown peer.PeerSprite
+	ball     simra.Sprite
+	ctrlup   simra.Sprite
+	ctrldown simra.Sprite
 }
 
 func (self *CtrlTrial) Initialize() {
-	peer.LogDebug("[IN]")
+	simra.LogDebug("[IN]")
 
-	peer.SetDesiredScreenSize(config.SCREEN_WIDTH, config.SCREEN_HEIGHT)
-	peer.GetTouchPeer().AddTouchListener(self)
+	simra.GetInstance().SetDesiredScreenSize(config.SCREEN_WIDTH, config.SCREEN_HEIGHT)
+	simra.GetInstance().AddTouchListener(self)
 
 	// initialize sprites
 	self.initSprites()
 
-	peer.LogDebug("[OUT]")
+	simra.LogDebug("[OUT]")
 }
 
 func (self *CtrlTrial) initSprites() {
@@ -41,9 +41,9 @@ func (self *CtrlTrial) initBall() {
 	self.ball.X = config.SCREEN_WIDTH / 2
 	self.ball.Y = config.SCREEN_HEIGHT / 2
 
-	tex := peer.GetGLPeer().LoadTexture("ball.png",
-		image.Rect(0, 0, int(self.ball.W), int(self.ball.H)))
-	peer.GetGLPeer().AddSprite(&self.ball, tex)
+	simra.GetInstance().AddSprite("ball.png",
+		image.Rect(0, 0, int(self.ball.W), int(self.ball.H)),
+		&self.ball)
 }
 
 const (
@@ -64,9 +64,9 @@ func (self *CtrlTrial) initCtrlUp() {
 			self.ctrlup.H - CTRL_MARGIN_BOTTOM - CTRL_MARGIN_BETWEEN
 
 	// add sprite to glpeer
-	tex := peer.GetGLPeer().LoadTexture("arrow.png",
-		image.Rect(0, 0, int(self.ctrlup.W), int(self.ctrlup.H)))
-	peer.GetGLPeer().AddSprite(&self.ctrlup, tex)
+	simra.GetInstance().AddSprite("arrow.png",
+		image.Rect(0, 0, int(self.ctrlup.W), int(self.ctrlup.H)),
+		&self.ctrlup)
 }
 
 func (self *CtrlTrial) initCtrlDown() {
@@ -83,9 +83,9 @@ func (self *CtrlTrial) initCtrlDown() {
 	self.ctrldown.R = math.Pi
 
 	// add sprite to glpeer
-	tex := peer.GetGLPeer().LoadTexture("arrow.png",
-		image.Rect(0, 0, int(self.ctrldown.W), int(self.ctrldown.H)))
-	peer.GetGLPeer().AddSprite(&self.ctrldown, tex)
+	simra.GetInstance().AddSprite("arrow.png",
+		image.Rect(0, 0, int(self.ctrldown.W), int(self.ctrldown.H)),
+		&self.ctrldown)
 }
 
 var degree float32 = 0
