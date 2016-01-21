@@ -18,7 +18,6 @@ func (self *CtrlTrial) Initialize() {
 	simra.LogDebug("[IN]")
 
 	simra.GetInstance().SetDesiredScreenSize(config.SCREEN_WIDTH, config.SCREEN_HEIGHT)
-	//simra.GetInstance().AddTouchListener(self)
 
 	// initialize sprites
 	self.initSprites()
@@ -91,7 +90,7 @@ func (self *CtrlTrial) initCtrlDown() {
 		&self.ctrldown)
 
 	// add touch listener for sprite
-	self.ctrlup.AddTouchListener(self)
+	//self.ctrlup.AddTouchListener(self)
 }
 
 var degree float32 = 0
@@ -105,10 +104,16 @@ func (self *CtrlTrial) Drive() {
 }
 
 func (self *CtrlTrial) OnTouchBegin(x, y float32) {
+	simra.LogDebug("[IN] hogehoge")
+	simra.LogDebug("[OUT] hogehoge")
 }
 
 func (self *CtrlTrial) OnTouchMove(x, y float32) {
+	simra.LogDebug("[IN]")
+	simra.LogDebug("[OUT]")
 }
 
 func (self *CtrlTrial) OnTouchEnd(x, y float32) {
+	simra.LogDebug("[IN]")
+	simra.LogDebug("[OUT]")
 }

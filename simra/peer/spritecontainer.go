@@ -15,6 +15,18 @@ type Sprite struct {
 	touchListeners []*TouchListener
 }
 
+func (self *Sprite) AddTouchListener(listener TouchListener) {
+	LogDebug("IN")
+	self.touchListeners = append(self.touchListeners, &listener)
+	LogDebug("OUT")
+}
+
+func (self *Sprite) RemoveAllTouchListener() {
+	LogDebug("IN")
+	self.touchListeners = nil
+	LogDebug("OUT")
+}
+
 type SpriteNodePair struct {
 	sprite *Sprite
 	node   *sprite.Node
@@ -34,7 +46,9 @@ func GetSpriteContainer() *SpriteContainer {
 }
 
 func (self *SpriteContainer) Initialize() {
+	LogDebug("IN")
 	GetTouchPeer().AddTouchListener(self)
+	LogDebug("OUT")
 }
 
 func (self *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex) {
@@ -50,18 +64,6 @@ func (self *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex) {
 func (self *SpriteContainer) RemoveSprites() {
 	LogDebug("IN")
 	self.spriteNodePairs = nil
-	LogDebug("OUT")
-}
-
-func (self *Sprite) AddTouchListener(listener TouchListener) {
-	LogDebug("IN")
-	self.touchListeners = append(self.touchListeners, &listener)
-	LogDebug("OUT")
-}
-
-func (self *Sprite) RemoveAllTouchListener() {
-	LogDebug("IN")
-	self.touchListeners = nil
 	LogDebug("OUT")
 }
 

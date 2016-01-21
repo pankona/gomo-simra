@@ -38,15 +38,17 @@ func (self *Simra) onStopped() {
 func (self *Simra) Start(onStart, onStop chan bool) {
 	peer.LogDebug("IN")
 	gomo.GetInstance().Initialize(onStart, onStop, self.onUpdate)
-	gomo.GetInstance().Start()
 	peer.GetSpriteContainer().Initialize()
+
+	gomo.GetInstance().Start()
 	peer.LogDebug("OUT")
 }
 
 func (self *Simra) SetScene(driver Driver) {
 	peer.LogDebug("IN")
 	peer.GetGLPeer().Reset()
-	peer.GetTouchPeer().RemoveAllTouchListener()
+	peer.GetSpriteContainer().RemoveSprites()
+	//peer.GetTouchPeer().RemoveAllTouchListener()
 
 	self.driver = driver
 	driver.Initialize()
