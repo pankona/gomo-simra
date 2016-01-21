@@ -39,6 +39,7 @@ func (self *Simra) Start(onStart, onStop chan bool) {
 	peer.LogDebug("IN")
 	gomo.GetInstance().Initialize(onStart, onStop, self.onUpdate)
 	gomo.GetInstance().Start()
+	peer.GetSpriteContainer().Initialize()
 	peer.LogDebug("OUT")
 }
 
