@@ -51,6 +51,24 @@ const (
 	CTRL_MARGIN_BETWEEN = 10
 )
 
+type CtrlUpTouchListener struct {
+}
+
+func (self *CtrlUpTouchListener) OnTouchBegin(x, y float32) {
+	simra.LogDebug("[IN] CtrlUp Begin!")
+	simra.LogDebug("[OUT]")
+}
+
+func (self *CtrlUpTouchListener) OnTouchMove(x, y float32) {
+	simra.LogDebug("[IN] CtrlUp Move!")
+	simra.LogDebug("[OUT]")
+}
+
+func (self *CtrlUpTouchListener) OnTouchEnd(x, y float32) {
+	simra.LogDebug("[IN] CtrlUp End")
+	simra.LogDebug("[OUT]")
+}
+
 func (self *CtrlTrial) initCtrlUp() {
 	// set size of CtrlUp
 	self.ctrlup.W = float32(120)
@@ -68,7 +86,25 @@ func (self *CtrlTrial) initCtrlUp() {
 		&self.ctrlup)
 
 	// add touch listener for sprite
-	self.ctrlup.AddTouchListener(self)
+	self.ctrlup.AddTouchListener(&CtrlUpTouchListener{})
+}
+
+type CtrlDownTouchListener struct {
+}
+
+func (self *CtrlDownTouchListener) OnTouchBegin(x, y float32) {
+	simra.LogDebug("[IN] CtrlDown Begin!")
+	simra.LogDebug("[OUT]")
+}
+
+func (self *CtrlDownTouchListener) OnTouchMove(x, y float32) {
+	simra.LogDebug("[IN] CtrlDown Move!")
+	simra.LogDebug("[OUT]")
+}
+
+func (self *CtrlDownTouchListener) OnTouchEnd(x, y float32) {
+	simra.LogDebug("[IN] CtrlDown End")
+	simra.LogDebug("[OUT]")
 }
 
 func (self *CtrlTrial) initCtrlDown() {
@@ -90,7 +126,7 @@ func (self *CtrlTrial) initCtrlDown() {
 		&self.ctrldown)
 
 	// add touch listener for sprite
-	//self.ctrlup.AddTouchListener(self)
+	self.ctrlup.AddTouchListener(&CtrlDownTouchListener{})
 }
 
 var degree float32 = 0
@@ -101,19 +137,4 @@ func (self *CtrlTrial) Drive() {
 		degree = 0
 	}
 	self.ball.R = float32(degree) * math.Pi / 180
-}
-
-func (self *CtrlTrial) OnTouchBegin(x, y float32) {
-	simra.LogDebug("[IN] hogehoge")
-	simra.LogDebug("[OUT] hogehoge")
-}
-
-func (self *CtrlTrial) OnTouchMove(x, y float32) {
-	simra.LogDebug("[IN]")
-	simra.LogDebug("[OUT]")
-}
-
-func (self *CtrlTrial) OnTouchEnd(x, y float32) {
-	simra.LogDebug("[IN]")
-	simra.LogDebug("[OUT]")
 }
