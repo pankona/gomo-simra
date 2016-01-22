@@ -67,6 +67,16 @@ func (self *SpriteContainer) RemoveSprites() {
 	LogDebug("OUT")
 }
 
+func isContain(sprite *Sprite, x, y float32) bool {
+	if x >= sprite.X &&
+		x <= sprite.X+sprite.W &&
+		y >= sprite.Y &&
+		y <= sprite.Y+sprite.H {
+		return true
+	}
+	return false
+}
+
 func (self *SpriteContainer) OnTouchBegin(x, y float32) {
 	LogDebug("IN")
 	for i := range self.spriteNodePairs {
@@ -77,8 +87,10 @@ func (self *SpriteContainer) OnTouchBegin(x, y float32) {
 				fmt.Println("listener is nil!")
 				continue
 			}
-			// TODO: check if the touched position is contained by sprite's bounding box
-			(*listener).OnTouchBegin(x, y)
+
+			if isContain(self.spriteNodePairs[i].sprite, x, y) {
+				(*listener).OnTouchBegin(x, y)
+			}
 		}
 	}
 	LogDebug("OUT")
@@ -93,8 +105,10 @@ func (self *SpriteContainer) OnTouchMove(x, y float32) {
 				fmt.Println("listener is nil!")
 				continue
 			}
-			// TODO: check if the touched position is contained by sprite's bounding box
-			(*listener).OnTouchMove(x, y)
+
+			if isContain(self.spriteNodePairs[i].sprite, x, y) {
+				(*listener).OnTouchMove(x, y)
+			}
 		}
 	}
 	LogDebug("OUT")
@@ -110,8 +124,10 @@ func (self *SpriteContainer) OnTouchEnd(x, y float32) {
 				fmt.Println("listener is nil!")
 				continue
 			}
-			// TODO: check if the touched position is contained by sprite's bounding box
-			(*listener).OnTouchEnd(x, y)
+
+			if isContain(self.spriteNodePairs[i].sprite, x, y) {
+				(*listener).OnTouchEnd(x, y)
+			}
 		}
 	}
 	LogDebug("OUT")
