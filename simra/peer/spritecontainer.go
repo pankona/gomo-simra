@@ -77,6 +77,7 @@ func (self *SpriteContainer) OnTouchBegin(x, y float32) {
 				fmt.Println("listener is nil!")
 				continue
 			}
+			// TODO: check if the touched position is contained by sprite's bounding box
 			(*listener).OnTouchBegin(x, y)
 		}
 	}
@@ -92,6 +93,7 @@ func (self *SpriteContainer) OnTouchMove(x, y float32) {
 				fmt.Println("listener is nil!")
 				continue
 			}
+			// TODO: check if the touched position is contained by sprite's bounding box
 			(*listener).OnTouchMove(x, y)
 		}
 	}
@@ -108,6 +110,7 @@ func (self *SpriteContainer) OnTouchEnd(x, y float32) {
 				fmt.Println("listener is nil!")
 				continue
 			}
+			// TODO: check if the touched position is contained by sprite's bounding box
 			(*listener).OnTouchEnd(x, y)
 		}
 	}
