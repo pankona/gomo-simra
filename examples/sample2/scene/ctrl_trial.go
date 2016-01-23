@@ -51,6 +51,7 @@ const (
 	CTRL_MARGIN_BETWEEN = 10
 )
 
+// CtrlUp
 type CtrlUpTouchListener struct {
 }
 
@@ -89,6 +90,7 @@ func (self *CtrlTrial) initCtrlUp() {
 	self.ctrlup.AddTouchListener(&CtrlUpTouchListener{})
 }
 
+// CtrlDown
 type CtrlDownTouchListener struct {
 }
 
@@ -126,7 +128,7 @@ func (self *CtrlTrial) initCtrlDown() {
 		&self.ctrldown)
 
 	// add touch listener for sprite
-	self.ctrlup.AddTouchListener(&CtrlDownTouchListener{})
+	self.ctrldown.AddTouchListener(&CtrlDownTouchListener{})
 }
 
 var degree float32 = 0
