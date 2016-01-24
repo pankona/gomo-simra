@@ -4,24 +4,24 @@ import (
 	"image"
 	"math"
 
-	"github.com/pankona/gomo-simra/peer"
+	"github.com/pankona/gomo-simra/simra"
 )
 
 type Stage1 struct {
-	gopher peer.PeerSprite
-	ball   peer.PeerSprite
+	gopher simra.Sprite
+	ball   simra.Sprite
 }
 
 func (self *Stage1) Initialize() {
-	peer.LogDebug("[IN]")
+	simra.LogDebug("[IN]")
 
-	peer.SetDesiredScreenSize(1080/2, 1920/2)
-	peer.GetTouchPeer().AddTouchListener(self)
+	simra.GetInstance().SetDesiredScreenSize(1080/2, 1920/2)
+	simra.GetInstance().AddTouchListener(self)
 
 	// initialize sprites
 	self.initSprite()
 
-	peer.LogDebug("[OUT]")
+	simra.LogDebug("[OUT]")
 }
 
 func (self *Stage1) initSprite() {
@@ -37,9 +37,9 @@ func (self *Stage1) initGopher() {
 	self.gopher.X = 1080 / 2 / 2
 	self.gopher.Y = 1920 / 2 / 2
 
-	tex_gopher := peer.GetGLPeer().LoadTexture("waza-gophers.jpeg",
-		image.Rect(152, 10, 152+int(self.gopher.W), 10+int(self.gopher.H)))
-	peer.GetGLPeer().AddSprite(&self.gopher, tex_gopher)
+	simra.GetInstance().AddSprite("waza-gophers.jpeg",
+		image.Rect(152, 10, 152+int(self.gopher.W), 10+int(self.gopher.H)),
+		&self.gopher)
 }
 
 var degree float32 = 0

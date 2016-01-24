@@ -3,24 +3,23 @@ package scene
 import (
 	"image"
 
-	"github.com/pankona/gomo-simra/peer"
 	"github.com/pankona/gomo-simra/simra"
 )
 
 type Title struct {
-	background peer.PeerSprite
+	background simra.Sprite
 }
 
 func (self *Title) Initialize() {
-	peer.LogDebug("[IN]")
+	simra.LogDebug("[IN]")
 
-	peer.SetDesiredScreenSize(1080/2, 1920/2)
-	peer.GetTouchPeer().AddTouchListener(self)
+	simra.GetInstance().SetDesiredScreenSize(1080/2, 1920/2)
+	simra.GetInstance().AddTouchListener(self)
 
 	// initialize sprites
 	self.initialize()
 
-	peer.LogDebug("[OUT]")
+	simra.LogDebug("[OUT]")
 }
 
 func (self *Title) initialize() {
@@ -32,9 +31,9 @@ func (self *Title) initialize() {
 	self.background.X = 1080 / 2 / 2
 	self.background.Y = 1920 / 2 / 2
 
-	tex_background := peer.GetGLPeer().LoadTexture("title.png",
-		image.Rect(0, 0, int(self.background.W), int(self.background.H)))
-	peer.GetGLPeer().AddSprite(&self.background, tex_background)
+	simra.GetInstance().AddSprite("title.png",
+		image.Rect(0, 0, int(self.background.W), int(self.background.H)),
+		&self.background)
 }
 
 func (self *Title) Drive() {

@@ -3,37 +3,39 @@ package scene
 import (
 	"image"
 
-	"github.com/pankona/gomo-simra/peer"
+	"github.com/pankona/gomo-simra/examples/sample2/scene/config"
+	"github.com/pankona/gomo-simra/simra"
 )
 
 type Title struct {
-	background peer.PeerSprite
+	background simra.Sprite
 }
 
 func (self *Title) Initialize() {
-	peer.LogDebug("[IN]")
+	simra.LogDebug("[IN]")
 
-	peer.SetDesiredScreenSize(960, 540)
-	peer.GetTouchPeer().AddTouchListener(self)
+	simra.GetInstance().SetDesiredScreenSize(config.SCREEN_WIDTH, config.SCREEN_HEIGHT)
 
 	// initialize sprites
 	self.initialize()
 
-	peer.LogDebug("[OUT]")
+	simra.LogDebug("[OUT]")
 }
 
 func (self *Title) initialize() {
 	// add background sprite
-	self.background.W = float32(960)
-	self.background.H = float32(540)
+	self.background.W = float32(config.SCREEN_WIDTH)
+	self.background.H = float32(config.SCREEN_HEIGHT)
 
 	// put center of screen
-	self.background.X = 960 / 2
-	self.background.Y = 540 / 2
+	self.background.X = config.SCREEN_WIDTH / 2
+	self.background.Y = config.SCREEN_HEIGHT / 2
 
-	tex_background := peer.GetGLPeer().LoadTexture("title.png",
-		image.Rect(0, 0, int(self.background.W), int(self.background.H)))
-	peer.GetGLPeer().AddSprite(&self.background, tex_background)
+	simra.GetInstance().AddSprite("title.png",
+		image.Rect(0, 0, int(self.background.W), int(self.background.H)),
+		&self.background)
+
+	self.background.AddTouchListener(self)
 }
 
 func (self *Title) Drive() {
@@ -47,5 +49,5 @@ func (self *Title) OnTouchMove(x, y float32) {
 
 func (self *Title) OnTouchEnd(x, y float32) {
 	// scene end. go to next scene
-	//simra.GetInstance().SetScene(&Stage1{})
+	simra.GetInstance().SetScene(&CtrlTrial{})
 }

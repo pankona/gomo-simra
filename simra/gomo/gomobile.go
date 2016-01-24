@@ -3,7 +3,7 @@
 package gomo
 
 import (
-	"github.com/pankona/gomo-simra/peer"
+	"github.com/pankona/gomo-simra/simra/peer"
 
 	_ "image/jpeg"
 	_ "image/png"
