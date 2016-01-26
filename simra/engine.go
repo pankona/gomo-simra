@@ -48,7 +48,6 @@ func (self *Simra) SetScene(driver Driver) {
 	peer.LogDebug("IN")
 	peer.GetGLPeer().Reset()
 	peer.GetSpriteContainer().RemoveSprites()
-	//peer.GetTouchPeer().RemoveAllTouchListener()
 
 	self.driver = driver
 	driver.Initialize()

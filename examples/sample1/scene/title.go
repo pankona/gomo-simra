@@ -14,7 +14,6 @@ func (self *Title) Initialize() {
 	simra.LogDebug("[IN]")
 
 	simra.GetInstance().SetDesiredScreenSize(1080/2, 1920/2)
-	simra.GetInstance().AddTouchListener(self)
 
 	// initialize sprites
 	self.initialize()
@@ -34,6 +33,8 @@ func (self *Title) initialize() {
 	simra.GetInstance().AddSprite("title.png",
 		image.Rect(0, 0, int(self.background.W), int(self.background.H)),
 		&self.background)
+
+	self.background.AddTouchListener(self)
 }
 
 func (self *Title) Drive() {
