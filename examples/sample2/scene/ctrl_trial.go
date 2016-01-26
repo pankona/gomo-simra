@@ -27,8 +27,8 @@ func (self *CtrlTrial) Initialize() {
 
 func (self *CtrlTrial) initSprites() {
 	self.initBall()
-	self.initCtrlUp()
 	self.initCtrlDown()
+	self.initCtrlUp()
 }
 
 func (self *CtrlTrial) initBall() {
@@ -76,10 +76,8 @@ func (self *CtrlTrial) initCtrlUp() {
 	self.ctrlup.H = float32(120)
 
 	// put CtrlUp on left bottom
-	self.ctrlup.X = (self.ctrlup.W / 2) + 10
-	self.ctrlup.Y =
-		config.SCREEN_HEIGHT - (self.ctrlup.H / 2) -
-			self.ctrlup.H - CTRL_MARGIN_BOTTOM - CTRL_MARGIN_BETWEEN
+	self.ctrlup.X = (self.ctrlup.W / 2) + CTRL_MARGIN_LEFT
+	self.ctrlup.Y = CTRL_MARGIN_BOTTOM + self.ctrldown.H + CTRL_MARGIN_BETWEEN + (self.ctrlup.H / 2)
 
 	// add sprite to glpeer
 	simra.GetInstance().AddSprite("arrow.png",
@@ -115,9 +113,8 @@ func (self *CtrlTrial) initCtrlDown() {
 	self.ctrldown.H = float32(120)
 
 	// put CtrlDown on left bottom
-	self.ctrldown.X = (self.ctrldown.W / 2) + 10
-	self.ctrldown.Y =
-		config.SCREEN_HEIGHT - (self.ctrldown.H / 2) - CTRL_MARGIN_BOTTOM
+	self.ctrldown.X = (self.ctrldown.W / 2) + CTRL_MARGIN_LEFT
+	self.ctrldown.Y = CTRL_MARGIN_BOTTOM + (self.ctrldown.H / 2)
 
 	// rotate arrow to indicate down control
 	self.ctrldown.R = math.Pi
