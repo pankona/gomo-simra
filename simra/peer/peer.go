@@ -139,7 +139,7 @@ func (self *GLPeer) apply() {
 		}
 		affine.Translate(affine,
 			sc.sprite.X*desiredScreenSize.scale-sc.sprite.W/2*desiredScreenSize.scale,
-			sc.sprite.Y*desiredScreenSize.scale-sc.sprite.H/2*desiredScreenSize.scale)
+			(desiredScreenSize.height-sc.sprite.Y)*desiredScreenSize.scale-sc.sprite.H/2*desiredScreenSize.scale)
 		if sc.sprite.R != 0 {
 			affine.Translate(affine,
 				0.5*sc.sprite.W*desiredScreenSize.scale,

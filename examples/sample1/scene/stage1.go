@@ -16,7 +16,6 @@ func (self *Stage1) Initialize() {
 	simra.LogDebug("[IN]")
 
 	simra.GetInstance().SetDesiredScreenSize(1080/2, 1920/2)
-	simra.GetInstance().AddTouchListener(self)
 
 	// initialize sprites
 	self.initSprite()
@@ -40,6 +39,8 @@ func (self *Stage1) initGopher() {
 	simra.GetInstance().AddSprite("waza-gophers.jpeg",
 		image.Rect(152, 10, 152+int(self.gopher.W), 10+int(self.gopher.H)),
 		&self.gopher)
+
+	self.gopher.AddTouchListener(self)
 }
 
 var degree float32 = 0
