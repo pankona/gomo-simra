@@ -28,6 +28,8 @@ func (self *CtrlTrial) Initialize() {
 
 	simra.GetInstance().SetDesiredScreenSize(config.SCREEN_WIDTH, config.SCREEN_HEIGHT)
 
+	// TODO: add global touch listener to catch touch end event
+
 	// initialize sprites
 	self.initSprites()
 
