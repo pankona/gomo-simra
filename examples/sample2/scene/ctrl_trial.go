@@ -68,8 +68,8 @@ type CtrlUpTouchListener struct {
 func (self *CtrlUpTouchListener) OnTouchBegin(x, y float32) {
 	simra.LogDebug("[IN] CtrlUp Begin!")
 
-	// TODO: update buttonState
-	//ctrl := self.parent
+	ctrl := self.parent
+	ctrl.buttonState = CTRL_UP
 
 	simra.LogDebug("[OUT]")
 }
@@ -82,8 +82,8 @@ func (self *CtrlUpTouchListener) OnTouchMove(x, y float32) {
 func (self *CtrlUpTouchListener) OnTouchEnd(x, y float32) {
 	simra.LogDebug("[IN] CtrlUp End")
 
-	// TODO: update buttonState
-	//ctrl := self.parent
+	ctrl := self.parent
+	ctrl.buttonState = CTRL_NOP
 
 	simra.LogDebug("[OUT]")
 }
@@ -116,8 +116,8 @@ type CtrlDownTouchListener struct {
 func (self *CtrlDownTouchListener) OnTouchBegin(x, y float32) {
 	simra.LogDebug("[IN] CtrlDown Begin!")
 
-	// TODO: update buttonState
-	//ctrl := self.parent
+	ctrl := self.parent
+	ctrl.buttonState = CTRL_DOWN
 
 	simra.LogDebug("[OUT]")
 }
@@ -130,8 +130,8 @@ func (self *CtrlDownTouchListener) OnTouchMove(x, y float32) {
 func (self *CtrlDownTouchListener) OnTouchEnd(x, y float32) {
 	simra.LogDebug("[IN] CtrlDown End")
 
-	// TODO: update buttonState
-	//ctrl := self.parent
+	ctrl := self.parent
+	ctrl.buttonState = CTRL_NOP
 
 	simra.LogDebug("[OUT]")
 }
@@ -167,7 +167,12 @@ func (self *CtrlTrial) Drive() {
 		degree = 0
 	}
 
-	// TODO: move ball according to buttonState
+	switch self.buttonState {
+	case CTRL_UP:
+		self.ball.Y += 1
+	case CTRL_DOWN:
+		self.ball.Y -= 1
+	}
 
 	self.ball.R = float32(degree) * math.Pi / 180
 }
