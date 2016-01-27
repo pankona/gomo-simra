@@ -12,7 +12,16 @@ type CtrlTrial struct {
 	ball     simra.Sprite
 	ctrlup   simra.Sprite
 	ctrldown simra.Sprite
+
+	// buttonState represents which ctrl is pressed (or no ctrl pressed)
+	buttonState int
 }
+
+const (
+	CTRL_NOP = iota
+	CTRL_UP
+	CTRL_DOWN
+)
 
 func (self *CtrlTrial) Initialize() {
 	simra.LogDebug("[IN]")
@@ -53,10 +62,15 @@ const (
 
 // CtrlUp
 type CtrlUpTouchListener struct {
+	parent *CtrlTrial
 }
 
 func (self *CtrlUpTouchListener) OnTouchBegin(x, y float32) {
 	simra.LogDebug("[IN] CtrlUp Begin!")
+
+	// TODO: update buttonState
+	//ctrl := self.parent
+
 	simra.LogDebug("[OUT]")
 }
 
@@ -67,6 +81,10 @@ func (self *CtrlUpTouchListener) OnTouchMove(x, y float32) {
 
 func (self *CtrlUpTouchListener) OnTouchEnd(x, y float32) {
 	simra.LogDebug("[IN] CtrlUp End")
+
+	// TODO: update buttonState
+	//ctrl := self.parent
+
 	simra.LogDebug("[OUT]")
 }
 
@@ -85,15 +103,22 @@ func (self *CtrlTrial) initCtrlUp() {
 		&self.ctrlup)
 
 	// add touch listener for sprite
-	self.ctrlup.AddTouchListener(&CtrlUpTouchListener{})
+	ctrlup := &CtrlUpTouchListener{}
+	self.ctrlup.AddTouchListener(ctrlup)
+	ctrlup.parent = self
 }
 
 // CtrlDown
 type CtrlDownTouchListener struct {
+	parent *CtrlTrial
 }
 
 func (self *CtrlDownTouchListener) OnTouchBegin(x, y float32) {
 	simra.LogDebug("[IN] CtrlDown Begin!")
+
+	// TODO: update buttonState
+	//ctrl := self.parent
+
 	simra.LogDebug("[OUT]")
 }
 
@@ -104,6 +129,10 @@ func (self *CtrlDownTouchListener) OnTouchMove(x, y float32) {
 
 func (self *CtrlDownTouchListener) OnTouchEnd(x, y float32) {
 	simra.LogDebug("[IN] CtrlDown End")
+
+	// TODO: update buttonState
+	//ctrl := self.parent
+
 	simra.LogDebug("[OUT]")
 }
 
@@ -125,7 +154,9 @@ func (self *CtrlTrial) initCtrlDown() {
 		&self.ctrldown)
 
 	// add touch listener for sprite
-	self.ctrldown.AddTouchListener(&CtrlDownTouchListener{})
+	ctrldown := &CtrlDownTouchListener{}
+	self.ctrldown.AddTouchListener(ctrldown)
+	ctrldown.parent = self
 }
 
 var degree float32 = 0
@@ -135,5 +166,8 @@ func (self *CtrlTrial) Drive() {
 	if degree >= 360 {
 		degree = 0
 	}
+
+	// TODO: move ball according to buttonState
+
 	self.ball.R = float32(degree) * math.Pi / 180
 }
