@@ -34,6 +34,23 @@ func (self *TouchPeer) AddTouchListener(listener TouchListener) {
 	LogDebug("OUT")
 }
 
+func remove(listeners []*TouchListener, remove *TouchListener) []*TouchListener {
+	result := []*TouchListener{}
+
+	for _, listener := range listeners {
+		if listener != remove {
+			result = append(result, listener)
+		}
+	}
+	return result
+}
+
+func (self *TouchPeer) RemoveTouchListener(listener TouchListener) {
+	LogDebug("IN")
+	self.touchListeners = remove(self.touchListeners, &listener)
+	LogDebug("OUT")
+}
+
 func (self *TouchPeer) RemoveAllTouchListener() {
 	LogDebug("IN")
 	self.touchListeners = nil
