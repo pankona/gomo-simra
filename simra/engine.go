@@ -67,6 +67,10 @@ func (self *Simra) AddTouchListener(listener peer.TouchListener) {
 	peer.GetTouchPeer().AddTouchListener(listener)
 }
 
+func (self *Simra) RemoveTouchListener(listener peer.TouchListener) {
+	peer.GetTouchPeer().RemoveTouchListener(listener)
+}
+
 func LogDebug(format string, a ...interface{}) {
 	peer.LogDebug(format, a...)
 }

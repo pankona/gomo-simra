@@ -28,12 +28,29 @@ func (self *CtrlTrial) Initialize() {
 
 	simra.GetInstance().SetDesiredScreenSize(config.SCREEN_WIDTH, config.SCREEN_HEIGHT)
 
-	// TODO: add global touch listener to catch touch end event
+	// add global touch listener to catch touch end event
+	simra.GetInstance().AddTouchListener(self)
+
+	// TODO: when goes to next scene, remove global touch listener
+	// simra.GetInstance().RemoveTouchListener(self)
 
 	// initialize sprites
 	self.initSprites()
 
 	simra.LogDebug("[OUT]")
+}
+
+func (self *CtrlTrial) OnTouchBegin(x, y float32) {
+	// nop
+}
+
+func (self *CtrlTrial) OnTouchMove(x, y float32) {
+	// nop
+}
+
+func (self *CtrlTrial) OnTouchEnd(x, y float32) {
+	// nop
+	self.buttonState = CTRL_NOP
 }
 
 func (self *CtrlTrial) initSprites() {
@@ -78,6 +95,10 @@ func (self *CtrlUpTouchListener) OnTouchBegin(x, y float32) {
 
 func (self *CtrlUpTouchListener) OnTouchMove(x, y float32) {
 	simra.LogDebug("[IN] CtrlUp Move!")
+
+	ctrl := self.parent
+	ctrl.buttonState = CTRL_UP
+
 	simra.LogDebug("[OUT]")
 }
 
@@ -126,6 +147,10 @@ func (self *CtrlDownTouchListener) OnTouchBegin(x, y float32) {
 
 func (self *CtrlDownTouchListener) OnTouchMove(x, y float32) {
 	simra.LogDebug("[IN] CtrlDown Move!")
+
+	ctrl := self.parent
+	ctrl.buttonState = CTRL_DOWN
+
 	simra.LogDebug("[OUT]")
 }
 
