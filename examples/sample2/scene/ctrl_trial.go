@@ -12,9 +12,11 @@ type CtrlTrial struct {
 	ball     simra.Sprite
 	ctrlup   simra.Sprite
 	ctrldown simra.Sprite
-
 	// buttonState represents which ctrl is pressed (or no ctrl pressed)
 	buttonState int
+
+	buttonRed  simra.Sprite
+	buttonBlue simra.Sprite
 }
 
 const (
@@ -57,6 +59,8 @@ func (self *CtrlTrial) initSprites() {
 	self.initBall()
 	self.initCtrlDown()
 	self.initCtrlUp()
+	self.initButtonBlue()
+	self.initButtonRed()
 }
 
 func (self *CtrlTrial) initBall() {
@@ -74,9 +78,12 @@ func (self *CtrlTrial) initBall() {
 }
 
 const (
-	CTRL_MARGIN_LEFT    = 10
-	CTRL_MARGIN_BOTTOM  = 10
-	CTRL_MARGIN_BETWEEN = 10
+	CTRL_MARGIN_LEFT      = 10
+	CTRL_MARGIN_BOTTOM    = 10
+	CTRL_MARGIN_BETWEEN   = 10
+	BUTTON_MARGIN_RIGHT   = 20
+	BUTTON_MARGIN_BOTTOM  = 20
+	BUTTON_MARGIN_BETWEEN = 10
 )
 
 // CtrlUp
@@ -184,6 +191,38 @@ func (self *CtrlTrial) initCtrlDown() {
 	ctrldown := &CtrlDownTouchListener{}
 	self.ctrldown.AddTouchListener(ctrldown)
 	ctrldown.parent = self
+}
+
+func (self *CtrlTrial) initButtonBlue() {
+	// set size of button blue
+	self.buttonBlue.W = float32(80)
+	self.buttonBlue.H = float32(80)
+
+	// put button red on right bottom
+	self.buttonBlue.X = config.SCREEN_WIDTH - BUTTON_MARGIN_RIGHT - self.buttonBlue.W/2
+	self.buttonBlue.Y = BUTTON_MARGIN_BOTTOM + (80) + BUTTON_MARGIN_BETWEEN + self.buttonBlue.W/2
+
+	// add sprite to glpeer
+	simra.GetInstance().AddSprite("blue_circle.png",
+		image.Rect(0, 0, int(self.buttonBlue.W), int(self.buttonBlue.H)),
+		&self.buttonBlue)
+
+}
+
+func (self *CtrlTrial) initButtonRed() {
+	// set size of button red
+	self.buttonRed.W = float32(80)
+	self.buttonRed.H = float32(80)
+
+	// put button red on right bottom
+	self.buttonRed.X = config.SCREEN_WIDTH - BUTTON_MARGIN_RIGHT - self.buttonBlue.W -
+		BUTTON_MARGIN_BETWEEN - self.buttonRed.W/2
+	self.buttonRed.Y = BUTTON_MARGIN_BOTTOM + (self.buttonRed.H / 2)
+
+	// add sprite to glpeer
+	simra.GetInstance().AddSprite("red_circle.png",
+		image.Rect(0, 0, int(self.buttonRed.W), int(self.buttonRed.H)),
+		&self.buttonRed)
 }
 
 var degree float32 = 0
