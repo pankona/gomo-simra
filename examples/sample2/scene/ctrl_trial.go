@@ -15,8 +15,9 @@ type CtrlTrial struct {
 	// buttonState represents which ctrl is pressed (or no ctrl pressed)
 	buttonState int
 
-	buttonRed  simra.Sprite
-	buttonBlue simra.Sprite
+	buttonRed      simra.Sprite
+	buttonBlue     simra.Sprite
+	buttonReplaced bool
 }
 
 const (
@@ -38,6 +39,7 @@ func (self *CtrlTrial) Initialize() {
 
 	// initialize sprites
 	self.initSprites()
+	self.buttonReplaced = false
 
 	simra.LogDebug("[OUT]")
 }
@@ -193,7 +195,57 @@ func (self *CtrlTrial) initCtrlDown() {
 	ctrldown.parent = self
 }
 
+func (self *CtrlTrial) replaceButtonColor() {
+	simra.LogDebug("IN")
+	// red changes to blue
+	self.buttonRed.ReplaceTexture("blue_circle.png",
+		image.Rect(0, 0, int(self.buttonBlue.W), int(self.buttonBlue.H)))
+	// blue changes to red
+	self.buttonBlue.ReplaceTexture("red_circle.png",
+		image.Rect(0, 0, int(self.buttonRed.W), int(self.buttonRed.H)))
+
+	self.buttonReplaced = true
+	simra.LogDebug("OUT")
+}
+
+func (self *CtrlTrial) originalButtonColor() {
+	simra.LogDebug("IN")
+	// set red button to buttonRed
+	self.buttonRed.ReplaceTexture("red_circle.png",
+		image.Rect(0, 0, int(self.buttonBlue.W), int(self.buttonBlue.H)))
+	// set blue button to buttonBlue
+	self.buttonBlue.ReplaceTexture("blue_circle.png",
+		image.Rect(0, 0, int(self.buttonRed.W), int(self.buttonRed.H)))
+
+	self.buttonReplaced = false
+	simra.LogDebug("OUT")
+}
+
+// button blue
+type ButtonBlueTouchListener struct {
+	parent *CtrlTrial
+}
+
+func (self *ButtonBlueTouchListener) OnTouchBegin(x, y float32) {
+	simra.LogDebug("IN")
+	if self.parent.buttonReplaced {
+		self.parent.originalButtonColor()
+	} else {
+		self.parent.replaceButtonColor()
+	}
+	simra.LogDebug("OUT")
+}
+
+func (self *ButtonBlueTouchListener) OnTouchMove(x, y float32) {
+	// nop
+}
+
+func (self *ButtonBlueTouchListener) OnTouchEnd(x, y float32) {
+	// nop
+}
+
 func (self *CtrlTrial) initButtonBlue() {
+	simra.LogDebug("IN")
 	// set size of button blue
 	self.buttonBlue.W = float32(80)
 	self.buttonBlue.H = float32(80)
@@ -207,6 +259,32 @@ func (self *CtrlTrial) initButtonBlue() {
 		image.Rect(0, 0, int(self.buttonBlue.W), int(self.buttonBlue.H)),
 		&self.buttonBlue)
 
+	// add touch listener for sprite
+	listener := &ButtonBlueTouchListener{}
+	self.buttonBlue.AddTouchListener(listener)
+	listener.parent = self
+	simra.LogDebug("OUT")
+}
+
+// button red
+type ButtonRedTouchListener struct {
+	parent *CtrlTrial
+}
+
+func (self *ButtonRedTouchListener) OnTouchBegin(x, y float32) {
+	simra.LogDebug("IN")
+	if self.parent.buttonReplaced {
+		self.parent.originalButtonColor()
+	} else {
+		self.parent.replaceButtonColor()
+	}
+	simra.LogDebug("OUT")
+}
+func (self *ButtonRedTouchListener) OnTouchMove(x, y float32) {
+	// nop
+}
+func (self *ButtonRedTouchListener) OnTouchEnd(x, y float32) {
+	// nop
 }
 
 func (self *CtrlTrial) initButtonRed() {
@@ -223,6 +301,11 @@ func (self *CtrlTrial) initButtonRed() {
 	simra.GetInstance().AddSprite("red_circle.png",
 		image.Rect(0, 0, int(self.buttonRed.W), int(self.buttonRed.H)),
 		&self.buttonRed)
+
+	// add touch listener for sprite
+	listener := &ButtonRedTouchListener{}
+	self.buttonRed.AddTouchListener(listener)
+	listener.parent = self
 }
 
 var degree float32 = 0
