@@ -67,6 +67,17 @@ func (self *SpriteContainer) RemoveSprites() {
 	LogDebug("OUT")
 }
 
+func (self *SpriteContainer) ReplaceTexture(sprite *Sprite, subTex sprite.SubTex) {
+	LogDebug("IN")
+	for i := range self.spriteNodePairs {
+		if self.spriteNodePairs[i].sprite == sprite {
+			node := self.spriteNodePairs[i].node
+			GetGLPeer().eng.SetSubTex(node, subTex)
+		}
+	}
+	LogDebug("OUT")
+}
+
 func isContained(sprite *Sprite, x, y float32) bool {
 	LogDebug("IN")
 	if x >= sprite.X-sprite.W/2 &&
