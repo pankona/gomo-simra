@@ -233,6 +233,8 @@ func (self *ButtonBlueTouchListener) OnTouchBegin(x, y float32) {
 	} else {
 		self.parent.replaceButtonColor()
 	}
+
+	simra.GetInstance().RemoveSprite(&self.parent.ball)
 	simra.LogDebug("OUT")
 }
 

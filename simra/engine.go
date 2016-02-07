@@ -59,6 +59,10 @@ func (self *Simra) AddSprite(assetName string, rect image.Rectangle, s *Sprite) 
 	peer.GetSpriteContainer().AddSprite(&s.Sprite, tex)
 }
 
+func (self *Simra) RemoveSprite(s *Sprite) {
+	peer.GetSpriteContainer().RemoveSprite(&s.Sprite)
+}
+
 func (self *Simra) SetDesiredScreenSize(w, h float32) {
 	peer.SetDesiredScreenSize(w, h)
 }

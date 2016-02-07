@@ -61,6 +61,21 @@ func (self *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex) {
 	LogDebug("OUT")
 }
 
+func (self *SpriteContainer) RemoveSprite(remove *Sprite) {
+	result := []*SpriteNodePair{}
+	for _, sn := range self.spriteNodePairs {
+		if sn.sprite != remove {
+			result = append(result, sn)
+		} else {
+			// eng.Unregister doesn't work
+			// since it is not implemented by gomobile.
+			// TODO: This must cause memory leak!
+			//GetGLPeer().eng.Unregister(sn.node)
+		}
+	}
+	self.spriteNodePairs = result
+}
+
 func (self *SpriteContainer) RemoveSprites() {
 	LogDebug("IN")
 	self.spriteNodePairs = nil
