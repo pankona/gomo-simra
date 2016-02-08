@@ -69,7 +69,7 @@ func (self *SpriteContainer) RemoveSprite(remove *Sprite) {
 		} else {
 			// eng.Unregister doesn't work
 			// since it is not implemented by gomobile.
-			// TODO: This must cause memory leak!
+			// TODO: call this after gomobile's implement.
 			//GetGLPeer().eng.Unregister(sn.node)
 		}
 	}
