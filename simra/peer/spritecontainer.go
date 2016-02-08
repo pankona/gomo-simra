@@ -30,6 +30,7 @@ func (self *Sprite) RemoveAllTouchListener() {
 type SpriteNodePair struct {
 	sprite *Sprite
 	node   *sprite.Node
+	inuse  bool
 }
 
 type SpriteContainer struct {
@@ -53,27 +54,35 @@ func (self *SpriteContainer) Initialize() {
 
 func (self *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex) {
 	LogDebug("IN")
-	var sn SpriteNodePair
+	var sn *SpriteNodePair = nil
+	for _, snpair := range self.spriteNodePairs {
+		if !snpair.inuse {
+			sn = snpair
+		}
+	}
+
+	if sn == nil {
+		sn = &SpriteNodePair{}
+	}
+
 	sn.sprite = s
-	sn.node = GetGLPeer().newNode()
-	self.spriteNodePairs = append(self.spriteNodePairs, &sn)
+	if sn.node == nil {
+		sn.node = GetGLPeer().newNode()
+	}
+	sn.inuse = true
+	self.spriteNodePairs = append(self.spriteNodePairs, sn)
 	GetGLPeer().eng.SetSubTex(sn.node, subTex)
 	LogDebug("OUT")
 }
 
 func (self *SpriteContainer) RemoveSprite(remove *Sprite) {
-	result := []*SpriteNodePair{}
+	LogDebug("IN")
 	for _, sn := range self.spriteNodePairs {
-		if sn.sprite != remove {
-			result = append(result, sn)
-		} else {
-			// eng.Unregister doesn't work
-			// since it is not implemented by gomobile.
-			// TODO: call this after gomobile's implement.
-			//GetGLPeer().eng.Unregister(sn.node)
+		if sn.sprite == remove {
+			sn.inuse = false
 		}
 	}
-	self.spriteNodePairs = result
+	LogDebug("OUT")
 }
 
 func (self *SpriteContainer) RemoveSprites() {

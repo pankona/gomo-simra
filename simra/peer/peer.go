@@ -129,7 +129,7 @@ func (self *GLPeer) apply() {
 
 	for i := range snpairs {
 		sc := snpairs[i]
-		if sc.sprite == nil {
+		if sc.sprite == nil || !sc.inuse {
 			continue
 		}
 
