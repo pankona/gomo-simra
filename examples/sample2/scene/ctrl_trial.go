@@ -280,6 +280,9 @@ func (self *ButtonRedTouchListener) OnTouchBegin(x, y float32) {
 	} else {
 		self.parent.replaceButtonColor()
 	}
+	simra.GetInstance().AddSprite("ball.png",
+		image.Rect(0, 0, int(self.parent.ball.W), int(self.parent.ball.H)),
+		&self.parent.ball)
 	simra.LogDebug("OUT")
 }
 func (self *ButtonRedTouchListener) OnTouchMove(x, y float32) {

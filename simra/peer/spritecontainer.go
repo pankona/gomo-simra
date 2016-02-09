@@ -54,7 +54,14 @@ func (self *SpriteContainer) Initialize() {
 
 func (self *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex) {
 	LogDebug("IN")
-	var sn *SpriteNodePair = nil
+	for _, snpair := range self.spriteNodePairs {
+		if s == snpair.sprite && snpair.inuse {
+			LogDebug("this sprite is already added and currently still being available.")
+			return
+		}
+	}
+
+	var sn *SpriteNodePair
 	for _, snpair := range self.spriteNodePairs {
 		if !snpair.inuse {
 			sn = snpair
@@ -68,9 +75,11 @@ func (self *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex) {
 	sn.sprite = s
 	if sn.node == nil {
 		sn.node = GetGLPeer().newNode()
+		self.spriteNodePairs = append(self.spriteNodePairs, sn)
+	} else {
+		GetGLPeer().appendChild(sn.node)
 	}
 	sn.inuse = true
-	self.spriteNodePairs = append(self.spriteNodePairs, sn)
 	GetGLPeer().eng.SetSubTex(sn.node, subTex)
 	LogDebug("OUT")
 }
@@ -79,7 +88,12 @@ func (self *SpriteContainer) RemoveSprite(remove *Sprite) {
 	LogDebug("IN")
 	for _, sn := range self.spriteNodePairs {
 		if sn.sprite == remove {
+			if !sn.inuse {
+				LogDebug("already removed.")
+				return
+			}
 			sn.inuse = false
+			GetGLPeer().removeChild(sn.node)
 		}
 	}
 	LogDebug("OUT")
