@@ -30,6 +30,7 @@ func (self *Sprite) RemoveAllTouchListener() {
 type SpriteNodePair struct {
 	sprite *Sprite
 	node   *sprite.Node
+	inuse  bool
 }
 
 type SpriteContainer struct {
@@ -53,11 +54,48 @@ func (self *SpriteContainer) Initialize() {
 
 func (self *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex) {
 	LogDebug("IN")
-	var sn SpriteNodePair
+	for _, snpair := range self.spriteNodePairs {
+		if s == snpair.sprite && snpair.inuse {
+			LogDebug("this sprite is already added and currently still being available.")
+			return
+		}
+	}
+
+	var sn *SpriteNodePair
+	for _, snpair := range self.spriteNodePairs {
+		if !snpair.inuse {
+			sn = snpair
+		}
+	}
+
+	if sn == nil {
+		sn = &SpriteNodePair{}
+	}
+
 	sn.sprite = s
-	sn.node = GetGLPeer().newNode()
-	self.spriteNodePairs = append(self.spriteNodePairs, &sn)
+	if sn.node == nil {
+		sn.node = GetGLPeer().newNode()
+		self.spriteNodePairs = append(self.spriteNodePairs, sn)
+	} else {
+		GetGLPeer().appendChild(sn.node)
+	}
+	sn.inuse = true
 	GetGLPeer().eng.SetSubTex(sn.node, subTex)
+	LogDebug("OUT")
+}
+
+func (self *SpriteContainer) RemoveSprite(remove *Sprite) {
+	LogDebug("IN")
+	for _, sn := range self.spriteNodePairs {
+		if sn.sprite == remove {
+			if !sn.inuse {
+				LogDebug("already removed.")
+				return
+			}
+			sn.inuse = false
+			GetGLPeer().removeChild(sn.node)
+		}
+	}
 	LogDebug("OUT")
 }
 

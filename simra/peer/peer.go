@@ -71,6 +71,14 @@ func (self *GLPeer) newNode() *sprite.Node {
 	return n
 }
 
+func (self *GLPeer) appendChild(n *sprite.Node) {
+	self.scene.AppendChild(n)
+}
+
+func (self *GLPeer) removeChild(n *sprite.Node) {
+	self.scene.RemoveChild(n)
+}
+
 func (self *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex {
 	LogDebug("IN")
 	a, err := asset.Open(assetName)
@@ -129,7 +137,7 @@ func (self *GLPeer) apply() {
 
 	for i := range snpairs {
 		sc := snpairs[i]
-		if sc.sprite == nil {
+		if sc.sprite == nil || !sc.inuse {
 			continue
 		}
 
