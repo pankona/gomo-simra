@@ -114,7 +114,7 @@ func (self *GLPeer) Update() {
 	if self.glctx == nil {
 		return
 	}
-	self.glctx.ClearColor(1, 1, 1, 1) // white background
+	self.glctx.ClearColor(0, 0, 0, 1) // black background
 	self.glctx.Clear(gl.COLOR_BUFFER_BIT)
 	now := clock.Time(time.Since(startTime) * 60 / time.Second)
 
