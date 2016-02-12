@@ -10,10 +10,12 @@ const (
 )
 
 type screenSize struct {
-	width  float32
-	height float32
-	scale  float32
-	fitTo  int
+	width        float32
+	height       float32
+	scale        float32
+	fitTo        int
+	marginWidth  float32
+	marginHeight float32
 }
 
 var desiredScreenSize screenSize
@@ -46,9 +48,14 @@ func calcScale() {
 	if h/float32(sz.HeightPt) > w/float32(sz.WidthPt) {
 		desiredScreenSize.scale = float32(sz.HeightPt) / h
 		desiredScreenSize.fitTo = FIT_HEIGHT
+		desiredScreenSize.marginWidth = float32(sz.WidthPt) - w*desiredScreenSize.scale
+		desiredScreenSize.marginHeight = 0
+
 	} else {
 		desiredScreenSize.scale = float32(sz.WidthPt) / w
 		desiredScreenSize.fitTo = FIT_WIDTH
+		desiredScreenSize.marginWidth = 0
+		desiredScreenSize.marginHeight = float32(sz.HeightPt) - h*desiredScreenSize.scale
 	}
 	LogDebug("scale = %f", desiredScreenSize.scale)
 }
