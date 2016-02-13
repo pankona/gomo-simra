@@ -5,8 +5,8 @@ package gomo
 import (
 	"github.com/pankona/gomo-simra/simra/peer"
 
-	_ "image/jpeg"
-	_ "image/png"
+	_ "image/jpeg" // must be imported here to treat jpeg
+	_ "image/png"  // must be imported here to treat transparent of png
 
 	"golang.org/x/mobile/app"
 	"golang.org/x/mobile/event/lifecycle"
@@ -24,7 +24,7 @@ type Gomo struct {
 	updateCallback func()
 }
 
-var gomo *Gomo = nil
+var gomo *Gomo
 
 func GetInstance() *Gomo {
 	peer.LogDebug("IN")
@@ -35,17 +35,17 @@ func GetInstance() *Gomo {
 	return gomo
 }
 
-func (self *Gomo) Initialize(onStart, onStop chan bool, updateCallback func()) {
+func (gomo *Gomo) Initialize(onStart, onStop chan bool, updateCallback func()) {
 	peer.LogDebug("IN")
-	self.glPeer = peer.GetGLPeer()
-	self.touchPeer = peer.GetTouchPeer()
-	self.onStart = onStart
-	self.onStop = onStop
-	self.updateCallback = updateCallback
+	gomo.glPeer = peer.GetGLPeer()
+	gomo.touchPeer = peer.GetTouchPeer()
+	gomo.onStart = onStart
+	gomo.onStop = onStop
+	gomo.updateCallback = updateCallback
 	peer.LogDebug("OUT")
 }
 
-func (self *Gomo) Start() {
+func (gomo *Gomo) Start() {
 	peer.LogDebug("IN")
 	app.Main(func(a app.App) {
 		for e := range a.Events() {
@@ -57,18 +57,18 @@ func (self *Gomo) Start() {
 
 					// initialize gl peer
 					glctx, _ := e.DrawContext.(gl.Context)
-					self.glPeer.Initialize(glctx)
+					gomo.glPeer.Initialize(glctx)
 
 					// time to set first scene
-					self.onStart <- true
+					gomo.onStart <- true
 					a.Send(paint.Event{})
 				case lifecycle.CrossOff:
 
 					// time to stop application
-					self.onStop <- true
+					gomo.onStop <- true
 
 					// finalize gl peer
-					self.glPeer.Finalize()
+					gomo.glPeer.Finalize()
 				}
 			case size.Event:
 				peer.SetScreenSize(e)
@@ -78,21 +78,21 @@ func (self *Gomo) Start() {
 				}
 
 				// update notify for simra
-				self.updateCallback()
+				gomo.updateCallback()
 
 				// update notify for gl peer
-				self.glPeer.Update()
+				gomo.glPeer.Update()
 
 				a.Publish()
 				a.Send(paint.Event{})
 			case touch.Event:
 				switch e.Type {
 				case touch.TypeBegin:
-					self.touchPeer.OnTouchBegin(e.X, e.Y)
+					gomo.touchPeer.OnTouchBegin(e.X, e.Y)
 				case touch.TypeMove:
-					self.touchPeer.OnTouchMove(e.X, e.Y)
+					gomo.touchPeer.OnTouchMove(e.X, e.Y)
 				case touch.TypeEnd:
-					self.touchPeer.OnTouchEnd(e.X, e.Y)
+					gomo.touchPeer.OnTouchEnd(e.X, e.Y)
 				}
 			}
 		}

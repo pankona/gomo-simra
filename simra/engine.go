@@ -11,7 +11,7 @@ type Simra struct {
 	driver Driver
 }
 
-var simra *Simra = nil
+var simra *Simra
 
 func GetInstance() *Simra {
 	peer.LogDebug("IN")
@@ -22,56 +22,56 @@ func GetInstance() *Simra {
 	return simra
 }
 
-func (self *Simra) onUpdate() {
-	if self.driver != nil {
-		self.driver.Drive()
+func (simra *Simra) onUpdate() {
+	if simra.driver != nil {
+		simra.driver.Drive()
 	}
 }
 
-func (self *Simra) onStopped() {
+func (simra *Simra) onStopped() {
 	peer.LogDebug("IN")
-	self.driver = nil
+	simra.driver = nil
 	peer.GetGLPeer().Finalize()
 	peer.LogDebug("OUT")
 }
 
-func (self *Simra) Start(onStart, onStop chan bool) {
+func (simra *Simra) Start(onStart, onStop chan bool) {
 	peer.LogDebug("IN")
-	gomo.GetInstance().Initialize(onStart, onStop, self.onUpdate)
+	gomo.GetInstance().Initialize(onStart, onStop, simra.onUpdate)
 	peer.GetSpriteContainer().Initialize()
 
 	gomo.GetInstance().Start()
 	peer.LogDebug("OUT")
 }
 
-func (self *Simra) SetScene(driver Driver) {
+func (simra *Simra) SetScene(driver Driver) {
 	peer.LogDebug("IN")
 	peer.GetGLPeer().Reset()
 	peer.GetSpriteContainer().RemoveSprites()
 
-	self.driver = driver
+	simra.driver = driver
 	driver.Initialize()
 	peer.LogDebug("OUT")
 }
 
-func (self *Simra) AddSprite(assetName string, rect image.Rectangle, s *Sprite) {
+func (simra *Simra) AddSprite(assetName string, rect image.Rectangle, s *Sprite) {
 	tex := peer.GetGLPeer().LoadTexture(assetName, rect)
 	peer.GetSpriteContainer().AddSprite(&s.Sprite, tex)
 }
 
-func (self *Simra) RemoveSprite(s *Sprite) {
+func (simra *Simra) RemoveSprite(s *Sprite) {
 	peer.GetSpriteContainer().RemoveSprite(&s.Sprite)
 }
 
-func (self *Simra) SetDesiredScreenSize(w, h float32) {
+func (simra *Simra) SetDesiredScreenSize(w, h float32) {
 	peer.SetDesiredScreenSize(w, h)
 }
 
-func (self *Simra) AddTouchListener(listener peer.TouchListener) {
+func (simra *Simra) AddTouchListener(listener peer.TouchListener) {
 	peer.GetTouchPeer().AddTouchListener(listener)
 }
 
-func (self *Simra) RemoveTouchListener(listener peer.TouchListener) {
+func (simra *Simra) RemoveTouchListener(listener peer.TouchListener) {
 	peer.GetTouchPeer().RemoveTouchListener(listener)
 }
 

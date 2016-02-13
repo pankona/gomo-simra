@@ -28,9 +28,9 @@ func GetTouchPeer() *TouchPeer {
 	return touchPeer
 }
 
-func (self *TouchPeer) AddTouchListener(listener TouchListener) {
+func (touchpeer *TouchPeer) AddTouchListener(listener TouchListener) {
 	LogDebug("IN")
-	self.touchListeners = append(self.touchListeners, &listener)
+	touchpeer.touchListeners = append(touchpeer.touchListeners, &listener)
 	LogDebug("OUT")
 }
 
@@ -45,15 +45,15 @@ func remove(listeners []*TouchListener, remove *TouchListener) []*TouchListener 
 	return result
 }
 
-func (self *TouchPeer) RemoveTouchListener(listener TouchListener) {
+func (touchpeer *TouchPeer) RemoveTouchListener(listener TouchListener) {
 	LogDebug("IN")
-	self.touchListeners = remove(self.touchListeners, &listener)
+	touchpeer.touchListeners = remove(touchpeer.touchListeners, &listener)
 	LogDebug("OUT")
 }
 
-func (self *TouchPeer) RemoveAllTouchListener() {
+func (touchpeer *TouchPeer) RemoveAllTouchListener() {
 	LogDebug("IN")
-	self.touchListeners = nil
+	touchpeer.touchListeners = nil
 	LogDebug("OUT")
 }
 
@@ -71,12 +71,12 @@ func calcTouchedPosition(pxx, pxy float32) (float32, float32) {
 	return ptx * scale, desiredScreenSize.height - pty*scale
 }
 
-func (self *TouchPeer) OnTouchBegin(pxx, pxy float32) {
+func (touchpeer *TouchPeer) OnTouchBegin(pxx, pxy float32) {
 	LogDebug("IN")
 
 	x, y := calcTouchedPosition(pxx, pxy)
-	for i := range self.touchListeners {
-		listener := self.touchListeners[i]
+	for i := range touchpeer.touchListeners {
+		listener := touchpeer.touchListeners[i]
 		if listener == nil {
 			fmt.Println("listener is nil!")
 			continue
@@ -87,13 +87,13 @@ func (self *TouchPeer) OnTouchBegin(pxx, pxy float32) {
 	LogDebug("OUT")
 }
 
-func (self *TouchPeer) OnTouchMove(pxx, pxy float32) {
+func (touchpeer *TouchPeer) OnTouchMove(pxx, pxy float32) {
 	LogDebug("IN")
 
 	x, y := calcTouchedPosition(pxx, pxy)
 
-	for i := range self.touchListeners {
-		listener := self.touchListeners[i]
+	for i := range touchpeer.touchListeners {
+		listener := touchpeer.touchListeners[i]
 		if listener == nil {
 			fmt.Println("listener is nil!")
 			continue
@@ -104,13 +104,13 @@ func (self *TouchPeer) OnTouchMove(pxx, pxy float32) {
 	LogDebug("OUT")
 }
 
-func (self *TouchPeer) OnTouchEnd(pxx, pxy float32) {
+func (touchpeer *TouchPeer) OnTouchEnd(pxx, pxy float32) {
 	LogDebug("IN")
 
 	x, y := calcTouchedPosition(pxx, pxy)
 
-	for i := range self.touchListeners {
-		listener := self.touchListeners[i]
+	for i := range touchpeer.touchListeners {
+		listener := touchpeer.touchListeners[i]
 		if listener == nil {
 			fmt.Println("listener is nil!")
 			continue
