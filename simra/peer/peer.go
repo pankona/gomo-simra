@@ -114,7 +114,7 @@ func (self *GLPeer) Update() {
 	if self.glctx == nil {
 		return
 	}
-	self.glctx.ClearColor(1, 1, 1, 1) // white background
+	self.glctx.ClearColor(0, 0, 0, 1) // black background
 	self.glctx.Clear(gl.COLOR_BUFFER_BIT)
 	now := clock.Time(time.Since(startTime) * 60 / time.Second)
 
@@ -146,8 +146,8 @@ func (self *GLPeer) apply() {
 			{0, 1, 0},
 		}
 		affine.Translate(affine,
-			sc.sprite.X*desiredScreenSize.scale-sc.sprite.W/2*desiredScreenSize.scale,
-			(desiredScreenSize.height-sc.sprite.Y)*desiredScreenSize.scale-sc.sprite.H/2*desiredScreenSize.scale)
+			sc.sprite.X*desiredScreenSize.scale-sc.sprite.W/2*desiredScreenSize.scale+desiredScreenSize.marginWidth/2,
+			(desiredScreenSize.height-sc.sprite.Y)*desiredScreenSize.scale-sc.sprite.H/2*desiredScreenSize.scale+desiredScreenSize.marginHeight/2)
 		if sc.sprite.R != 0 {
 			affine.Translate(affine,
 				0.5*sc.sprite.W*desiredScreenSize.scale,
