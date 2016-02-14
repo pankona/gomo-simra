@@ -36,50 +36,50 @@ func GetGLPeer() *GLPeer {
 	return glPeer
 }
 
-func (self *GLPeer) Initialize(in_glctx gl.Context) {
+func (glpeer *GLPeer) Initialize(in_glctx gl.Context) {
 	LogDebug("IN")
-	self.glctx = in_glctx
+	glpeer.glctx = in_glctx
 
 	// transparency of png
-	self.glctx.Enable(gl.BLEND)
-	self.glctx.BlendEquation(gl.FUNC_ADD)
-	self.glctx.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
-	self.images = glutil.NewImages(in_glctx)
-	self.fps = debug.NewFPS(self.images)
-	self.initEng()
+	glpeer.glctx.Enable(gl.BLEND)
+	glpeer.glctx.BlendEquation(gl.FUNC_ADD)
+	glpeer.glctx.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+	glpeer.images = glutil.NewImages(in_glctx)
+	glpeer.fps = debug.NewFPS(glpeer.images)
+	glpeer.initEng()
 
 	LogDebug("OUT")
 }
 
-func (self *GLPeer) initEng() {
-	if self.eng != nil {
-		self.eng.Release()
+func (glpeer *GLPeer) initEng() {
+	if glpeer.eng != nil {
+		glpeer.eng.Release()
 	}
-	self.eng = glsprite.Engine(self.images)
-	self.scene = &sprite.Node{}
-	self.eng.Register(self.scene)
-	self.eng.SetTransform(self.scene, f32.Affine{
+	glpeer.eng = glsprite.Engine(glpeer.images)
+	glpeer.scene = &sprite.Node{}
+	glpeer.eng.Register(glpeer.scene)
+	glpeer.eng.SetTransform(glpeer.scene, f32.Affine{
 		{1, 0, 0},
 		{0, 1, 0},
 	})
 }
 
-func (self *GLPeer) newNode() *sprite.Node {
+func (glpeer *GLPeer) newNode() *sprite.Node {
 	n := &sprite.Node{}
-	self.eng.Register(n)
-	self.scene.AppendChild(n)
+	glpeer.eng.Register(n)
+	glpeer.scene.AppendChild(n)
 	return n
 }
 
-func (self *GLPeer) appendChild(n *sprite.Node) {
-	self.scene.AppendChild(n)
+func (glpeer *GLPeer) appendChild(n *sprite.Node) {
+	glpeer.scene.AppendChild(n)
 }
 
-func (self *GLPeer) removeChild(n *sprite.Node) {
-	self.scene.RemoveChild(n)
+func (glpeer *GLPeer) removeChild(n *sprite.Node) {
+	glpeer.scene.RemoveChild(n)
 }
 
-func (self *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex {
+func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex {
 	LogDebug("IN")
 	a, err := asset.Open(assetName)
 	if err != nil {
@@ -91,7 +91,7 @@ func (self *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.S
 	if err != nil {
 		log.Fatal(err)
 	}
-	t, err := self.eng.LoadTexture(img)
+	t, err := glpeer.eng.LoadTexture(img)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -100,38 +100,38 @@ func (self *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.S
 	return sprite.SubTex{t, rect}
 }
 
-func (self *GLPeer) Finalize() {
+func (glpeer *GLPeer) Finalize() {
 	LogDebug("IN")
 	GetSpriteContainer().RemoveSprites()
-	self.eng.Release()
-	self.fps.Release()
-	self.images.Release()
-	self.glctx = nil
+	glpeer.eng.Release()
+	glpeer.fps.Release()
+	glpeer.images.Release()
+	glpeer.glctx = nil
 	LogDebug("OUT")
 }
 
-func (self *GLPeer) Update() {
-	if self.glctx == nil {
+func (glpeer *GLPeer) Update() {
+	if glpeer.glctx == nil {
 		return
 	}
-	self.glctx.ClearColor(0, 0, 0, 1) // black background
-	self.glctx.Clear(gl.COLOR_BUFFER_BIT)
+	glpeer.glctx.ClearColor(0, 0, 0, 1) // black background
+	glpeer.glctx.Clear(gl.COLOR_BUFFER_BIT)
 	now := clock.Time(time.Since(startTime) * 60 / time.Second)
 
-	self.apply()
+	glpeer.apply()
 
-	self.eng.Render(self.scene, now, sz)
-	self.fps.Draw(sz)
+	glpeer.eng.Render(glpeer.scene, now, sz)
+	glpeer.fps.Draw(sz)
 }
 
-func (self *GLPeer) Reset() {
+func (glpeer *GLPeer) Reset() {
 	LogDebug("IN")
 	GetSpriteContainer().RemoveSprites()
-	self.initEng()
+	glpeer.initEng()
 	LogDebug("OUT")
 }
 
-func (self *GLPeer) apply() {
+func (glpeer *GLPeer) apply() {
 
 	snpairs := GetSpriteContainer().spriteNodePairs
 
@@ -160,7 +160,7 @@ func (self *GLPeer) apply() {
 		affine.Scale(affine,
 			sc.sprite.W*desiredScreenSize.scale,
 			sc.sprite.H*desiredScreenSize.scale)
-		self.eng.SetTransform(sc.node, *affine)
+		glpeer.eng.SetTransform(sc.node, *affine)
 	}
 }
 

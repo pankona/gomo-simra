@@ -15,15 +15,15 @@ type Sprite struct {
 	touchListeners []*TouchListener
 }
 
-func (self *Sprite) AddTouchListener(listener TouchListener) {
+func (sprite *Sprite) AddTouchListener(listener TouchListener) {
 	LogDebug("IN")
-	self.touchListeners = append(self.touchListeners, &listener)
+	sprite.touchListeners = append(sprite.touchListeners, &listener)
 	LogDebug("OUT")
 }
 
-func (self *Sprite) RemoveAllTouchListener() {
+func (sprite *Sprite) RemoveAllTouchListener() {
 	LogDebug("IN")
-	self.touchListeners = nil
+	sprite.touchListeners = nil
 	LogDebug("OUT")
 }
 
@@ -46,15 +46,15 @@ func GetSpriteContainer() *SpriteContainer {
 	return spriteContainer
 }
 
-func (self *SpriteContainer) Initialize() {
+func (spritecontainer *SpriteContainer) Initialize() {
 	LogDebug("IN")
-	GetTouchPeer().AddTouchListener(self)
+	GetTouchPeer().AddTouchListener(spritecontainer)
 	LogDebug("OUT")
 }
 
-func (self *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex) {
+func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex) {
 	LogDebug("IN")
-	for _, snpair := range self.spriteNodePairs {
+	for _, snpair := range spritecontainer.spriteNodePairs {
 		if s == snpair.sprite && snpair.inuse {
 			LogDebug("this sprite is already added and currently still being available.")
 			return
@@ -62,7 +62,7 @@ func (self *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex) {
 	}
 
 	var sn *SpriteNodePair
-	for _, snpair := range self.spriteNodePairs {
+	for _, snpair := range spritecontainer.spriteNodePairs {
 		if !snpair.inuse {
 			sn = snpair
 		}
@@ -75,7 +75,7 @@ func (self *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex) {
 	sn.sprite = s
 	if sn.node == nil {
 		sn.node = GetGLPeer().newNode()
-		self.spriteNodePairs = append(self.spriteNodePairs, sn)
+		spritecontainer.spriteNodePairs = append(spritecontainer.spriteNodePairs, sn)
 	} else {
 		GetGLPeer().appendChild(sn.node)
 	}
@@ -84,9 +84,9 @@ func (self *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex) {
 	LogDebug("OUT")
 }
 
-func (self *SpriteContainer) RemoveSprite(remove *Sprite) {
+func (spritecontainer *SpriteContainer) RemoveSprite(remove *Sprite) {
 	LogDebug("IN")
-	for _, sn := range self.spriteNodePairs {
+	for _, sn := range spritecontainer.spriteNodePairs {
 		if sn.sprite == remove {
 			if !sn.inuse {
 				LogDebug("already removed.")
@@ -99,17 +99,17 @@ func (self *SpriteContainer) RemoveSprite(remove *Sprite) {
 	LogDebug("OUT")
 }
 
-func (self *SpriteContainer) RemoveSprites() {
+func (spritecontainer *SpriteContainer) RemoveSprites() {
 	LogDebug("IN")
-	self.spriteNodePairs = nil
+	spritecontainer.spriteNodePairs = nil
 	LogDebug("OUT")
 }
 
-func (self *SpriteContainer) ReplaceTexture(sprite *Sprite, subTex sprite.SubTex) {
+func (spritecontainer *SpriteContainer) ReplaceTexture(sprite *Sprite, subTex sprite.SubTex) {
 	LogDebug("IN")
-	for i := range self.spriteNodePairs {
-		if self.spriteNodePairs[i].sprite == sprite {
-			node := self.spriteNodePairs[i].node
+	for i := range spritecontainer.spriteNodePairs {
+		if spritecontainer.spriteNodePairs[i].sprite == sprite {
+			node := spritecontainer.spriteNodePairs[i].node
 			GetGLPeer().eng.SetSubTex(node, subTex)
 		}
 	}
@@ -129,11 +129,11 @@ func isContained(sprite *Sprite, x, y float32) bool {
 	return false
 }
 
-func (self *SpriteContainer) OnTouchBegin(x, y float32) {
+func (spritecontainer *SpriteContainer) OnTouchBegin(x, y float32) {
 	LogDebug("IN")
-	for i := range self.spriteNodePairs {
-		listeners := self.spriteNodePairs[i].sprite.touchListeners
-		if isContained(self.spriteNodePairs[i].sprite, x, y) {
+	for i := range spritecontainer.spriteNodePairs {
+		listeners := spritecontainer.spriteNodePairs[i].sprite.touchListeners
+		if isContained(spritecontainer.spriteNodePairs[i].sprite, x, y) {
 			for j := range listeners {
 				listener := listeners[j]
 				if listener == nil {
@@ -147,11 +147,11 @@ func (self *SpriteContainer) OnTouchBegin(x, y float32) {
 	}
 	LogDebug("OUT")
 }
-func (self *SpriteContainer) OnTouchMove(x, y float32) {
+func (spritecontainer *SpriteContainer) OnTouchMove(x, y float32) {
 	LogDebug("IN")
-	for i := range self.spriteNodePairs {
-		listeners := self.spriteNodePairs[i].sprite.touchListeners
-		if isContained(self.spriteNodePairs[i].sprite, x, y) {
+	for i := range spritecontainer.spriteNodePairs {
+		listeners := spritecontainer.spriteNodePairs[i].sprite.touchListeners
+		if isContained(spritecontainer.spriteNodePairs[i].sprite, x, y) {
 			for j := range listeners {
 				listener := listeners[j]
 				if listener == nil {
@@ -166,11 +166,11 @@ func (self *SpriteContainer) OnTouchMove(x, y float32) {
 	LogDebug("OUT")
 }
 
-func (self *SpriteContainer) OnTouchEnd(x, y float32) {
+func (spritecontainer *SpriteContainer) OnTouchEnd(x, y float32) {
 	LogDebug("IN")
-	for i := range self.spriteNodePairs {
-		listeners := self.spriteNodePairs[i].sprite.touchListeners
-		if isContained(self.spriteNodePairs[i].sprite, x, y) {
+	for i := range spritecontainer.spriteNodePairs {
+		listeners := spritecontainer.spriteNodePairs[i].sprite.touchListeners
+		if isContained(spritecontainer.spriteNodePairs[i].sprite, x, y) {
 			for j := range listeners {
 				listener := listeners[j]
 				if listener == nil {

@@ -1,29 +1,30 @@
 package simra
 
 import (
-	"github.com/pankona/gomo-simra/simra/peer"
 	"image"
+
+	"github.com/pankona/gomo-simra/simra/peer"
 )
 
 type Sprite struct {
 	peer.Sprite
 }
 
-func (self *Sprite) ReplaceTexture(assetName string, rect image.Rectangle) {
+func (sprite *Sprite) ReplaceTexture(assetName string, rect image.Rectangle) {
 	LogDebug("IN")
 	tex := peer.GetGLPeer().LoadTexture(assetName, rect)
-	peer.GetSpriteContainer().ReplaceTexture(&self.Sprite, tex)
+	peer.GetSpriteContainer().ReplaceTexture(&sprite.Sprite, tex)
 	LogDebug("OUT")
 }
 
-func (self *Sprite) AddTouchListener(listener peer.TouchListener) {
+func (sprite *Sprite) AddTouchListener(listener peer.TouchListener) {
 	LogDebug("IN")
-	self.Sprite.AddTouchListener(listener)
+	sprite.Sprite.AddTouchListener(listener)
 	LogDebug("OUT")
 }
 
-func (self *Sprite) RemoveAllTouchListener() {
+func (sprite *Sprite) RemoveAllTouchListener() {
 	LogDebug("IN")
-	self.Sprite.RemoveAllTouchListener()
+	sprite.Sprite.RemoveAllTouchListener()
 	LogDebug("OUT")
 }
