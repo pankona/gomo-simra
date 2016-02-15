@@ -68,7 +68,8 @@ func calcTouchedPosition(pxx, pxy float32) (float32, float32) {
 		scale = desiredScreenSize.width / float32(sz.WidthPt)
 	}
 
-	return ptx * scale, desiredScreenSize.height - pty*scale
+	return (ptx - desiredScreenSize.marginWidth/2) * scale,
+		desiredScreenSize.height - (pty-desiredScreenSize.marginHeight/2)*scale
 }
 
 func (touchpeer *TouchPeer) OnTouchBegin(pxx, pxy float32) {
