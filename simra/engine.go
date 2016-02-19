@@ -92,12 +92,14 @@ func (simra *Simra) RemoveTouchListener(listener peer.TouchListener) {
 }
 
 // LogDebug prints logs.
+// From simra, just call peer.LogDebug.
 // This is disabled at Release Build.
 func LogDebug(format string, a ...interface{}) {
 	peer.LogDebug(format, a...)
 }
 
 // LogError prints logs.
+// From simra, just call peer.LogError.
 // This is never disabled even for Release build.
 func LogError(format string, a ...interface{}) {
 	peer.LogError(format, a...)
