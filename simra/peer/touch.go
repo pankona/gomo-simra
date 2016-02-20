@@ -62,7 +62,7 @@ func calcTouchedPosition(pxx, pxy float32) (float32, float32) {
 	pty := pxy / sz.PixelsPerPt
 
 	var scale float32
-	if desiredScreenSize.fitTo == FIT_HEIGHT {
+	if desiredScreenSize.fitTo == FitHeight {
 		scale = desiredScreenSize.height / float32(sz.HeightPt)
 	} else {
 		scale = desiredScreenSize.width / float32(sz.WidthPt)

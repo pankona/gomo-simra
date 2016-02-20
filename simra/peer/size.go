@@ -5,8 +5,8 @@ import "golang.org/x/mobile/event/size"
 var sz size.Event
 
 const (
-	FIT_HEIGHT = iota
-	FIT_WIDTH
+	FitHeight = iota
+	FitWidth
 )
 
 type screenSize struct {
@@ -47,13 +47,13 @@ func calcScale() {
 
 	if h/float32(sz.HeightPt) > w/float32(sz.WidthPt) {
 		desiredScreenSize.scale = float32(sz.HeightPt) / h
-		desiredScreenSize.fitTo = FIT_HEIGHT
+		desiredScreenSize.fitTo = FitHeight
 		desiredScreenSize.marginWidth = float32(sz.WidthPt) - w*desiredScreenSize.scale
 		desiredScreenSize.marginHeight = 0
 
 	} else {
 		desiredScreenSize.scale = float32(sz.WidthPt) / w
-		desiredScreenSize.fitTo = FIT_WIDTH
+		desiredScreenSize.fitTo = FitWidth
 		desiredScreenSize.marginWidth = 0
 		desiredScreenSize.marginHeight = float32(sz.HeightPt) - h*desiredScreenSize.scale
 	}
