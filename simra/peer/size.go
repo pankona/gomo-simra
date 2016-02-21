@@ -5,7 +5,9 @@ import "golang.org/x/mobile/event/size"
 var sz size.Event
 
 const (
+	// FitHeight indicates screen should fit to height length
 	FitHeight = iota
+	// FitWidth indicates screen should fit to width length
 	FitWidth
 )
 
@@ -20,19 +22,26 @@ type screenSize struct {
 
 var desiredScreenSize screenSize
 
-func SetScreenSize(in_sz size.Event) {
+// SetScreenSize sets screen size of device.
+// This will be called only from gomobile.go.
+func SetScreenSize(s size.Event) {
 	LogDebug("IN")
-	sz = in_sz
+	sz = s
 	calcScale()
 	LogDebug("OUT")
 }
 
+// GetScreenSize returns screen size of device.
+// This value is set by SetScreenSize in advance.
 func GetScreenSize() size.Event {
 	LogDebug("IN")
 	LogDebug("OUT")
 	return sz
 }
 
+// SetDesiredScreenSize sets virtual screen size.
+// Any positive value can be specified to arguments.
+// like, w=1920, h=1080
 func SetDesiredScreenSize(w, h float32) {
 	LogDebug("IN")
 	desiredScreenSize.height = h
