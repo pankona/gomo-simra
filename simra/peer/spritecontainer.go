@@ -6,39 +6,55 @@ import (
 	"golang.org/x/mobile/exp/sprite"
 )
 
+// Sprite represents a sprite.
 type Sprite struct {
-	W              float32
-	H              float32
-	X              float32
-	Y              float32
-	R              float32
+	// W = width of sprite
+	W float32
+	// H = height of sprite
+	H float32
+	// X = x position of sprite
+	X float32
+	// Y = y position of sprite
+	Y float32
+	// R = radius of sprite (use for rotation)
+	R float32
+	// touchListeners is listeners to notify touch event
 	touchListeners []*TouchListener
 }
 
+// AddTouchListener registers a listener to notify touch event.
 func (sprite *Sprite) AddTouchListener(listener TouchListener) {
 	LogDebug("IN")
 	sprite.touchListeners = append(sprite.touchListeners, &listener)
 	LogDebug("OUT")
 }
 
+// RemoveAllTouchListener removes all registered listeners from sprite.
 func (sprite *Sprite) RemoveAllTouchListener() {
 	LogDebug("IN")
 	sprite.touchListeners = nil
 	LogDebug("OUT")
 }
 
+// SpriteNodePair represents pair of Sprite and sprite.Node.
+// This is used for calculate affine transformation of Node
+// from Sprite's property.
 type SpriteNodePair struct {
 	sprite *Sprite
 	node   *sprite.Node
 	inuse  bool
 }
 
+// SpriteContainer represents array of SpriteNodePair.
 type SpriteContainer struct {
 	spriteNodePairs []*SpriteNodePair
 }
 
 var spriteContainer *SpriteContainer
 
+// GetSpriteContainer returns SpriteContainer.
+// Since SpriteContainer is singleton, use this function
+// to get instance of SpriteContainer.
 func GetSpriteContainer() *SpriteContainer {
 	if spriteContainer == nil {
 		spriteContainer = &SpriteContainer{}
@@ -46,12 +62,15 @@ func GetSpriteContainer() *SpriteContainer {
 	return spriteContainer
 }
 
+// Initialize initializes SpriteContainer object.
+// This must be called to use all SpriteContainer's function in advance.
 func (spritecontainer *SpriteContainer) Initialize() {
 	LogDebug("IN")
 	GetTouchPeer().AddTouchListener(spritecontainer)
 	LogDebug("OUT")
 }
 
+// AddSprite adds a sprite to SpriteContainer.
 func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex) {
 	LogDebug("IN")
 	for _, snpair := range spritecontainer.spriteNodePairs {
@@ -84,6 +103,10 @@ func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTe
 	LogDebug("OUT")
 }
 
+// RemoveSprite removes a spcified sprite from SpriteContainer.
+// Since Unregister of Node is not implemented by gomobile, this function just
+// marks the specified sprite as "not in use".
+// The sprite marked as "not in use" will be reused at AddSprite.
 func (spritecontainer *SpriteContainer) RemoveSprite(remove *Sprite) {
 	LogDebug("IN")
 	for _, sn := range spritecontainer.spriteNodePairs {
@@ -99,12 +122,14 @@ func (spritecontainer *SpriteContainer) RemoveSprite(remove *Sprite) {
 	LogDebug("OUT")
 }
 
+// RemoveSprites removes all registered sprites from SpriteContainer.
 func (spritecontainer *SpriteContainer) RemoveSprites() {
 	LogDebug("IN")
 	spritecontainer.spriteNodePairs = nil
 	LogDebug("OUT")
 }
 
+// ReplaceTexture replaces sprite's texture to specified one.
 func (spritecontainer *SpriteContainer) ReplaceTexture(sprite *Sprite, subTex sprite.SubTex) {
 	LogDebug("IN")
 	for i := range spritecontainer.spriteNodePairs {
@@ -129,6 +154,9 @@ func isContained(sprite *Sprite, x, y float32) bool {
 	return false
 }
 
+// OnTouchBegin is called when screen is started to touch.
+// This function calls listener's OnTouchBegin if the touched position is
+// contained by sprite's rectangle.
 func (spritecontainer *SpriteContainer) OnTouchBegin(x, y float32) {
 	LogDebug("IN")
 	for i := range spritecontainer.spriteNodePairs {
@@ -147,6 +175,10 @@ func (spritecontainer *SpriteContainer) OnTouchBegin(x, y float32) {
 	}
 	LogDebug("OUT")
 }
+
+// OnTouchMove is called when touch is moved (dragged).
+// This function calls listener's OnTouchMove if the touched position is
+// contained by sprite's rectangle.
 func (spritecontainer *SpriteContainer) OnTouchMove(x, y float32) {
 	LogDebug("IN")
 	for i := range spritecontainer.spriteNodePairs {
@@ -166,6 +198,9 @@ func (spritecontainer *SpriteContainer) OnTouchMove(x, y float32) {
 	LogDebug("OUT")
 }
 
+// OnTouchEnd is called when touch is ended (released).
+// This function calls listener's OnTouchEnd if the touched position is
+// contained by sprite's rectangle.
 func (spritecontainer *SpriteContainer) OnTouchEnd(x, y float32) {
 	LogDebug("IN")
 	for i := range spritecontainer.spriteNodePairs {
