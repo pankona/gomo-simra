@@ -19,6 +19,8 @@ var glPeer *GLPeer
 
 var startTime = time.Now()
 
+// GLPeer represents gl context.
+// Singleton.
 type GLPeer struct {
 	glctx  gl.Context
 	images *glutil.Images
@@ -27,6 +29,9 @@ type GLPeer struct {
 	scene  *sprite.Node
 }
 
+// GetGLPeer returns a instance of GLPeer.
+// Since GLPeer is singleton, it is necessary to
+// call this function to get GLPeer instance.
 func GetGLPeer() *GLPeer {
 	LogDebug("IN")
 	if glPeer == nil {
@@ -36,15 +41,17 @@ func GetGLPeer() *GLPeer {
 	return glPeer
 }
 
-func (glpeer *GLPeer) Initialize(in_glctx gl.Context) {
+// Initialize initializes GLPeer.
+// This function must be called inadvance of using GLPeer
+func (glpeer *GLPeer) Initialize(glctx gl.Context) {
 	LogDebug("IN")
-	glpeer.glctx = in_glctx
+	glpeer.glctx = glctx
 
 	// transparency of png
 	glpeer.glctx.Enable(gl.BLEND)
 	glpeer.glctx.BlendEquation(gl.FUNC_ADD)
 	glpeer.glctx.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
-	glpeer.images = glutil.NewImages(in_glctx)
+	glpeer.images = glutil.NewImages(glctx)
 	glpeer.fps = debug.NewFPS(glpeer.images)
 	glpeer.initEng()
 
@@ -79,6 +86,8 @@ func (glpeer *GLPeer) removeChild(n *sprite.Node) {
 	glpeer.scene.RemoveChild(n)
 }
 
+// LoadTexture return texture that is loaded by the information of arguments.
+// Loaded texture can assign using AddSprite function.
 func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex {
 	LogDebug("IN")
 	a, err := asset.Open(assetName)
@@ -100,6 +109,8 @@ func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite
 	return sprite.SubTex{t, rect}
 }
 
+// Finalize finalizes GLPeer.
+// This is called at termination of application.
 func (glpeer *GLPeer) Finalize() {
 	LogDebug("IN")
 	GetSpriteContainer().RemoveSprites()
@@ -110,6 +121,8 @@ func (glpeer *GLPeer) Finalize() {
 	LogDebug("OUT")
 }
 
+// Update updates screen.
+// This is called 60 times per 1 sec.
 func (glpeer *GLPeer) Update() {
 	if glpeer.glctx == nil {
 		return
@@ -124,6 +137,10 @@ func (glpeer *GLPeer) Update() {
 	glpeer.fps.Draw(sz)
 }
 
+// Reset resets current gl context.
+// All sprites are also cleaned.
+// This is called at changing of scene, and
+// this function is for clean previous scene.
 func (glpeer *GLPeer) Reset() {
 	LogDebug("IN")
 	GetSpriteContainer().RemoveSprites()

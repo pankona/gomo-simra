@@ -6,6 +6,8 @@ import (
 	"golang.org/x/mobile/event/size"
 )
 
+// TouchPeer represents a Touch object.
+// Singleton.
 type TouchPeer struct {
 	touchListeners []*TouchListener
 	sz             size.Event
@@ -13,12 +15,16 @@ type TouchPeer struct {
 
 var touchPeer *TouchPeer
 
+// TouchListener is interface to be notifed touch event.
 type TouchListener interface {
 	OnTouchBegin(x, y float32)
 	OnTouchMove(x, y float32)
 	OnTouchEnd(x, y float32)
 }
 
+// GetTouchPeer returns instance of TouchPeer.
+// Since TouchPeer is singleton, it is necessary to
+// call this function to get instance of TouchPeer.
 func GetTouchPeer() *TouchPeer {
 	LogDebug("IN")
 	if touchPeer == nil {
@@ -28,6 +34,7 @@ func GetTouchPeer() *TouchPeer {
 	return touchPeer
 }
 
+// AddTouchListener registeres a listener to notify touch event.
 func (touchpeer *TouchPeer) AddTouchListener(listener TouchListener) {
 	LogDebug("IN")
 	touchpeer.touchListeners = append(touchpeer.touchListeners, &listener)
@@ -45,12 +52,14 @@ func remove(listeners []*TouchListener, remove *TouchListener) []*TouchListener 
 	return result
 }
 
+// RemoveTouchListener removes specified listener.
 func (touchpeer *TouchPeer) RemoveTouchListener(listener TouchListener) {
 	LogDebug("IN")
 	touchpeer.touchListeners = remove(touchpeer.touchListeners, &listener)
 	LogDebug("OUT")
 }
 
+// RemoveAllTouchListener removes all registered listeners.
 func (touchpeer *TouchPeer) RemoveAllTouchListener() {
 	LogDebug("IN")
 	touchpeer.touchListeners = nil
@@ -62,7 +71,7 @@ func calcTouchedPosition(pxx, pxy float32) (float32, float32) {
 	pty := pxy / sz.PixelsPerPt
 
 	var scale float32
-	if desiredScreenSize.fitTo == FIT_HEIGHT {
+	if desiredScreenSize.fitTo == FitHeight {
 		scale = desiredScreenSize.height / float32(sz.HeightPt)
 	} else {
 		scale = desiredScreenSize.width / float32(sz.WidthPt)
@@ -72,6 +81,8 @@ func calcTouchedPosition(pxx, pxy float32) (float32, float32) {
 		desiredScreenSize.height - (pty-desiredScreenSize.marginHeight/2)*scale
 }
 
+// OnTouchBegin is called when touch is started.
+// This event is notified to all registered listeners despite of the touched position.
 func (touchpeer *TouchPeer) OnTouchBegin(pxx, pxy float32) {
 	LogDebug("IN")
 
@@ -88,6 +99,8 @@ func (touchpeer *TouchPeer) OnTouchBegin(pxx, pxy float32) {
 	LogDebug("OUT")
 }
 
+// OnTouchMove is called when touch is moved (dragged).
+// This event is notified to all registered listeners despite of the touched position.
 func (touchpeer *TouchPeer) OnTouchMove(pxx, pxy float32) {
 	LogDebug("IN")
 
@@ -105,6 +118,8 @@ func (touchpeer *TouchPeer) OnTouchMove(pxx, pxy float32) {
 	LogDebug("OUT")
 }
 
+// OnTouchEnd is called when touch is ended (released).
+// This event is notified to all registered listeners despite of the touched position.
 func (touchpeer *TouchPeer) OnTouchEnd(pxx, pxy float32) {
 	LogDebug("IN")
 

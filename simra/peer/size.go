@@ -5,8 +5,10 @@ import "golang.org/x/mobile/event/size"
 var sz size.Event
 
 const (
-	FIT_HEIGHT = iota
-	FIT_WIDTH
+	// FitHeight indicates screen should fit to height length
+	FitHeight = iota
+	// FitWidth indicates screen should fit to width length
+	FitWidth
 )
 
 type screenSize struct {
@@ -20,19 +22,26 @@ type screenSize struct {
 
 var desiredScreenSize screenSize
 
-func SetScreenSize(in_sz size.Event) {
+// SetScreenSize sets screen size of device.
+// This will be called only from gomobile.go.
+func SetScreenSize(s size.Event) {
 	LogDebug("IN")
-	sz = in_sz
+	sz = s
 	calcScale()
 	LogDebug("OUT")
 }
 
+// GetScreenSize returns screen size of device.
+// This value is set by SetScreenSize in advance.
 func GetScreenSize() size.Event {
 	LogDebug("IN")
 	LogDebug("OUT")
 	return sz
 }
 
+// SetDesiredScreenSize sets virtual screen size.
+// Any positive value can be specified to arguments.
+// like, w=1920, h=1080
 func SetDesiredScreenSize(w, h float32) {
 	LogDebug("IN")
 	desiredScreenSize.height = h
@@ -47,13 +56,13 @@ func calcScale() {
 
 	if h/float32(sz.HeightPt) > w/float32(sz.WidthPt) {
 		desiredScreenSize.scale = float32(sz.HeightPt) / h
-		desiredScreenSize.fitTo = FIT_HEIGHT
+		desiredScreenSize.fitTo = FitHeight
 		desiredScreenSize.marginWidth = float32(sz.WidthPt) - w*desiredScreenSize.scale
 		desiredScreenSize.marginHeight = 0
 
 	} else {
 		desiredScreenSize.scale = float32(sz.WidthPt) / w
-		desiredScreenSize.fitTo = FIT_WIDTH
+		desiredScreenSize.fitTo = FitWidth
 		desiredScreenSize.marginWidth = 0
 		desiredScreenSize.marginHeight = float32(sz.HeightPt) - h*desiredScreenSize.scale
 	}

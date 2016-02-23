@@ -16,6 +16,8 @@ import (
 	"golang.org/x/mobile/gl"
 )
 
+// Gomo represents gomobile instance.
+// Singleton.
 type Gomo struct {
 	glPeer         *peer.GLPeer
 	touchPeer      *peer.TouchPeer
@@ -26,6 +28,9 @@ type Gomo struct {
 
 var gomo *Gomo
 
+// GetInstance returns a Gomo instance.
+// Since Gomo is singleton, it is necessary to
+// call this function to get Gomo instance.
 func GetInstance() *Gomo {
 	peer.LogDebug("IN")
 	if gomo == nil {
@@ -35,6 +40,7 @@ func GetInstance() *Gomo {
 	return gomo
 }
 
+// Initialize initializes Gomo.
 func (gomo *Gomo) Initialize(onStart, onStop chan bool, updateCallback func()) {
 	peer.LogDebug("IN")
 	gomo.glPeer = peer.GetGLPeer()
@@ -45,6 +51,8 @@ func (gomo *Gomo) Initialize(onStart, onStop chan bool, updateCallback func()) {
 	peer.LogDebug("OUT")
 }
 
+// Start starts gomobile's main loop.
+// Most of events handled by peer is fired by this function.
 func (gomo *Gomo) Start() {
 	peer.LogDebug("IN")
 	app.Main(func(a app.App) {

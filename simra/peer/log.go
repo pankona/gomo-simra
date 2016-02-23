@@ -21,6 +21,8 @@ func printLog(tag string, format string, a ...interface{}) {
 	fmt.Printf("\n")
 }
 
+// LogDebug prints logs.
+// This is disabled at Release Build.
 func LogDebug(format string, a ...interface{}) {
 	if config.DEBUG {
 		printLog("DEBUG", format, a...)
@@ -28,6 +30,8 @@ func LogDebug(format string, a ...interface{}) {
 
 }
 
+// LogError prints logs.
+// This is never disabled even for Release build.
 func LogError(format string, a ...interface{}) {
 	printLog("ERROR", format, a...)
 }
