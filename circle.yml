@@ -1,20 +1,31 @@
 machine:
     environment:
         IMPORT_PATH: "github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
+        GOROOT: "$HOME/goroot/go"
         GOPATH: "$HOME/go"
-        PATH: "$GOPATH/bin:$PATH"
+        PATH: "$GOROOT/bin:$GOPATH/bin:$PATH"
 
 dependencies:
     cache_directories:
+        - $GOROOT
         - $GOPATH
+        - ~/tmp
 
     pre:
-        - mkdir -p $GOPATH
+        - |
+            mkdir -p $GOPATH
+            mkdir -p ~/tmp && cd ~/tmp
+            if [ ! -e $GOROOT ]; then
+                GOPKG=go1.6.linux-amd64.tar.gz
+                wget https://storage.googleapis.com/golang/$GOPKG
+                mkdir -p $GOROOT
+                tar -xf $GOPKG
+                cp -r ./go -T $GOROOT
+            fi
         - go get golang.org/x/mobile/cmd/gomobile
         - gomobile init -v
 
     override:
-        - echo $GOPATH
         - echo "$GOPATH/src/$IMPORT_PATH"
         - mkdir -p "$GOPATH/src/$IMPORT_PATH"
         - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
