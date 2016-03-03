@@ -1,4 +1,5 @@
 [![Circle CI](https://circleci.com/gh/pankona/gomo-simra/tree/master.svg?style=svg)](https://circleci.com/gh/pankona/gomo-simra/tree/master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/pankona/gomo-simra)](https://goreportcard.com/report/github.com/pankona/gomo-simra)
 
 # gomo-simra
 
