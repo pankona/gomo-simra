@@ -24,6 +24,7 @@ dependencies:
             fi
         - go get golang.org/x/mobile/cmd/gomobile
         - gomobile init -v
+        - go get github.com/golang/lint/golint
 
     override:
         - echo "$GOPATH/src/$IMPORT_PATH"
