@@ -24,6 +24,7 @@ dependencies:
             fi
         - go get golang.org/x/mobile/cmd/gomobile
         - gomobile init -v
+        - go get github.com/golang/lint/golint
 
     override:
         - echo "$GOPATH/src/$IMPORT_PATH"
@@ -34,4 +35,5 @@ dependencies:
 
 test:
     override:
-        - echo "test here!"
+        - cd "$GOPATH/src/$IMPORT_PATH/examples" && test -z "$(golint ./... | tee /dev/stderr)" 
+        - cd "$GOPATH/src/$IMPORT_PATH/simra" && test -z "$(golint ./... | tee /dev/stderr)" 
