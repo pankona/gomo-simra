@@ -8,6 +8,7 @@ import (
 	"github.com/pankona/gomo-simra/simra"
 )
 
+// CtrlTrial represents a scene object for CtrlTrial
 type CtrlTrial struct {
 	ball     simra.Sprite
 	ctrlup   simra.Sprite
@@ -21,312 +22,331 @@ type CtrlTrial struct {
 }
 
 const (
-	CTRL_NOP = iota
-	CTRL_UP
-	CTRL_DOWN
+	ctrlNop = iota
+	ctrlUp
+	ctrlDown
 )
 
-func (self *CtrlTrial) Initialize() {
+// Initialize initializes CtrlTrial scene
+// This is called from simra.
+// simra.GetInstance().SetDesiredScreenSize should be called to determine
+// screen size of this scene.
+func (ctrltrial *CtrlTrial) Initialize() {
 	simra.LogDebug("[IN]")
 
-	simra.GetInstance().SetDesiredScreenSize(config.SCREEN_WIDTH, config.SCREEN_HEIGHT)
+	simra.GetInstance().SetDesiredScreenSize(config.ScreenWidth, config.ScreenHeight)
 
 	// add global touch listener to catch touch end event
-	simra.GetInstance().AddTouchListener(self)
+	simra.GetInstance().AddTouchListener(ctrltrial)
 
 	// TODO: when goes to next scene, remove global touch listener
-	// simra.GetInstance().RemoveTouchListener(self)
+	// simra.GetInstance().RemoveTouchListener(ctrltrial)
 
 	// initialize sprites
-	self.initSprites()
-	self.buttonReplaced = false
+	ctrltrial.initSprites()
+	ctrltrial.buttonReplaced = false
 
 	simra.LogDebug("[OUT]")
 }
 
-func (self *CtrlTrial) OnTouchBegin(x, y float32) {
+// OnTouchBegin is called when CtrlTrial scene is Touched.
+func (ctrltrial *CtrlTrial) OnTouchBegin(x, y float32) {
 	// nop
 }
 
-func (self *CtrlTrial) OnTouchMove(x, y float32) {
+// OnTouchMove is called when CtrlTrial scene is Touched and moved.
+func (ctrltrial *CtrlTrial) OnTouchMove(x, y float32) {
 	// nop
 }
 
-func (self *CtrlTrial) OnTouchEnd(x, y float32) {
-	// nop
-	self.buttonState = CTRL_NOP
+// OnTouchEnd is called when CtrlTrial scene is Touched and it is released.
+func (ctrltrial *CtrlTrial) OnTouchEnd(x, y float32) {
+	ctrltrial.buttonState = ctrlNop
 }
 
-func (self *CtrlTrial) initSprites() {
-	self.initBall()
-	self.initCtrlDown()
-	self.initCtrlUp()
-	self.initButtonBlue()
-	self.initButtonRed()
+func (ctrltrial *CtrlTrial) initSprites() {
+	ctrltrial.initBall()
+	ctrltrial.initctrlDown()
+	ctrltrial.initctrlUp()
+	ctrltrial.initButtonBlue()
+	ctrltrial.initButtonRed()
 }
 
-func (self *CtrlTrial) initBall() {
+func (ctrltrial *CtrlTrial) initBall() {
 	// set size of ball
-	self.ball.W = float32(48)
-	self.ball.H = float32(48)
+	ctrltrial.ball.W = float32(48)
+	ctrltrial.ball.H = float32(48)
 
 	// put center of screen at start
-	self.ball.X = config.SCREEN_WIDTH / 2
-	self.ball.Y = config.SCREEN_HEIGHT / 2
+	ctrltrial.ball.X = config.ScreenWidth / 2
+	ctrltrial.ball.Y = config.ScreenHeight / 2
 
 	simra.GetInstance().AddSprite("ball.png",
-		image.Rect(0, 0, int(self.ball.W), int(self.ball.H)),
-		&self.ball)
+		image.Rect(0, 0, int(ctrltrial.ball.W), int(ctrltrial.ball.H)),
+		&ctrltrial.ball)
 }
 
 const (
-	CTRL_MARGIN_LEFT      = 10
-	CTRL_MARGIN_BOTTOM    = 10
-	CTRL_MARGIN_BETWEEN   = 10
-	BUTTON_MARGIN_RIGHT   = 20
-	BUTTON_MARGIN_BOTTOM  = 20
-	BUTTON_MARGIN_BETWEEN = 10
+	ctrlMarginLeft      = 10
+	ctrlMarginBottom    = 10
+	ctrlMarginBetween   = 10
+	buttonMarginRight   = 20
+	buttonMarginBottom  = 20
+	buttonMarginBetween = 10
 )
 
-// CtrlUp
-type CtrlUpTouchListener struct {
+// ctrlUp
+type ctrlUpTouchListener struct {
 	parent *CtrlTrial
 }
 
-func (self *CtrlUpTouchListener) OnTouchBegin(x, y float32) {
-	simra.LogDebug("[IN] CtrlUp Begin!")
+func (ctrltrial *ctrlUpTouchListener) OnTouchBegin(x, y float32) {
+	simra.LogDebug("[IN] ctrlUp Begin!")
 
-	ctrl := self.parent
-	ctrl.buttonState = CTRL_UP
-
-	simra.LogDebug("[OUT]")
-}
-
-func (self *CtrlUpTouchListener) OnTouchMove(x, y float32) {
-	simra.LogDebug("[IN] CtrlUp Move!")
-
-	ctrl := self.parent
-	ctrl.buttonState = CTRL_UP
+	ctrl := ctrltrial.parent
+	ctrl.buttonState = ctrlUp
 
 	simra.LogDebug("[OUT]")
 }
 
-func (self *CtrlUpTouchListener) OnTouchEnd(x, y float32) {
-	simra.LogDebug("[IN] CtrlUp End")
+func (ctrltrial *ctrlUpTouchListener) OnTouchMove(x, y float32) {
+	simra.LogDebug("[IN] ctrlUp Move!")
 
-	ctrl := self.parent
-	ctrl.buttonState = CTRL_NOP
+	ctrl := ctrltrial.parent
+	ctrl.buttonState = ctrlUp
 
 	simra.LogDebug("[OUT]")
 }
 
-func (self *CtrlTrial) initCtrlUp() {
-	// set size of CtrlUp
-	self.ctrlup.W = float32(120)
-	self.ctrlup.H = float32(120)
+func (ctrltrial *ctrlUpTouchListener) OnTouchEnd(x, y float32) {
+	simra.LogDebug("[IN] ctrlUp End")
 
-	// put CtrlUp on left bottom
-	self.ctrlup.X = (self.ctrlup.W / 2) + CTRL_MARGIN_LEFT
-	self.ctrlup.Y = CTRL_MARGIN_BOTTOM + self.ctrldown.H + CTRL_MARGIN_BETWEEN + (self.ctrlup.H / 2)
+	ctrl := ctrltrial.parent
+	ctrl.buttonState = ctrlNop
+
+	simra.LogDebug("[OUT]")
+}
+
+func (ctrltrial *CtrlTrial) initctrlUp() {
+	// set size of ctrlUp
+	ctrltrial.ctrlup.W = float32(120)
+	ctrltrial.ctrlup.H = float32(120)
+
+	// put ctrlUp on left bottom
+	ctrltrial.ctrlup.X = (ctrltrial.ctrlup.W / 2) + ctrlMarginLeft
+	ctrltrial.ctrlup.Y = ctrlMarginBottom + ctrltrial.ctrldown.H + ctrlMarginBetween + (ctrltrial.ctrlup.H / 2)
 
 	// add sprite to glpeer
 	simra.GetInstance().AddSprite("arrow.png",
-		image.Rect(0, 0, int(self.ctrlup.W), int(self.ctrlup.H)),
-		&self.ctrlup)
+		image.Rect(0, 0, int(ctrltrial.ctrlup.W), int(ctrltrial.ctrlup.H)),
+		&ctrltrial.ctrlup)
 
 	// add touch listener for sprite
-	ctrlup := &CtrlUpTouchListener{}
-	self.ctrlup.AddTouchListener(ctrlup)
-	ctrlup.parent = self
+	ctrlup := &ctrlUpTouchListener{}
+	ctrltrial.ctrlup.AddTouchListener(ctrlup)
+	ctrlup.parent = ctrltrial
 }
 
-// CtrlDown
-type CtrlDownTouchListener struct {
+// ctrlDown
+type ctrlDownTouchListener struct {
 	parent *CtrlTrial
 }
 
-func (self *CtrlDownTouchListener) OnTouchBegin(x, y float32) {
-	simra.LogDebug("[IN] CtrlDown Begin!")
+func (ctrltrial *ctrlDownTouchListener) OnTouchBegin(x, y float32) {
+	simra.LogDebug("[IN] ctrlDown Begin!")
 
-	ctrl := self.parent
-	ctrl.buttonState = CTRL_DOWN
-
-	simra.LogDebug("[OUT]")
-}
-
-func (self *CtrlDownTouchListener) OnTouchMove(x, y float32) {
-	simra.LogDebug("[IN] CtrlDown Move!")
-
-	ctrl := self.parent
-	ctrl.buttonState = CTRL_DOWN
+	ctrl := ctrltrial.parent
+	ctrl.buttonState = ctrlDown
 
 	simra.LogDebug("[OUT]")
 }
 
-func (self *CtrlDownTouchListener) OnTouchEnd(x, y float32) {
-	simra.LogDebug("[IN] CtrlDown End")
+func (ctrltrial *ctrlDownTouchListener) OnTouchMove(x, y float32) {
+	simra.LogDebug("[IN] ctrlDown Move!")
 
-	ctrl := self.parent
-	ctrl.buttonState = CTRL_NOP
+	ctrl := ctrltrial.parent
+	ctrl.buttonState = ctrlDown
 
 	simra.LogDebug("[OUT]")
 }
 
-func (self *CtrlTrial) initCtrlDown() {
-	// set size of CtrlDown
-	self.ctrldown.W = float32(120)
-	self.ctrldown.H = float32(120)
+func (ctrltrial *ctrlDownTouchListener) OnTouchEnd(x, y float32) {
+	simra.LogDebug("[IN] ctrlDown End")
 
-	// put CtrlDown on left bottom
-	self.ctrldown.X = (self.ctrldown.W / 2) + CTRL_MARGIN_LEFT
-	self.ctrldown.Y = CTRL_MARGIN_BOTTOM + (self.ctrldown.H / 2)
+	ctrl := ctrltrial.parent
+	ctrl.buttonState = ctrlNop
+
+	simra.LogDebug("[OUT]")
+}
+
+func (ctrltrial *CtrlTrial) initctrlDown() {
+	// set size of ctrlDown
+	ctrltrial.ctrldown.W = float32(120)
+	ctrltrial.ctrldown.H = float32(120)
+
+	// put ctrlDown on left bottom
+	ctrltrial.ctrldown.X = (ctrltrial.ctrldown.W / 2) + ctrlMarginLeft
+	ctrltrial.ctrldown.Y = ctrlMarginBottom + (ctrltrial.ctrldown.H / 2)
 
 	// rotate arrow to indicate down control
-	self.ctrldown.R = math.Pi
+	ctrltrial.ctrldown.R = math.Pi
 
 	// add sprite to glpeer
 	simra.GetInstance().AddSprite("arrow.png",
-		image.Rect(0, 0, int(self.ctrldown.W), int(self.ctrldown.H)),
-		&self.ctrldown)
+		image.Rect(0, 0, int(ctrltrial.ctrldown.W), int(ctrltrial.ctrldown.H)),
+		&ctrltrial.ctrldown)
 
 	// add touch listener for sprite
-	ctrldown := &CtrlDownTouchListener{}
-	self.ctrldown.AddTouchListener(ctrldown)
-	ctrldown.parent = self
+	ctrldown := &ctrlDownTouchListener{}
+	ctrltrial.ctrldown.AddTouchListener(ctrldown)
+	ctrldown.parent = ctrltrial
 }
 
-func (self *CtrlTrial) replaceButtonColor() {
+func (ctrltrial *CtrlTrial) replaceButtonColor() {
 	simra.LogDebug("IN")
 	// red changes to blue
-	self.buttonRed.ReplaceTexture("blue_circle.png",
-		image.Rect(0, 0, int(self.buttonBlue.W), int(self.buttonBlue.H)))
+	ctrltrial.buttonRed.ReplaceTexture("blue_circle.png",
+		image.Rect(0, 0, int(ctrltrial.buttonBlue.W), int(ctrltrial.buttonBlue.H)))
 	// blue changes to red
-	self.buttonBlue.ReplaceTexture("red_circle.png",
-		image.Rect(0, 0, int(self.buttonRed.W), int(self.buttonRed.H)))
+	ctrltrial.buttonBlue.ReplaceTexture("red_circle.png",
+		image.Rect(0, 0, int(ctrltrial.buttonRed.W), int(ctrltrial.buttonRed.H)))
 
-	self.buttonReplaced = true
+	ctrltrial.buttonReplaced = true
 	simra.LogDebug("OUT")
 }
 
-func (self *CtrlTrial) originalButtonColor() {
+func (ctrltrial *CtrlTrial) originalButtonColor() {
 	simra.LogDebug("IN")
 	// set red button to buttonRed
-	self.buttonRed.ReplaceTexture("red_circle.png",
-		image.Rect(0, 0, int(self.buttonBlue.W), int(self.buttonBlue.H)))
+	ctrltrial.buttonRed.ReplaceTexture("red_circle.png",
+		image.Rect(0, 0, int(ctrltrial.buttonBlue.W), int(ctrltrial.buttonBlue.H)))
 	// set blue button to buttonBlue
-	self.buttonBlue.ReplaceTexture("blue_circle.png",
-		image.Rect(0, 0, int(self.buttonRed.W), int(self.buttonRed.H)))
+	ctrltrial.buttonBlue.ReplaceTexture("blue_circle.png",
+		image.Rect(0, 0, int(ctrltrial.buttonRed.W), int(ctrltrial.buttonRed.H)))
 
-	self.buttonReplaced = false
+	ctrltrial.buttonReplaced = false
 	simra.LogDebug("OUT")
 }
 
-// button blue
+// ButtonBlueTouchListener represents a listener object
+// to notify touch event of Blue Button
 type ButtonBlueTouchListener struct {
 	parent *CtrlTrial
 }
 
-func (self *ButtonBlueTouchListener) OnTouchBegin(x, y float32) {
+// OnTouchBegin is called when Blue Button is Touched.
+func (ctrltrial *ButtonBlueTouchListener) OnTouchBegin(x, y float32) {
 	simra.LogDebug("IN")
-	if self.parent.buttonReplaced {
-		self.parent.originalButtonColor()
+	if ctrltrial.parent.buttonReplaced {
+		ctrltrial.parent.originalButtonColor()
 	} else {
-		self.parent.replaceButtonColor()
+		ctrltrial.parent.replaceButtonColor()
 	}
 
-	simra.GetInstance().RemoveSprite(&self.parent.ball)
+	simra.GetInstance().RemoveSprite(&ctrltrial.parent.ball)
 	simra.LogDebug("OUT")
 }
 
-func (self *ButtonBlueTouchListener) OnTouchMove(x, y float32) {
+// OnTouchMove is called when Blue Button is Touched and moved.
+func (ctrltrial *ButtonBlueTouchListener) OnTouchMove(x, y float32) {
 	// nop
 }
 
-func (self *ButtonBlueTouchListener) OnTouchEnd(x, y float32) {
+// OnTouchEnd is called when Blue Button is Touched and it is released.
+func (ctrltrial *ButtonBlueTouchListener) OnTouchEnd(x, y float32) {
 	// nop
 }
 
-func (self *CtrlTrial) initButtonBlue() {
+func (ctrltrial *CtrlTrial) initButtonBlue() {
 	simra.LogDebug("IN")
 	// set size of button blue
-	self.buttonBlue.W = float32(80)
-	self.buttonBlue.H = float32(80)
+	ctrltrial.buttonBlue.W = float32(80)
+	ctrltrial.buttonBlue.H = float32(80)
 
 	// put button red on right bottom
-	self.buttonBlue.X = config.SCREEN_WIDTH - BUTTON_MARGIN_RIGHT - self.buttonBlue.W/2
-	self.buttonBlue.Y = BUTTON_MARGIN_BOTTOM + (80) + BUTTON_MARGIN_BETWEEN + self.buttonBlue.W/2
+	ctrltrial.buttonBlue.X = config.ScreenWidth - buttonMarginRight - ctrltrial.buttonBlue.W/2
+	ctrltrial.buttonBlue.Y = buttonMarginBottom + (80) + buttonMarginBetween + ctrltrial.buttonBlue.W/2
 
 	// add sprite to glpeer
 	simra.GetInstance().AddSprite("blue_circle.png",
-		image.Rect(0, 0, int(self.buttonBlue.W), int(self.buttonBlue.H)),
-		&self.buttonBlue)
+		image.Rect(0, 0, int(ctrltrial.buttonBlue.W), int(ctrltrial.buttonBlue.H)),
+		&ctrltrial.buttonBlue)
 
 	// add touch listener for sprite
 	listener := &ButtonBlueTouchListener{}
-	self.buttonBlue.AddTouchListener(listener)
-	listener.parent = self
+	ctrltrial.buttonBlue.AddTouchListener(listener)
+	listener.parent = ctrltrial
 	simra.LogDebug("OUT")
 }
 
-// button red
+// ButtonRedTouchListener represents a listener object
+// to notify touch event of Red Button
 type ButtonRedTouchListener struct {
 	parent *CtrlTrial
 }
 
-func (self *ButtonRedTouchListener) OnTouchBegin(x, y float32) {
+// OnTouchBegin is called when Red Button is Touched.
+func (ctrltrial *ButtonRedTouchListener) OnTouchBegin(x, y float32) {
 	simra.LogDebug("IN")
-	if self.parent.buttonReplaced {
-		self.parent.originalButtonColor()
+	if ctrltrial.parent.buttonReplaced {
+		ctrltrial.parent.originalButtonColor()
 	} else {
-		self.parent.replaceButtonColor()
+		ctrltrial.parent.replaceButtonColor()
 	}
 	simra.GetInstance().AddSprite("ball.png",
-		image.Rect(0, 0, int(self.parent.ball.W), int(self.parent.ball.H)),
-		&self.parent.ball)
+		image.Rect(0, 0, int(ctrltrial.parent.ball.W), int(ctrltrial.parent.ball.H)),
+		&ctrltrial.parent.ball)
 	simra.LogDebug("OUT")
 }
-func (self *ButtonRedTouchListener) OnTouchMove(x, y float32) {
-	// nop
-}
-func (self *ButtonRedTouchListener) OnTouchEnd(x, y float32) {
+
+// OnTouchMove is called when Red Button is Touched and moved.
+func (ctrltrial *ButtonRedTouchListener) OnTouchMove(x, y float32) {
 	// nop
 }
 
-func (self *CtrlTrial) initButtonRed() {
+// OnTouchEnd is called when Red Button is Touched and it is released.
+func (ctrltrial *ButtonRedTouchListener) OnTouchEnd(x, y float32) {
+	// nop
+}
+
+func (ctrltrial *CtrlTrial) initButtonRed() {
 	// set size of button red
-	self.buttonRed.W = float32(80)
-	self.buttonRed.H = float32(80)
+	ctrltrial.buttonRed.W = float32(80)
+	ctrltrial.buttonRed.H = float32(80)
 
 	// put button red on right bottom
-	self.buttonRed.X = config.SCREEN_WIDTH - BUTTON_MARGIN_RIGHT - self.buttonBlue.W -
-		BUTTON_MARGIN_BETWEEN - self.buttonRed.W/2
-	self.buttonRed.Y = BUTTON_MARGIN_BOTTOM + (self.buttonRed.H / 2)
+	ctrltrial.buttonRed.X = config.ScreenWidth - buttonMarginRight - ctrltrial.buttonBlue.W -
+		buttonMarginBetween - ctrltrial.buttonRed.W/2
+	ctrltrial.buttonRed.Y = buttonMarginBottom + (ctrltrial.buttonRed.H / 2)
 
 	// add sprite to glpeer
 	simra.GetInstance().AddSprite("red_circle.png",
-		image.Rect(0, 0, int(self.buttonRed.W), int(self.buttonRed.H)),
-		&self.buttonRed)
+		image.Rect(0, 0, int(ctrltrial.buttonRed.W), int(ctrltrial.buttonRed.H)),
+		&ctrltrial.buttonRed)
 
 	// add touch listener for sprite
 	listener := &ButtonRedTouchListener{}
-	self.buttonRed.AddTouchListener(listener)
-	listener.parent = self
+	ctrltrial.buttonRed.AddTouchListener(listener)
+	listener.parent = ctrltrial
 }
 
-var degree float32 = 0
+var degree float32
 
-func (self *CtrlTrial) Drive() {
-	degree += 1
+// Drive is called from simra.
+// This is used to update sprites position.
+// This will be called 60 times per sec.
+func (ctrltrial *CtrlTrial) Drive() {
+	degree++
 	if degree >= 360 {
 		degree = 0
 	}
 
-	switch self.buttonState {
-	case CTRL_UP:
-		self.ball.Y += 1
-	case CTRL_DOWN:
-		self.ball.Y -= 1
+	switch ctrltrial.buttonState {
+	case ctrlUp:
+		ctrltrial.ball.Y++
+	case ctrlDown:
+		ctrltrial.ball.Y--
 	}
 
-	self.ball.R = float32(degree) * math.Pi / 180
+	ctrltrial.ball.R = float32(degree) * math.Pi / 180
 }
