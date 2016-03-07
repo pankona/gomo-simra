@@ -12,8 +12,9 @@ type Title struct {
 }
 
 // Initialize initializes title scene
+// This is called from simra.
 // simra.GetInstance().SetDesiredScreenSize should be called to determine
-// screen size of this app
+// screen size of this scene.
 func (title *Title) Initialize() {
 	simra.LogDebug("[IN]")
 
