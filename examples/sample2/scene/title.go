@@ -14,7 +14,7 @@ type Title struct {
 func (self *Title) Initialize() {
 	simra.LogDebug("[IN]")
 
-	simra.GetInstance().SetDesiredScreenSize(config.SCREEN_WIDTH, config.SCREEN_HEIGHT)
+	simra.GetInstance().SetDesiredScreenSize(config.ScreenWidth, config.ScreenHeight)
 
 	// initialize sprites
 	self.initialize()
@@ -24,12 +24,12 @@ func (self *Title) Initialize() {
 
 func (self *Title) initialize() {
 	// add background sprite
-	self.background.W = float32(config.SCREEN_WIDTH)
-	self.background.H = float32(config.SCREEN_HEIGHT)
+	self.background.W = float32(config.ScreenWidth)
+	self.background.H = float32(config.ScreenHeight)
 
 	// put center of screen
-	self.background.X = config.SCREEN_WIDTH / 2
-	self.background.Y = config.SCREEN_HEIGHT / 2
+	self.background.X = config.ScreenWidth / 2
+	self.background.Y = config.ScreenHeight / 2
 
 	simra.GetInstance().AddSprite("title.png",
 		image.Rect(0, 0, int(self.background.W), int(self.background.H)),

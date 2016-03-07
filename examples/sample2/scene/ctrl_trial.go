@@ -29,7 +29,7 @@ const (
 func (self *CtrlTrial) Initialize() {
 	simra.LogDebug("[IN]")
 
-	simra.GetInstance().SetDesiredScreenSize(config.SCREEN_WIDTH, config.SCREEN_HEIGHT)
+	simra.GetInstance().SetDesiredScreenSize(config.ScreenWidth, config.ScreenHeight)
 
 	// add global touch listener to catch touch end event
 	simra.GetInstance().AddTouchListener(self)
@@ -71,8 +71,8 @@ func (self *CtrlTrial) initBall() {
 	self.ball.H = float32(48)
 
 	// put center of screen at start
-	self.ball.X = config.SCREEN_WIDTH / 2
-	self.ball.Y = config.SCREEN_HEIGHT / 2
+	self.ball.X = config.ScreenWidth / 2
+	self.ball.Y = config.ScreenHeight / 2
 
 	simra.GetInstance().AddSprite("ball.png",
 		image.Rect(0, 0, int(self.ball.W), int(self.ball.H)),
@@ -253,7 +253,7 @@ func (self *CtrlTrial) initButtonBlue() {
 	self.buttonBlue.H = float32(80)
 
 	// put button red on right bottom
-	self.buttonBlue.X = config.SCREEN_WIDTH - BUTTON_MARGIN_RIGHT - self.buttonBlue.W/2
+	self.buttonBlue.X = config.ScreenWidth - BUTTON_MARGIN_RIGHT - self.buttonBlue.W/2
 	self.buttonBlue.Y = BUTTON_MARGIN_BOTTOM + (80) + BUTTON_MARGIN_BETWEEN + self.buttonBlue.W/2
 
 	// add sprite to glpeer
@@ -298,7 +298,7 @@ func (self *CtrlTrial) initButtonRed() {
 	self.buttonRed.H = float32(80)
 
 	// put button red on right bottom
-	self.buttonRed.X = config.SCREEN_WIDTH - BUTTON_MARGIN_RIGHT - self.buttonBlue.W -
+	self.buttonRed.X = config.ScreenWidth - BUTTON_MARGIN_RIGHT - self.buttonBlue.W -
 		BUTTON_MARGIN_BETWEEN - self.buttonRed.W/2
 	self.buttonRed.Y = BUTTON_MARGIN_BOTTOM + (self.buttonRed.H / 2)
 

@@ -1,6 +1,8 @@
 package config
 
 const (
-	SCREEN_WIDTH  = 960
-	SCREEN_HEIGHT = 540
+	// ScreenWidth indicates virtual screen size of width for this app
+	ScreenWidth = 960
+	// ScreenHeight indicates virtual screen size of height for this app
+	ScreenHeight = 540
 )
