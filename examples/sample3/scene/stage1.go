@@ -15,10 +15,16 @@ type Ball struct {
 	speed     float64
 }
 
+// Background represents a sprite for background
+type Background struct {
+	simra.Sprite
+}
+
 // Stage1 represents scene of Stage1.
 type Stage1 struct {
 	models     Models
 	ball       Ball
+	background Background
 	isTouching bool
 }
 
@@ -117,10 +123,17 @@ func (scene *Stage1) initSprites() {
 	scene.ball.X = config.ScreenWidth / 2
 	scene.ball.Y = config.ScreenHeight / 2
 
+	scene.background.W = config.ScreenWidth
+	scene.background.H = config.ScreenHeight
+	scene.background.X = config.ScreenWidth / 2
+	scene.background.Y = config.ScreenHeight / 2
+	simra.GetInstance().AddSprite("bg.png",
+		image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight),
+		&scene.background.Sprite)
+
 	simra.GetInstance().AddSprite("ball.png",
 		image.Rect(0, 0, int(scene.ball.W), int(scene.ball.H)),
 		&scene.ball.Sprite)
-
 }
 
 func (scene *Stage1) registerModels() {
