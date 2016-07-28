@@ -14,12 +14,18 @@ type Model interface {
 
 // Models represents collection of model for a scene
 type Models struct {
-	ball Model
+	ball       Model
+	background [2]Model
 }
 
 // RegisterBall registers a model to array of model
 func (models *Models) RegisterBall(model Model) {
 	models.ball = model
+}
+
+// RegisterBackground registers a model to array of model
+func (models *Models) RegisterBackground(model Model, index int) {
+	models.background[index] = model
 }
 
 var degree float32
@@ -40,4 +46,8 @@ func (models *Models) Progress(isKeyTouching bool) {
 		ball.setDirection(270)
 	}
 	ball.move()
+
+	background := models.background
+	background[0].move()
+	background[1].move()
 }
