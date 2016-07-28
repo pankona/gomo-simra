@@ -24,7 +24,7 @@ type Background struct {
 type Stage1 struct {
 	models     Models
 	ball       Ball
-	background Background
+	background [2]Background
 	isTouching bool
 }
 
@@ -117,15 +117,26 @@ func (scene *Stage1) OnTouchEnd(x, y float32) {
 func (scene *Stage1) initSprites() {
 
 	// set size of background
-	scene.background.W = config.ScreenWidth
-	scene.background.H = config.ScreenHeight
+	scene.background[0].W = config.ScreenWidth
+	scene.background[0].H = config.ScreenHeight
 
 	// put center of screen
-	scene.background.X = config.ScreenWidth / 2
-	scene.background.Y = config.ScreenHeight / 2
+	scene.background[0].X = config.ScreenWidth / 2
+	scene.background[0].Y = config.ScreenHeight / 2
 	simra.GetInstance().AddSprite("bg.png",
 		image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight),
-		&scene.background.Sprite)
+		&scene.background[0].Sprite)
+
+	// set size of background
+	scene.background[1].W = config.ScreenWidth
+	scene.background[1].H = config.ScreenHeight
+
+	// put out of screen
+	scene.background[1].X = config.ScreenWidth/2 + config.ScreenWidth
+	scene.background[1].Y = config.ScreenHeight / 2
+	simra.GetInstance().AddSprite("bg.png",
+		image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight),
+		&scene.background[1].Sprite)
 
 	// set size of ball
 	scene.ball.W = float32(48)
