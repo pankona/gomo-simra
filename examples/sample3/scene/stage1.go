@@ -18,13 +18,14 @@ type Ball struct {
 // Background represents a sprite for background
 type Background struct {
 	simra.Sprite
+	speed float64
 }
 
 // Stage1 represents scene of Stage1.
 type Stage1 struct {
 	models     Models
 	ball       Ball
-	background Background
+	background [2]Background
 	isTouching bool
 }
 
@@ -59,10 +60,6 @@ func (ball *Ball) move() {
 
 	}
 
-	/*
-		ball.Sprite.X += float32(math.Cos(ball.direction*math.Pi/180) * ball.speed)
-		ball.Sprite.Y += float32(math.Sin(ball.direction*math.Pi/180) * ball.speed)
-	*/
 	ball.Sprite.Y += float32(ball.speed)
 	if ball.Sprite.Y < 0 {
 		ball.Sprite.Y = 0
@@ -73,7 +70,32 @@ func (ball *Ball) move() {
 		ball.Sprite.Y = config.ScreenHeight
 		ball.speed = 0
 	}
-	//	simra.LogDebug("cos90, sin90", math.Cos(90*math.Pi/180), math.Sin(90*math.Pi/180))
+}
+
+func (bg *Background) getPosition() (x, y float32) {
+	x = 0
+	y = 0
+	return x, y
+}
+
+func (bg *Background) setPosition(x, y float32) {
+}
+
+func (bg *Background) getRotate() float32 {
+	return 0
+}
+
+func (bg *Background) setRotate(r float32) {
+}
+
+func (bg *Background) setDirection(d float64) {
+}
+
+func (bg *Background) move() {
+	bg.Sprite.X -= float32(bg.speed)
+	if bg.Sprite.X < -1*bg.Sprite.W/2 {
+		bg.Sprite.X = config.ScreenWidth/2 + (config.ScreenWidth - float32(bg.speed))
+	}
 }
 
 // Initialize initializes Stage1 scene
@@ -117,15 +139,26 @@ func (scene *Stage1) OnTouchEnd(x, y float32) {
 func (scene *Stage1) initSprites() {
 
 	// set size of background
-	scene.background.W = config.ScreenWidth
-	scene.background.H = config.ScreenHeight
+	scene.background[0].W = config.ScreenWidth + 1
+	scene.background[0].H = config.ScreenHeight
 
 	// put center of screen
-	scene.background.X = config.ScreenWidth / 2
-	scene.background.Y = config.ScreenHeight / 2
+	scene.background[0].X = config.ScreenWidth / 2
+	scene.background[0].Y = config.ScreenHeight / 2
 	simra.GetInstance().AddSprite("bg.png",
 		image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight),
-		&scene.background.Sprite)
+		&scene.background[0].Sprite)
+
+	// set size of background
+	scene.background[1].W = config.ScreenWidth + 1
+	scene.background[1].H = config.ScreenHeight
+
+	// put out of screen
+	scene.background[1].X = config.ScreenWidth/2 + (config.ScreenWidth)
+	scene.background[1].Y = config.ScreenHeight / 2
+	simra.GetInstance().AddSprite("bg.png",
+		image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight),
+		&scene.background[1].Sprite)
 
 	// set size of ball
 	scene.ball.W = float32(48)
@@ -144,6 +177,11 @@ func (scene *Stage1) registerModels() {
 	scene.ball.speed = 1
 	scene.ball.direction = 90
 	scene.models.RegisterBall(&scene.ball)
+
+	scene.background[0].speed = 3
+	scene.models.RegisterBackground(&scene.background[0], 0)
+	scene.background[1].speed = 3
+	scene.models.RegisterBackground(&scene.background[1], 1)
 }
 
 // Drive is called from simra.
