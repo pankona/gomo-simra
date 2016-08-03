@@ -26,9 +26,43 @@ func GetInstance() *Simra {
 	return simra
 }
 
+type point struct {
+	x, y int
+}
+
 func (simra *Simra) onUpdate() {
 	if simra.driver != nil {
 		simra.driver.Drive()
+	}
+
+	// check collision
+	for _, v := range comap {
+		// TODO: refactor this Fxxkin' part
+
+		x1, y1, w1, h1 := v.c1.GetXYWH()
+		x2, y2, w2, h2 := v.c2.GetXYWH()
+
+		p1 := &point{x1 - w1/2, y1 + h1/2}
+		p2 := &point{x1 + w1/2, y1 + h1/2}
+		p3 := &point{x1 - w1/2, y1 - h1/2}
+		p4 := &point{x1 + w1/2, y1 - h1/2}
+
+		if p1.x >= (x2-w2/2) && p1.x <= (x2+w2/2) &&
+			p1.y >= (y2-h2/2) && p1.y <= (y2+h2/2) {
+			v.listener.OnCollision()
+		}
+		if p2.x >= (x2-w2/2) && p2.x <= (x2+w2/2) &&
+			p2.y >= (y2-h2/2) && p2.y <= (y2+h2/2) {
+			v.listener.OnCollision()
+		}
+		if p3.x >= (x2-w2/2) && p3.x <= (x2+w2/2) &&
+			p3.y >= (y2-h2/2) && p3.y <= (y2+h2/2) {
+			v.listener.OnCollision()
+		}
+		if p4.x >= (x2-w2/2) && p4.x <= (x2+w2/2) &&
+			p4.y >= (y2-h2/2) && p4.y <= (y2+h2/2) {
+			v.listener.OnCollision()
+		}
 	}
 }
 

@@ -5,6 +5,7 @@ import (
 
 	"github.com/pankona/gomo-simra/examples/sample3/scene/config"
 	"github.com/pankona/gomo-simra/simra"
+	"github.com/pankona/gomo-simra/simra/peer"
 )
 
 // Ball represents a ball
@@ -194,6 +195,24 @@ func (scene *Stage1) initSprites() {
 	simra.GetInstance().AddSprite("obstacle.png",
 		image.Rect(0, 0, 100, 100),
 		&scene.obstacle.Sprite)
+
+	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle, scene)
+}
+
+// GetXYWH returns x, y w, h of receiver
+func (ball Ball) GetXYWH() (x, y, w, h int) {
+	return int(ball.Sprite.X), int(ball.Sprite.Y), int(ball.Sprite.W), int(ball.Sprite.H)
+}
+
+// GetXYWH returns x, y w, h of receiver
+func (obstacle Obstacle) GetXYWH() (x, y, w, h int) {
+	return int(obstacle.Sprite.X), int(obstacle.Sprite.Y), int(obstacle.Sprite.W), int(obstacle.Sprite.H)
+}
+
+// OnCollision is called at collision detected
+func (scene *Stage1) OnCollision() {
+	peer.LogDebug("IN")
+	peer.LogDebug("OUT")
 }
 
 func (scene *Stage1) registerModels() {
