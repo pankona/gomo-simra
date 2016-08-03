@@ -21,14 +21,23 @@ type Background struct {
 	speed float64
 }
 
+// Obstacle represetnts a sprite for obstacle
+type Obstacle struct {
+	simra.Sprite
+}
+
 // Stage1 represents scene of Stage1.
 type Stage1 struct {
 	models     Models
 	ball       Ball
+	obstacle   Obstacle
 	background [2]Background
 	isTouching bool
 }
 
+/**
+ * Ball implementation for Model interface
+ */
 func (ball *Ball) getPosition() (x, y float32) {
 	x = 0
 	y = 0
@@ -72,6 +81,9 @@ func (ball *Ball) move() {
 	}
 }
 
+/**
+ * Background implementation for Model interface
+ */
 func (bg *Background) getPosition() (x, y float32) {
 	x = 0
 	y = 0
@@ -171,6 +183,17 @@ func (scene *Stage1) initSprites() {
 	simra.GetInstance().AddSprite("ball.png",
 		image.Rect(0, 0, int(scene.ball.W), int(scene.ball.H)),
 		&scene.ball.Sprite)
+
+	// set size of obstacle
+	scene.obstacle.W = 50
+	scene.obstacle.H = 100
+
+	// put center/upper side of screen
+	scene.obstacle.X = config.ScreenWidth / 2
+	scene.obstacle.Y = config.ScreenHeight / 3 * 2
+	simra.GetInstance().AddSprite("obstacle.png",
+		image.Rect(0, 0, 100, 100),
+		&scene.obstacle.Sprite)
 }
 
 func (scene *Stage1) registerModels() {
