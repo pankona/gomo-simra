@@ -26,6 +26,17 @@ func (simra *Simra) AddCollisionListener(c1, c2 Collider, listener CollisionList
 	LogDebug("OUT")
 }
 
+// RemoveCollisionMap removes specified comap from list
+func (simra *Simra) RemoveCollisionMap(c *collisionMap) {
+	result := []*collisionMap{}
+
+	for _, v := range comap {
+		if v != c {
+			result = append(result, v)
+		}
+	}
+}
+
 // RemoveAllCollisionListener removes all registered listeners
 func (simra *Simra) RemoveAllCollisionListener() {
 	LogDebug("IN")

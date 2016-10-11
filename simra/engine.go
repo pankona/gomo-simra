@@ -35,9 +35,16 @@ func (simra *Simra) onUpdate() {
 		simra.driver.Drive()
 	}
 
+collision_detection:
 	// check collision
 	for _, v := range comap {
 		// TODO: refactor this Fxxkin' part
+
+		if v.c1 == nil || v.c2 == nil {
+			// remove and bailout...
+			simra.RemoveCollisionMap(v)
+			goto collision_detection
+		}
 
 		x1, y1, w1, h1 := v.c1.GetXYWH()
 		x2, y2, w2, h2 := v.c2.GetXYWH()
