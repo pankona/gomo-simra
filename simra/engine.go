@@ -50,18 +50,22 @@ func (simra *Simra) onUpdate() {
 		if p1.x >= (x2-w2/2) && p1.x <= (x2+w2/2) &&
 			p1.y >= (y2-h2/2) && p1.y <= (y2+h2/2) {
 			v.listener.OnCollision()
+			return
 		}
 		if p2.x >= (x2-w2/2) && p2.x <= (x2+w2/2) &&
 			p2.y >= (y2-h2/2) && p2.y <= (y2+h2/2) {
 			v.listener.OnCollision()
+			return
 		}
 		if p3.x >= (x2-w2/2) && p3.x <= (x2+w2/2) &&
 			p3.y >= (y2-h2/2) && p3.y <= (y2+h2/2) {
 			v.listener.OnCollision()
+			return
 		}
 		if p4.x >= (x2-w2/2) && p4.x <= (x2+w2/2) &&
 			p4.y >= (y2-h2/2) && p4.y <= (y2+h2/2) {
 			v.listener.OnCollision()
+			return
 		}
 	}
 }
