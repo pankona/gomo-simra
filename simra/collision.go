@@ -35,6 +35,8 @@ func (simra *Simra) RemoveCollisionMap(c *collisionMap) {
 			result = append(result, v)
 		}
 	}
+
+	comap = result
 }
 
 // RemoveAllCollisionListener removes all registered listeners
