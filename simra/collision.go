@@ -15,7 +15,7 @@ type Collider interface {
 
 // CollisionListener represents a interface of listener of collision
 type CollisionListener interface {
-	OnCollision()
+	OnCollision(c1, c2 Collider)
 }
 
 // AddCollisionListener add a callback function that is called on

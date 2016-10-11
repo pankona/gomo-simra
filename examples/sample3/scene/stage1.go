@@ -210,7 +210,7 @@ func (obstacle Obstacle) GetXYWH() (x, y, w, h int) {
 }
 
 // OnCollision is called at collision detected
-func (scene *Stage1) OnCollision() {
+func (scene *Stage1) OnCollision(c1, c2 simra.Collider) {
 	peer.LogDebug("IN")
 	peer.LogDebug("OUT")
 }
