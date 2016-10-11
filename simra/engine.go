@@ -26,10 +26,16 @@ func GetInstance() *Simra {
 	return simra
 }
 
+type point struct {
+	x, y int
+}
+
 func (simra *Simra) onUpdate() {
 	if simra.driver != nil {
 		simra.driver.Drive()
 	}
+
+	simra.collisionCheckAndNotify()
 }
 
 func (simra *Simra) onStopped() {
