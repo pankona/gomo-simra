@@ -21,17 +21,17 @@ type CollisionListener interface {
 // AddCollisionListener add a callback function that is called on
 // collision is detected between c1 and c2.
 func (simra *Simra) AddCollisionListener(c1, c2 Collider, listener CollisionListener) {
+	// TODO: exclusive controll
 	LogDebug("IN")
 	comap = append(comap, &collisionMap{c1, c2, listener})
 	LogDebug("OUT")
 }
 
-// RemoveCollisionMap removes specified comap from list
-func (simra *Simra) RemoveCollisionMap(c *collisionMap) {
+func (simra *Simra) removeCollisionMap(c *collisionMap) {
 	result := []*collisionMap{}
 
 	for _, v := range comap {
-		if v != c {
+		if c.c1 != v.c1 && c.c2 != v.c2 && v != c {
 			result = append(result, v)
 		}
 	}
@@ -49,17 +49,9 @@ func (simra *Simra) RemoveAllCollisionListener() {
 func (simra *Simra) collisionCheckAndNotify() {
 	LogDebug("IN")
 
-CollisionDetection:
 	// check collision
 	for _, v := range comap {
-		// TODO: refactor this Fxxkin' part
-
-		if v.c1 == nil || v.c2 == nil {
-			// remove and bailout...
-			simra.RemoveCollisionMap(v)
-			goto CollisionDetection
-		}
-
+		// TODO: refactor around here...
 		x1, y1, w1, h1 := v.c1.GetXYWH()
 		x2, y2, w2, h2 := v.c2.GetXYWH()
 
@@ -90,4 +82,16 @@ CollisionDetection:
 		}
 	}
 	LogDebug("OUT")
+}
+
+// RemoveCollisionListener removes a collision map by specified collider instance.
+func (simra *Simra) RemoveCollisionListener(c1, c2 Collider) {
+	// TODO: exclusive controll
+	LogDebug("IN")
+	simra.removeCollisionMap(&collisionMap{c1, c2, nil})
+	LogDebug("OUT")
+}
+
+func (simra *Simra) comapLength() int {
+	return len(comap)
 }
