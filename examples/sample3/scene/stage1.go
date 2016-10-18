@@ -8,25 +8,6 @@ import (
 	"github.com/pankona/gomo-simra/simra/peer"
 )
 
-// Ball represents a ball
-type Ball struct {
-	simra.Sprite
-	// direction is radian.
-	direction float64
-	speed     float64
-}
-
-// Background represents a sprite for background
-type Background struct {
-	simra.Sprite
-	speed float64
-}
-
-// Obstacle represetnts a sprite for obstacle
-type Obstacle struct {
-	simra.Sprite
-}
-
 // Stage1 represents scene of Stage1.
 type Stage1 struct {
 	models     Models
@@ -34,81 +15,6 @@ type Stage1 struct {
 	obstacle   Obstacle
 	background [2]Background
 	isTouching bool
-}
-
-/**
- * Ball implementation for Model interface
- */
-func (ball *Ball) getPosition() (x, y float32) {
-	x = 0
-	y = 0
-	return x, y
-}
-
-func (ball *Ball) setPosition(x, y float32) {
-	ball.Sprite.X = x
-	ball.Sprite.Y = y
-}
-
-func (ball *Ball) getRotate() float32 {
-	return ball.Sprite.R
-}
-
-func (ball *Ball) setRotate(r float32) {
-	ball.Sprite.R = r
-}
-
-func (ball *Ball) setDirection(d float64) {
-	ball.direction = d
-}
-
-func (ball *Ball) move() {
-	if ball.direction > 0 && ball.direction < 180 {
-		ball.speed += 9.8 / 60
-	} else {
-		ball.speed -= 9.8 / 60
-
-	}
-
-	ball.Sprite.Y += float32(ball.speed)
-	if ball.Sprite.Y < 0 {
-		ball.Sprite.Y = 0
-		ball.speed = 0
-	}
-
-	if ball.Sprite.Y > config.ScreenHeight {
-		ball.Sprite.Y = config.ScreenHeight
-		ball.speed = 0
-	}
-}
-
-/**
- * Background implementation for Model interface
- */
-func (bg *Background) getPosition() (x, y float32) {
-	x = 0
-	y = 0
-	return x, y
-}
-
-func (bg *Background) setPosition(x, y float32) {
-}
-
-func (bg *Background) getRotate() float32 {
-	return 0
-}
-
-func (bg *Background) setRotate(r float32) {
-}
-
-func (bg *Background) setDirection(d float64) {
-}
-
-func (bg *Background) move() {
-	bg.Sprite.X -= float32(bg.speed)
-	if bg.Sprite.X < -1*bg.Sprite.W/2 {
-		bg.Sprite.X = config.ScreenWidth/2 + (config.ScreenWidth - float32(bg.speed))
-	}
 }
 
 // Initialize initializes Stage1 scene
@@ -197,16 +103,6 @@ func (scene *Stage1) initSprites() {
 		&scene.obstacle.Sprite)
 
 	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle, scene)
-}
-
-// GetXYWH returns x, y w, h of receiver
-func (ball Ball) GetXYWH() (x, y, w, h int) {
-	return int(ball.Sprite.X), int(ball.Sprite.Y), int(ball.Sprite.W), int(ball.Sprite.H)
-}
-
-// GetXYWH returns x, y w, h of receiver
-func (obstacle Obstacle) GetXYWH() (x, y, w, h int) {
-	return int(obstacle.Sprite.X), int(obstacle.Sprite.Y), int(obstacle.Sprite.W), int(obstacle.Sprite.H)
 }
 
 // OnCollision is called at collision detected
