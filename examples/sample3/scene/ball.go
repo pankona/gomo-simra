@@ -16,27 +16,39 @@ type Ball struct {
 /**
  * Ball implementation for Model interface
  */
+func (ball *Ball) setPosition(x, y float32) {
+	ball.Sprite.X = x
+	ball.Sprite.Y = y
+}
+
 func (ball *Ball) getPosition() (x, y float32) {
 	x = 0
 	y = 0
 	return x, y
 }
 
-func (ball *Ball) setPosition(x, y float32) {
-	ball.Sprite.X = x
-	ball.Sprite.Y = y
+func (ball *Ball) setRotate(r float32) {
+	ball.Sprite.R = r
 }
 
 func (ball *Ball) getRotate() float32 {
 	return ball.Sprite.R
 }
 
-func (ball *Ball) setRotate(r float32) {
-	ball.Sprite.R = r
-}
-
 func (ball *Ball) setDirection(d float64) {
 	ball.direction = d
+}
+
+func (ball *Ball) getDirection() float64 {
+	return ball.direction
+}
+
+func (ball *Ball) setSpeed(s float64) {
+	ball.speed = s
+}
+
+func (ball *Ball) getSpeed() float64 {
+	return ball.speed
 }
 
 func (ball *Ball) move() {

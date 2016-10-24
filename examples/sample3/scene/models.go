@@ -9,6 +9,9 @@ type Model interface {
 	getRotate() float32
 	setRotate(radian float32)
 	setDirection(radian float64)
+	getDirection() float64
+	setSpeed(s float64)
+	getSpeed() float64
 	move()
 }
 

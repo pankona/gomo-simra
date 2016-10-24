@@ -14,23 +14,36 @@ type Background struct {
 /**
  * Background implementation for Model interface
  */
+
+func (bg *Background) setPosition(x, y float32) {
+}
+
 func (bg *Background) getPosition() (x, y float32) {
 	x = 0
 	y = 0
 	return x, y
 }
 
-func (bg *Background) setPosition(x, y float32) {
+func (bg *Background) setRotate(r float32) {
 }
 
 func (bg *Background) getRotate() float32 {
 	return 0
 }
 
-func (bg *Background) setRotate(r float32) {
+func (bg *Background) setDirection(d float64) {
 }
 
-func (bg *Background) setDirection(d float64) {
+func (bg *Background) getDirection() float64 {
+	return 0
+}
+
+func (bg *Background) setSpeed(s float64) {
+	bg.speed = s
+}
+
+func (bg *Background) getSpeed() float64 {
+	return bg.speed
 }
 
 func (bg *Background) move() {

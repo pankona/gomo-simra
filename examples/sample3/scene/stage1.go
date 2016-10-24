@@ -107,11 +107,12 @@ func (scene *Stage1) initSprites() {
 // OnCollision is called at collision detected
 func (scene *Stage1) OnCollision(c1, c2 simra.Collider) {
 
-	if _, ok := c1.(*Ball); ok {
-		if _, ok := c2.(*Obstacle); ok {
-			simra.LogDebug("collision detected!")
-		}
-	}
+	//if ball, ok := c1.(*Ball); ok {
+	//	if obstacle, ok := c2.(*Obstacle); ok {
+	//		simra.LogDebug("collision detected!")
+	//	}
+	//}
+	simra.LogDebug("collision detected!")
 }
 
 func (scene *Stage1) registerModels() {
