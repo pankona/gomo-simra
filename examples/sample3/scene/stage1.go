@@ -116,13 +116,8 @@ func (scene *Stage1) OnCollision(c1, c2 simra.Collider) {
 }
 
 func (scene *Stage1) registerModels() {
-	scene.ball.speed = 1
-	scene.ball.direction = 90
 	scene.models.RegisterBall(&scene.ball)
-
-	scene.background[0].speed = 3
 	scene.models.RegisterBackground(&scene.background[0], 0)
-	scene.background[1].speed = 3
 	scene.models.RegisterBackground(&scene.background[1], 1)
 }
 

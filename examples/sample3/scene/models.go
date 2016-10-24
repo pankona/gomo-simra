@@ -23,11 +23,14 @@ type Models struct {
 
 // RegisterBall registers a model to array of model
 func (models *Models) RegisterBall(ball Model) {
+	ball.setSpeed(1)
+	ball.setDirection(90)
 	models.ball = ball
 }
 
 // RegisterBackground registers a model to array of model
 func (models *Models) RegisterBackground(bg Model, index int) {
+	bg.setSpeed(3)
 	models.background[index] = bg
 }
 
