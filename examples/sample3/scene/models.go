@@ -22,13 +22,13 @@ type Models struct {
 }
 
 // RegisterBall registers a model to array of model
-func (models *Models) RegisterBall(model Model) {
-	models.ball = model
+func (models *Models) RegisterBall(ball Model) {
+	models.ball = ball
 }
 
 // RegisterBackground registers a model to array of model
-func (models *Models) RegisterBackground(model Model, index int) {
-	models.background[index] = model
+func (models *Models) RegisterBackground(bg Model, index int) {
+	models.background[index] = bg
 }
 
 var degree float32
