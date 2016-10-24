@@ -5,7 +5,6 @@ import (
 
 	"github.com/pankona/gomo-simra/examples/sample3/scene/config"
 	"github.com/pankona/gomo-simra/simra"
-	"github.com/pankona/gomo-simra/simra/peer"
 )
 
 // Stage1 represents scene of Stage1.
@@ -107,8 +106,12 @@ func (scene *Stage1) initSprites() {
 
 // OnCollision is called at collision detected
 func (scene *Stage1) OnCollision(c1, c2 simra.Collider) {
-	peer.LogDebug("IN")
-	peer.LogDebug("OUT")
+
+	if _, ok := c1.(*Ball); ok {
+		if _, ok := c2.(*Obstacle); ok {
+			simra.LogDebug("collision detected!")
+		}
+	}
 }
 
 func (scene *Stage1) registerModels() {
