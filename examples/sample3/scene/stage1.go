@@ -9,13 +9,18 @@ import (
 
 // Stage1 represents scene of Stage1.
 type Stage1 struct {
-	models     models
-	views      views
-	ball       Ball
-	obstacle   [2]Obstacle
-	background [2]Background
-	isTouching bool
+	models        models
+	views         views
+	ball          Ball
+	obstacle      [2]Obstacle
+	background    [2]Background
+	isTouching    bool
+	remainingLife int
 }
+
+const (
+	remainingLifeAtStart = 3
+)
 
 // Initialize initializes Stage1 scene
 // This is called from simra.
@@ -32,11 +37,11 @@ func (scene *Stage1) Initialize() {
 	// TODO: when goes to next scene, remove global touch listener
 	// simra.GetInstance().RemoveTouchListener(Stage1)
 
-	// initialize sprites
 	scene.resetPosition()
 	scene.setupSprites()
 	scene.registerViews()
 	scene.registerModels()
+	scene.remainingLife = remainingLifeAtStart
 
 	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle[0], &scene.models)
 	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle[1], &scene.models)
