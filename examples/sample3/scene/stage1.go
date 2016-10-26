@@ -5,110 +5,16 @@ import (
 
 	"github.com/pankona/gomo-simra/examples/sample3/scene/config"
 	"github.com/pankona/gomo-simra/simra"
-	"github.com/pankona/gomo-simra/simra/peer"
 )
-
-// Ball represents a ball
-type Ball struct {
-	simra.Sprite
-	// direction is radian.
-	direction float64
-	speed     float64
-}
-
-// Background represents a sprite for background
-type Background struct {
-	simra.Sprite
-	speed float64
-}
-
-// Obstacle represetnts a sprite for obstacle
-type Obstacle struct {
-	simra.Sprite
-}
 
 // Stage1 represents scene of Stage1.
 type Stage1 struct {
-	models     Models
+	models     models
+	views      views
 	ball       Ball
 	obstacle   Obstacle
 	background [2]Background
 	isTouching bool
-}
-
-/**
- * Ball implementation for Model interface
- */
-func (ball *Ball) getPosition() (x, y float32) {
-	x = 0
-	y = 0
-	return x, y
-}
-
-func (ball *Ball) setPosition(x, y float32) {
-	ball.Sprite.X = x
-	ball.Sprite.Y = y
-}
-
-func (ball *Ball) getRotate() float32 {
-	return ball.Sprite.R
-}
-
-func (ball *Ball) setRotate(r float32) {
-	ball.Sprite.R = r
-}
-
-func (ball *Ball) setDirection(d float64) {
-	ball.direction = d
-}
-
-func (ball *Ball) move() {
-	if ball.direction > 0 && ball.direction < 180 {
-		ball.speed += 9.8 / 60
-	} else {
-		ball.speed -= 9.8 / 60
-
-	}
-
-	ball.Sprite.Y += float32(ball.speed)
-	if ball.Sprite.Y < 0 {
-		ball.Sprite.Y = 0
-		ball.speed = 0
-	}
-
-	if ball.Sprite.Y > config.ScreenHeight {
-		ball.Sprite.Y = config.ScreenHeight
-		ball.speed = 0
-	}
-}
-
-/**
- * Background implementation for Model interface
- */
-func (bg *Background) getPosition() (x, y float32) {
-	x = 0
-	y = 0
-	return x, y
-}
-
-func (bg *Background) setPosition(x, y float32) {
-}
-
-func (bg *Background) getRotate() float32 {
-	return 0
-}
-
-func (bg *Background) setRotate(r float32) {
-}
-
-func (bg *Background) setDirection(d float64) {
-}
-
-func (bg *Background) move() {
-	bg.Sprite.X -= float32(bg.speed)
-	if bg.Sprite.X < -1*bg.Sprite.W/2 {
-		bg.Sprite.X = config.ScreenWidth/2 + (config.ScreenWidth - float32(bg.speed))
-	}
 }
 
 // Initialize initializes Stage1 scene
@@ -127,9 +33,12 @@ func (scene *Stage1) Initialize() {
 	// simra.GetInstance().RemoveTouchListener(Stage1)
 
 	// initialize sprites
-	scene.initSprites()
-
+	scene.resetPosition()
+	scene.setupSprites()
+	scene.registerViews()
 	scene.registerModels()
+
+	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle, &scene.models)
 
 	simra.LogDebug("[OUT]")
 }
@@ -149,8 +58,7 @@ func (scene *Stage1) OnTouchEnd(x, y float32) {
 	scene.isTouching = false
 }
 
-func (scene *Stage1) initSprites() {
-
+func (scene *Stage1) resetPosition() {
 	// set size of background
 	scene.background[0].W = config.ScreenWidth + 1
 	scene.background[0].H = config.ScreenHeight
@@ -158,9 +66,6 @@ func (scene *Stage1) initSprites() {
 	// put center of screen
 	scene.background[0].X = config.ScreenWidth / 2
 	scene.background[0].Y = config.ScreenHeight / 2
-	simra.GetInstance().AddSprite("bg.png",
-		image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight),
-		&scene.background[0].Sprite)
 
 	// set size of background
 	scene.background[1].W = config.ScreenWidth + 1
@@ -169,9 +74,6 @@ func (scene *Stage1) initSprites() {
 	// put out of screen
 	scene.background[1].X = config.ScreenWidth/2 + (config.ScreenWidth)
 	scene.background[1].Y = config.ScreenHeight / 2
-	simra.GetInstance().AddSprite("bg.png",
-		image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight),
-		&scene.background[1].Sprite)
 
 	// set size of ball
 	scene.ball.W = float32(48)
@@ -181,10 +83,6 @@ func (scene *Stage1) initSprites() {
 	scene.ball.X = config.ScreenWidth / 2
 	scene.ball.Y = config.ScreenHeight / 2
 
-	simra.GetInstance().AddSprite("ball.png",
-		image.Rect(0, 0, int(scene.ball.W), int(scene.ball.H)),
-		&scene.ball.Sprite)
-
 	// set size of obstacle
 	scene.obstacle.W = 50
 	scene.obstacle.H = 100
@@ -192,38 +90,43 @@ func (scene *Stage1) initSprites() {
 	// put center/upper side of screen
 	scene.obstacle.X = config.ScreenWidth / 2
 	scene.obstacle.Y = config.ScreenHeight / 3 * 2
+}
+
+func (scene *Stage1) setupSprites() {
+
+	simra.GetInstance().AddSprite("bg.png",
+		image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight),
+		&scene.background[0].Sprite)
+
+	simra.GetInstance().AddSprite("bg.png",
+		image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight),
+		&scene.background[1].Sprite)
+
+	simra.GetInstance().AddSprite("ball.png",
+		image.Rect(0, 0, int(scene.ball.W), int(scene.ball.H)),
+		&scene.ball.Sprite)
+
 	simra.GetInstance().AddSprite("obstacle.png",
 		image.Rect(0, 0, 100, 100),
 		&scene.obstacle.Sprite)
-
-	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle, scene)
 }
 
-// GetXYWH returns x, y w, h of receiver
-func (ball Ball) GetXYWH() (x, y, w, h int) {
-	return int(ball.Sprite.X), int(ball.Sprite.Y), int(ball.Sprite.W), int(ball.Sprite.H)
+func (scene *Stage1) registerViews() {
+	scene.views.registerBall(&scene.ball)
+	scene.views.addEventListener(scene)
 }
 
-// GetXYWH returns x, y w, h of receiver
-func (obstacle Obstacle) GetXYWH() (x, y, w, h int) {
-	return int(obstacle.Sprite.X), int(obstacle.Sprite.Y), int(obstacle.Sprite.W), int(obstacle.Sprite.H)
-}
-
-// OnCollision is called at collision detected
-func (scene *Stage1) OnCollision(c1, c2 simra.Collider) {
-	peer.LogDebug("IN")
-	peer.LogDebug("OUT")
+func (scene *Stage1) onFinishDead() {
+	scene.resetPosition()
+	scene.views.restart()
+	scene.models.restart()
 }
 
 func (scene *Stage1) registerModels() {
-	scene.ball.speed = 1
-	scene.ball.direction = 90
 	scene.models.RegisterBall(&scene.ball)
-
-	scene.background[0].speed = 3
 	scene.models.RegisterBackground(&scene.background[0], 0)
-	scene.background[1].speed = 3
 	scene.models.RegisterBackground(&scene.background[1], 1)
+	scene.models.addEventListener(&scene.views)
 }
 
 // Drive is called from simra.
@@ -231,4 +134,5 @@ func (scene *Stage1) registerModels() {
 // This will be called 60 times per sec.
 func (scene *Stage1) Drive() {
 	scene.models.Progress(scene.isTouching)
+	scene.views.Progress(scene.isTouching)
 }
