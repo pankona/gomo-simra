@@ -14,7 +14,6 @@ type Background struct {
 /**
  * Background implementation for Model interface
  */
-
 func (bg *Background) setPosition(x, y float32) {
 }
 

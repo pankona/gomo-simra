@@ -123,9 +123,10 @@ func (scene *Stage1) onFinishDead() {
 }
 
 func (scene *Stage1) registerModels() {
-	scene.models.RegisterBall(&scene.ball)
-	scene.models.RegisterBackground(&scene.background[0], 0)
-	scene.models.RegisterBackground(&scene.background[1], 1)
+	scene.models.registerBall(&scene.ball)
+	scene.models.registerObstacle(&scene.obstacle)
+	scene.models.registerBackground(&scene.background[0], 0)
+	scene.models.registerBackground(&scene.background[1], 1)
 	scene.models.addEventListener(&scene.views)
 }
 

@@ -24,6 +24,7 @@ type modelEventListener interface {
 
 type models struct {
 	ball       model
+	obstacle   model
 	background [2]model
 	listeners  []modelEventListener
 	isDead     bool
@@ -33,15 +34,19 @@ func (models *models) restart() {
 	models.isDead = false
 }
 
-// RegisterBall registers ball as a model component
-func (models *models) RegisterBall(ball model) {
+func (models *models) registerBall(ball model) {
 	ball.setSpeed(1)
 	ball.setDirection(90)
 	models.ball = ball
 }
 
-// RegisterBackground registers a model to array of model
-func (models *models) RegisterBackground(bg model, index int) {
+func (models *models) registerObstacle(obstacle model) {
+	obstacle.setSpeed(3)
+	obstacle.setDirection(180)
+	models.obstacle = obstacle
+}
+
+func (models *models) registerBackground(bg model, index int) {
 	bg.setSpeed(3)
 	models.background[index] = bg
 }
@@ -78,6 +83,8 @@ func (models *models) Progress(isKeyTouching bool) {
 func (models *models) move() {
 	ball := models.ball
 	ball.move()
+	obstacle := models.obstacle
+	obstacle.move()
 	background := models.background
 	background[0].move()
 	background[1].move()

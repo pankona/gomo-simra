@@ -23,9 +23,7 @@ func (ball *Ball) setPosition(x, y float32) {
 }
 
 func (ball *Ball) getPosition() (x, y float32) {
-	x = 0
-	y = 0
-	return x, y
+	return ball.Sprite.X, ball.Sprite.Y
 }
 
 func (ball *Ball) setRotate(r float32) {
