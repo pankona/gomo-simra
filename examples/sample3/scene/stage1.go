@@ -9,7 +9,8 @@ import (
 
 // Stage1 represents scene of Stage1.
 type Stage1 struct {
-	models     Models
+	models     models
+	views      views
 	ball       Ball
 	obstacle   Obstacle
 	background [2]Background
@@ -33,7 +34,7 @@ func (scene *Stage1) Initialize() {
 
 	// initialize sprites
 	scene.initSprites()
-
+	scene.registerViews()
 	scene.registerModels()
 
 	simra.LogDebug("[OUT]")
@@ -104,10 +105,15 @@ func (scene *Stage1) initSprites() {
 	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle, &scene.models)
 }
 
+func (scene *Stage1) registerViews() {
+	scene.views.registerBall(&scene.ball)
+}
+
 func (scene *Stage1) registerModels() {
 	scene.models.RegisterBall(&scene.ball)
 	scene.models.RegisterBackground(&scene.background[0], 0)
 	scene.models.RegisterBackground(&scene.background[1], 1)
+	scene.models.addEventListener(&scene.views)
 }
 
 // Drive is called from simra.

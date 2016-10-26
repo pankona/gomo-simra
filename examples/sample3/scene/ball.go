@@ -3,6 +3,7 @@ package scene
 import (
 	"github.com/pankona/gomo-simra/examples/sample3/scene/config"
 	"github.com/pankona/gomo-simra/simra"
+	"math"
 )
 
 // Ball represents a ball
@@ -52,14 +53,15 @@ func (ball *Ball) getSpeed() float64 {
 }
 
 func (ball *Ball) move() {
-	if ball.direction > 0 && ball.direction < 180 {
-		ball.speed += 9.8 / 60
-	} else {
-		ball.speed -= 9.8 / 60
+	dx := ball.speed * math.Cos(ball.direction*math.Pi/180)
+	dy := ball.speed * math.Sin(ball.direction*math.Pi/180)
+	dy -= 9.8 / 60
+	ball.speed = math.Sqrt(dx*dx + dy*dy)
+	ball.direction = math.Atan2(dy, dx) * 180 / math.Pi
 
-	}
+	ball.Sprite.X += float32(dx)
+	ball.Sprite.Y += float32(dy)
 
-	ball.Sprite.Y += float32(ball.speed)
 	if ball.Sprite.Y < 0 {
 		ball.Sprite.Y = 0
 		ball.speed = 0
