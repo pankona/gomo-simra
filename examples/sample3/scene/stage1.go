@@ -12,7 +12,7 @@ type Stage1 struct {
 	models     models
 	views      views
 	ball       Ball
-	obstacle   Obstacle
+	obstacle   [2]Obstacle
 	background [2]Background
 	isTouching bool
 }
@@ -38,7 +38,8 @@ func (scene *Stage1) Initialize() {
 	scene.registerViews()
 	scene.registerModels()
 
-	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle, &scene.models)
+	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle[0], &scene.models)
+	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle[1], &scene.models)
 
 	simra.LogDebug("[OUT]")
 }
@@ -84,12 +85,18 @@ func (scene *Stage1) resetPosition() {
 	scene.ball.Y = config.ScreenHeight / 2
 
 	// set size of obstacle
-	scene.obstacle.W = 50
-	scene.obstacle.H = 100
+	scene.obstacle[0].W = 50
+	scene.obstacle[0].H = 100
+	scene.obstacle[1].W = 50
+	scene.obstacle[1].H = 100
 
 	// put center/upper side of screen
-	scene.obstacle.X = config.ScreenWidth / 2
-	scene.obstacle.Y = config.ScreenHeight / 3 * 2
+	scene.obstacle[0].X = config.ScreenWidth / 2
+	scene.obstacle[0].Y = config.ScreenHeight / 3 * 2
+
+	// put center/lower side of screen
+	scene.obstacle[1].X = config.ScreenWidth / 2
+	scene.obstacle[1].Y = config.ScreenHeight / 3 * 1
 }
 
 func (scene *Stage1) setupSprites() {
@@ -108,7 +115,11 @@ func (scene *Stage1) setupSprites() {
 
 	simra.GetInstance().AddSprite("obstacle.png",
 		image.Rect(0, 0, 100, 100),
-		&scene.obstacle.Sprite)
+		&scene.obstacle[0].Sprite)
+
+	simra.GetInstance().AddSprite("obstacle.png",
+		image.Rect(0, 0, 100, 100),
+		&scene.obstacle[1].Sprite)
 }
 
 func (scene *Stage1) registerViews() {
@@ -124,7 +135,8 @@ func (scene *Stage1) onFinishDead() {
 
 func (scene *Stage1) registerModels() {
 	scene.models.registerBall(&scene.ball)
-	scene.models.registerObstacle(&scene.obstacle)
+	scene.models.registerObstacle(&scene.obstacle[0], 0)
+	scene.models.registerObstacle(&scene.obstacle[1], 1)
 	scene.models.registerBackground(&scene.background[0], 0)
 	scene.models.registerBackground(&scene.background[1], 1)
 	scene.models.addEventListener(&scene.views)

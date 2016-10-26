@@ -23,11 +23,11 @@ type modelEventListener interface {
 }
 
 type models struct {
-	ball       model
-	obstacle   model
-	background [2]model
-	listeners  []modelEventListener
-	isDead     bool
+	ball        model
+	obstacles   [2]model
+	backgrounds [2]model
+	listeners   []modelEventListener
+	isDead      bool
 }
 
 func (models *models) restart() {
@@ -40,15 +40,15 @@ func (models *models) registerBall(ball model) {
 	models.ball = ball
 }
 
-func (models *models) registerObstacle(obstacle model) {
+func (models *models) registerObstacle(obstacle model, index int) {
 	obstacle.setSpeed(3)
 	obstacle.setDirection(180)
-	models.obstacle = obstacle
+	models.obstacles[index] = obstacle
 }
 
 func (models *models) registerBackground(bg model, index int) {
 	bg.setSpeed(3)
-	models.background[index] = bg
+	models.backgrounds[index] = bg
 }
 
 func (models *models) addEventListener(listener modelEventListener) {
@@ -83,11 +83,12 @@ func (models *models) Progress(isKeyTouching bool) {
 func (models *models) move() {
 	ball := models.ball
 	ball.move()
-	obstacle := models.obstacle
-	obstacle.move()
-	background := models.background
-	background[0].move()
-	background[1].move()
+	obstacles := models.obstacles
+	obstacles[0].move()
+	obstacles[1].move()
+	backgrounds := models.backgrounds
+	backgrounds[0].move()
+	backgrounds[1].move()
 }
 
 // OnCollision is called at collision detected
