@@ -91,11 +91,11 @@ func (scene *Stage1) resetPosition() {
 	scene.obstacle[1].H = 100
 
 	// put center/upper side of screen
-	scene.obstacle[0].X = config.ScreenWidth / 2
+	scene.obstacle[0].X = config.ScreenWidth + config.ScreenWidth/2
 	scene.obstacle[0].Y = config.ScreenHeight / 3 * 2
 
 	// put center/lower side of screen
-	scene.obstacle[1].X = config.ScreenWidth / 2
+	scene.obstacle[1].X = config.ScreenWidth + config.ScreenWidth/2
 	scene.obstacle[1].Y = config.ScreenHeight / 3 * 1
 }
 

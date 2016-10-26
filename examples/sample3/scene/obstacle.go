@@ -64,6 +64,6 @@ func (obstacle *Obstacle) move() {
 	obstacle.Sprite.Y += float32(dy)
 
 	if obstacle.Sprite.X < -1*obstacle.Sprite.W/2 {
-		obstacle.Sprite.X = config.ScreenWidth/2 + (config.ScreenWidth - float32(obstacle.speed))
+		obstacle.Sprite.X = config.ScreenWidth + config.ScreenWidth/2
 	}
 }
