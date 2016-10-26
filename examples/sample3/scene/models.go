@@ -1,6 +1,9 @@
 package scene
 
-import "math"
+import (
+	"github.com/pankona/gomo-simra/simra"
+	"math"
+)
 
 // Model represents a model
 type Model interface {
@@ -56,4 +59,14 @@ func (models *Models) Progress(isKeyTouching bool) {
 	background := models.background
 	background[0].move()
 	background[1].move()
+}
+
+// OnCollision is called at collision detected
+func (models *Models) OnCollision(c1, c2 simra.Collider) {
+
+	if _, ok := c1.(*Ball); ok {
+		if _, ok := c2.(*Obstacle); ok {
+			simra.LogDebug("collision detected!")
+		}
+	}
 }

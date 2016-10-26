@@ -101,18 +101,7 @@ func (scene *Stage1) initSprites() {
 		image.Rect(0, 0, 100, 100),
 		&scene.obstacle.Sprite)
 
-	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle, scene)
-}
-
-// OnCollision is called at collision detected
-func (scene *Stage1) OnCollision(c1, c2 simra.Collider) {
-
-	//if ball, ok := c1.(*Ball); ok {
-	//	if obstacle, ok := c2.(*Obstacle); ok {
-	//		simra.LogDebug("collision detected!")
-	//	}
-	//}
-	simra.LogDebug("collision detected!")
+	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle, &scene.models)
 }
 
 func (scene *Stage1) registerModels() {
