@@ -19,7 +19,7 @@ type model interface {
 }
 
 type modelEventListener interface {
-	onEvent()
+	onDead()
 }
 
 type models struct {
@@ -27,6 +27,10 @@ type models struct {
 	background [2]model
 	listeners  []modelEventListener
 	isDead     bool
+}
+
+func (models *models) restart() {
+	models.isDead = false
 }
 
 // RegisterBall registers ball as a model component
@@ -50,13 +54,14 @@ var degree float32
 
 // Progress progresses the time of models 1 frame
 func (models *models) Progress(isKeyTouching bool) {
+	ball := models.ball
+
 	if !models.isDead {
 		degree++
 		if degree >= 360 {
 			degree = 0
 		}
 
-		ball := models.ball
 		ball.setRotate(float32(degree) * math.Pi / 180)
 
 		if isKeyTouching {
@@ -66,9 +71,8 @@ func (models *models) Progress(isKeyTouching bool) {
 			ball.setSpeed(math.Sqrt(dx*dx + dy*dy))
 			ball.setDirection(math.Atan2(dy, dx) * 180 / math.Pi)
 		}
+		models.move()
 	}
-
-	models.move()
 }
 
 func (models *models) move() {
@@ -88,7 +92,7 @@ func (models *models) OnCollision(c1, c2 simra.Collider) {
 				models.isDead = true
 				for _, v := range models.listeners {
 					models.isDead = true
-					v.onEvent()
+					v.onDead()
 				}
 			}
 		}
