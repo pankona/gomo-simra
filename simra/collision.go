@@ -47,7 +47,7 @@ func (simra *Simra) RemoveAllCollisionListener() {
 }
 
 func (simra *Simra) collisionCheckAndNotify() {
-	LogDebug("IN")
+	//LogDebug("IN")
 
 	// check collision
 	for _, v := range comap {
@@ -81,7 +81,7 @@ func (simra *Simra) collisionCheckAndNotify() {
 			return
 		}
 	}
-	LogDebug("OUT")
+	//LogDebug("OUT")
 }
 
 // RemoveCollisionListener removes a collision map by specified collider instance.

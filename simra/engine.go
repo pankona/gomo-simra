@@ -18,11 +18,11 @@ var simra *Simra
 // It is necessary to call this function to get Simra instance
 // since Simra is single instance.
 func GetInstance() *Simra {
-	peer.LogDebug("IN")
+	//peer.LogDebug("IN")
 	if simra == nil {
 		simra = &Simra{}
 	}
-	peer.LogDebug("OUT")
+	//peer.LogDebug("OUT")
 	return simra
 }
 
