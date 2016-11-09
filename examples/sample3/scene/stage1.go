@@ -16,6 +16,37 @@ type Stage1 struct {
 	background    [2]Background
 	isTouching    bool
 	remainingLife int
+	life          [3]Life
+}
+
+// Life represents view part of remaining life
+type Life struct {
+	simra.Sprite
+}
+
+func (life *Life) getPosition() (x float32, y float32) {
+	x, y = life.X, life.Y
+	return
+}
+
+func (life *Life) setPosition(x float32, y float32) {
+	life.X, life.Y = x, y
+}
+
+func (life *Life) setSpeed(s float64) {
+}
+
+func (life *Life) getSpeed() float64 {
+	return 0
+}
+
+func (life *Life) setDirection(radian float64) {
+}
+func (life *Life) getDirection() float64 {
+	return 0
+}
+
+func (life *Life) move() {
 }
 
 const (
@@ -102,6 +133,19 @@ func (scene *Stage1) resetPosition() {
 	// put center/lower side of screen
 	scene.obstacle[1].X = config.ScreenWidth + config.ScreenWidth/2
 	scene.obstacle[1].Y = config.ScreenHeight / 3 * 1
+
+	scene.life[0].X = 48
+	scene.life[0].Y = 30
+	scene.life[0].W = float32(48)
+	scene.life[0].H = float32(48)
+	scene.life[1].X = 48 * 2
+	scene.life[1].Y = 30
+	scene.life[1].W = float32(48)
+	scene.life[1].H = float32(48)
+	scene.life[2].X = 48 * 3
+	scene.life[2].Y = 30
+	scene.life[2].W = float32(48)
+	scene.life[2].H = float32(48)
 }
 
 func (scene *Stage1) setupSprites() {
@@ -125,6 +169,18 @@ func (scene *Stage1) setupSprites() {
 	simra.GetInstance().AddSprite("obstacle.png",
 		image.Rect(0, 0, 100, 100),
 		&scene.obstacle[1].Sprite)
+
+	simra.GetInstance().AddSprite("heart.png",
+		image.Rect(0, 0, 384, 384),
+		&scene.life[0].Sprite)
+
+	simra.GetInstance().AddSprite("heart.png",
+		image.Rect(0, 0, 384, 384),
+		&scene.life[1].Sprite)
+
+	simra.GetInstance().AddSprite("heart.png",
+		image.Rect(0, 0, 384, 384),
+		&scene.life[2].Sprite)
 }
 
 func (scene *Stage1) registerViews() {
