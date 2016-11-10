@@ -189,14 +189,16 @@ func (scene *Stage1) registerViews() {
 }
 
 func (scene *Stage1) onFinishDead() {
-	scene.resetPosition()
-	scene.views.restart()
-	scene.models.restart()
-
 	if scene.remainingLife == 0 {
 		// TODO: gameover
 		return
 	}
+
+	// life is still remaining. continue.
+	scene.resetPosition()
+	scene.views.restart()
+	scene.models.restart()
+
 	simra.GetInstance().RemoveSprite(&scene.life[scene.remainingLife-1].Sprite)
 	scene.remainingLife--
 }
