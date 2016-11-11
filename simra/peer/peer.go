@@ -2,16 +2,22 @@ package peer
 
 import (
 	"image"
+	"image/draw"
 	"log"
 	"time"
 
-	"golang.org/x/mobile/asset"
+	"github.com/golang/freetype/truetype"
+	"golang.org/x/image/font"
+	"golang.org/x/image/math/fixed"
+	//"golang.org/x/mobile/asset"
 	"golang.org/x/mobile/exp/app/debug"
 	"golang.org/x/mobile/exp/f32"
+	mfont "golang.org/x/mobile/exp/font"
 	"golang.org/x/mobile/exp/gl/glutil"
 	"golang.org/x/mobile/exp/sprite"
 	"golang.org/x/mobile/exp/sprite/clock"
 	"golang.org/x/mobile/exp/sprite/glsprite"
+	"golang.org/x/mobile/geom"
 	"golang.org/x/mobile/gl"
 )
 
@@ -90,17 +96,63 @@ func (glpeer *GLPeer) removeChild(n *sprite.Node) {
 // Loaded texture can assign using AddSprite function.
 func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex {
 	LogDebug("IN")
-	a, err := asset.Open(assetName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer a.Close()
+	//a, err := asset.Open(assetName)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//defer a.Close()
 
-	img, _, err := image.Decode(a)
-	if err != nil {
-		log.Fatal(err)
+	//img, _, err := image.Decode(a)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//t, err := glpeer.eng.LoadTexture(img)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+
+	//
+
+	width := 400
+	height := 30
+	img := glpeer.images.NewImage(width, height)
+
+	fg, bg := image.Black, image.White
+	draw.Draw(img.RGBA, img.RGBA.Bounds(), bg, image.Point{}, draw.Src)
+
+	// Draw the text.
+	h := font.HintingNone
+	//h = font.HintingFull
+
+	monofontbytes := mfont.Monospace()
+	monofont, _ := truetype.Parse(monofontbytes)
+
+	d := &font.Drawer{
+		Dst: img.RGBA,
+		Src: fg,
+		Face: truetype.NewFace(monofont, &truetype.Options{
+			Size:    24,
+			DPI:     72,
+			Hinting: h,
+		}),
 	}
-	t, err := glpeer.eng.LoadTexture(img)
+
+	d.Dot = fixed.Point26_6{
+		X: fixed.I(10),
+		Y: fixed.I(int(24 * 72 / 72)),
+	}
+	d.DrawString("hogehoge")
+
+	img.Upload()
+	img.Draw(
+		sz,
+		geom.Point{0, (sz.HeightPt - geom.Pt(height)/4)},
+		geom.Point{geom.Pt(width) / 4, (sz.HeightPt - geom.Pt(height)/4)},
+		geom.Point{0, (sz.HeightPt - geom.Pt(height)/4)},
+		img.RGBA.Bounds().Inset(1),
+	)
+
+	t, err := glpeer.eng.LoadTexture(img.RGBA)
 	if err != nil {
 		log.Fatal(err)
 	}
