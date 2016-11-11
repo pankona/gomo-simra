@@ -106,7 +106,7 @@ func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite
 	}
 
 	LogDebug("OUT")
-	return sprite.SubTex{t, rect}
+	return sprite.SubTex{T: t, R: rect}
 }
 
 // Finalize finalizes GLPeer.
