@@ -23,6 +23,7 @@ dependencies:
                 cp -r ./go -T $GOROOT
             fi
         - go get golang.org/x/mobile/cmd/gomobile
+        - go get github.com/golang/freetype/truetype
         - gomobile init -v
         - go get github.com/golang/lint/golint
 
