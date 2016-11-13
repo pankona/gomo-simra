@@ -9,7 +9,7 @@ import (
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
 	"golang.org/x/image/math/fixed"
-	//"golang.org/x/mobile/asset"
+	"golang.org/x/mobile/asset"
 	"golang.org/x/mobile/exp/app/debug"
 	"golang.org/x/mobile/exp/f32"
 	mfont "golang.org/x/mobile/exp/font"
@@ -96,22 +96,32 @@ func (glpeer *GLPeer) removeChild(n *sprite.Node) {
 // Loaded texture can assign using AddSprite function.
 func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex {
 	LogDebug("IN")
-	//a, err := asset.Open(assetName)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//defer a.Close()
+	a, err := asset.Open(assetName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer a.Close()
 
-	//img, _, err := image.Decode(a)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//t, err := glpeer.eng.LoadTexture(img)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
+	img, _, err := image.Decode(a)
+	if err != nil {
+		log.Fatal(err)
+	}
+	t, err := glpeer.eng.LoadTexture(img)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	//
+	LogDebug("OUT")
+	return sprite.SubTex{T: t, R: rect}
+}
+
+// LoadTextureByText createst and return texture by speicied text
+// Loaded texture can assign using AddSprite function.
+// TODO: caller can specify font
+func (glpeer *GLPeer) LoadTextureByText(text string, rect image.Rectangle) sprite.SubTex {
+
+	// TODO: this function is completely in experimental To Be Fixed.
+	LogDebug("IN")
 
 	width := 400
 	height := 30
@@ -141,7 +151,7 @@ func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite
 		X: fixed.I(10),
 		Y: fixed.I(int(24 * 72 / 72)),
 	}
-	d.DrawString("hogehoge")
+	d.DrawString(text)
 
 	img.Upload()
 	img.Draw(
