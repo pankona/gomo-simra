@@ -69,7 +69,14 @@ func (simra *Simra) SetScene(driver Driver) {
 
 // AddSprite adds a sprite to current scene.
 // To call this function, SetScene must be called in advance.
+// TODO: remove this function. this function is deprecated. use AddImageSprite instead.
 func (simra *Simra) AddSprite(assetName string, rect image.Rectangle, s *Sprite) {
+	simra.AddImageSprite(assetName, rect, s)
+}
+
+// AddImageSprite adds a sprite to current scene.
+// To call this function, SetScene must be called in advance.
+func (simra *Simra) AddImageSprite(assetName string, rect image.Rectangle, s *Sprite) {
 	tex := peer.GetGLPeer().LoadTexture(assetName, rect)
 	peer.GetSpriteContainer().AddSprite(&s.Sprite, tex)
 }
