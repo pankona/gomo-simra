@@ -81,6 +81,13 @@ func (simra *Simra) AddImageSprite(assetName string, rect image.Rectangle, s *Sp
 	peer.GetSpriteContainer().AddSprite(&s.Sprite, tex)
 }
 
+// AddTextSprite adds a sprite to current scene.
+// To call this function, SetScene must be called in advance.
+func (simra *Simra) AddTextSprite(text string, rect image.Rectangle, s *Sprite) {
+	tex := peer.GetGLPeer().MakeTextureByText(text, rect)
+	peer.GetSpriteContainer().AddSprite(&s.Sprite, tex)
+}
+
 // RemoveSprite removes specified sprite from current scene.
 // Removed sprite will be disappeared.
 func (simra *Simra) RemoveSprite(s *Sprite) {

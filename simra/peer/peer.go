@@ -115,16 +115,16 @@ func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite
 	return sprite.SubTex{T: t, R: rect}
 }
 
-// LoadTextureByText createst and return texture by speicied text
+// MakeTextureByText createst and return texture by speicied text
 // Loaded texture can assign using AddSprite function.
 // TODO: caller can specify font
-func (glpeer *GLPeer) LoadTextureByText(text string, rect image.Rectangle) sprite.SubTex {
+func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, rect image.Rectangle) sprite.SubTex {
 
 	// TODO: this function is completely in experimental To Be Fixed.
 	LogDebug("IN")
 
-	width := 400
-	height := 30
+	width := rect.Dx()
+	height := rect.Dy()
 	img := glpeer.images.NewImage(width, height)
 
 	fg, bg := image.Black, image.White
@@ -141,7 +141,7 @@ func (glpeer *GLPeer) LoadTextureByText(text string, rect image.Rectangle) sprit
 		Dst: img.RGBA,
 		Src: fg,
 		Face: truetype.NewFace(monofont, &truetype.Options{
-			Size:    24,
+			Size:    fontsize,
 			DPI:     72,
 			Hinting: h,
 		}),
@@ -149,16 +149,18 @@ func (glpeer *GLPeer) LoadTextureByText(text string, rect image.Rectangle) sprit
 
 	d.Dot = fixed.Point26_6{
 		X: fixed.I(10),
-		Y: fixed.I(int(24 * 72 / 72)),
+		Y: fixed.I(int(fontsize * 72 / 72)),
 	}
 	d.DrawString(text)
 
 	img.Upload()
+
+	scale := geom.Pt(desiredScreenSize.scale)
 	img.Draw(
 		sz,
-		geom.Point{0, (sz.HeightPt - geom.Pt(height)/4)},
-		geom.Point{geom.Pt(width) / 4, (sz.HeightPt - geom.Pt(height)/4)},
-		geom.Point{0, (sz.HeightPt - geom.Pt(height)/4)},
+		geom.Point{0, (sz.HeightPt - geom.Pt(height)/scale)},
+		geom.Point{geom.Pt(width) / scale, (sz.HeightPt - geom.Pt(height)/scale)},
+		geom.Point{0, (sz.HeightPt - geom.Pt(height)/scale)},
 		img.RGBA.Bounds().Inset(1),
 	)
 
