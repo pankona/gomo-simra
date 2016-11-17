@@ -8,11 +8,11 @@ import (
 
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
+	"golang.org/x/image/font/gofont/goregular"
 	"golang.org/x/image/math/fixed"
 	"golang.org/x/mobile/asset"
 	"golang.org/x/mobile/exp/app/debug"
 	"golang.org/x/mobile/exp/f32"
-	mfont "golang.org/x/mobile/exp/font"
 	"golang.org/x/mobile/exp/gl/glutil"
 	"golang.org/x/mobile/exp/sprite"
 	"golang.org/x/mobile/exp/sprite/clock"
@@ -123,6 +123,7 @@ func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, rect imag
 	// TODO: this function is completely in experimental To Be Fixed.
 	LogDebug("IN")
 
+	dpi := float64(72)
 	width := rect.Dx()
 	height := rect.Dy()
 	img := glpeer.images.NewImage(width, height)
@@ -134,22 +135,21 @@ func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, rect imag
 	h := font.HintingNone
 	//h = font.HintingFull
 
-	monofontbytes := mfont.Monospace()
-	monofont, _ := truetype.Parse(monofontbytes)
+	gofont, _ := truetype.Parse(goregular.TTF)
 
 	d := &font.Drawer{
 		Dst: img.RGBA,
 		Src: fg,
-		Face: truetype.NewFace(monofont, &truetype.Options{
+		Face: truetype.NewFace(gofont, &truetype.Options{
 			Size:    fontsize,
-			DPI:     72,
+			DPI:     dpi,
 			Hinting: h,
 		}),
 	}
 
 	d.Dot = fixed.Point26_6{
 		X: fixed.I(10),
-		Y: fixed.I(int(fontsize * 72 / 72)),
+		Y: fixed.I(int(fontsize * dpi / 72)),
 	}
 	d.DrawString(text)
 
@@ -158,9 +158,9 @@ func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, rect imag
 	scale := geom.Pt(desiredScreenSize.scale)
 	img.Draw(
 		sz,
-		geom.Point{0, (sz.HeightPt - geom.Pt(height)/scale)},
-		geom.Point{geom.Pt(width) / scale, (sz.HeightPt - geom.Pt(height)/scale)},
-		geom.Point{0, (sz.HeightPt - geom.Pt(height)/scale)},
+		geom.Point{X: 0, Y: (sz.HeightPt - geom.Pt(height)/scale)},
+		geom.Point{X: geom.Pt(width) / scale, Y: (sz.HeightPt - geom.Pt(height)/scale)},
+		geom.Point{X: 0, Y: (sz.HeightPt - geom.Pt(height)/scale)},
 		img.RGBA.Bounds().Inset(1),
 	)
 

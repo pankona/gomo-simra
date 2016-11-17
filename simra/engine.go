@@ -83,8 +83,8 @@ func (simra *Simra) AddImageSprite(assetName string, rect image.Rectangle, s *Sp
 
 // AddTextSprite adds a sprite to current scene.
 // To call this function, SetScene must be called in advance.
-func (simra *Simra) AddTextSprite(text string, rect image.Rectangle, s *Sprite) {
-	tex := peer.GetGLPeer().MakeTextureByText(text, rect)
+func (simra *Simra) AddTextSprite(text string, fontsize float64, rect image.Rectangle, s *Sprite) {
+	tex := peer.GetGLPeer().MakeTextureByText(text, fontsize, rect)
 	peer.GetSpriteContainer().AddSprite(&s.Sprite, tex)
 }
 

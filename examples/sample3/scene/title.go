@@ -10,6 +10,7 @@ import (
 // Title represents a scene object for Title
 type Title struct {
 	background simra.Sprite
+	text       simra.Sprite
 }
 
 // Initialize initializes title scene
@@ -39,6 +40,15 @@ func (title *Title) initialize() {
 	simra.GetInstance().AddSprite("title.png",
 		image.Rect(0, 0, int(title.background.W), int(title.background.H)),
 		&title.background)
+
+	title.text.W = 320
+	title.text.H = 80
+	title.text.X = title.text.W / 2
+	title.text.Y = title.text.H / 2
+	simra.GetInstance().AddTextSprite("text sample",
+		60, // fontsize
+		image.Rect(0, 0, int(title.text.W), int(title.text.H)),
+		&title.text)
 
 	title.background.AddTouchListener(title)
 }
