@@ -2,6 +2,7 @@ package peer
 
 import (
 	"image"
+	"image/color"
 	"image/draw"
 	"log"
 	"time"
@@ -128,7 +129,9 @@ func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, rect imag
 	height := rect.Dy()
 	img := glpeer.images.NewImage(width, height)
 
-	fg, bg := image.Black, image.Transparent
+	// sample. set RED as text color
+	c := color.RGBA{255, 0, 0, 255}
+	fg, bg := image.NewUniform(c), image.Transparent
 	draw.Draw(img.RGBA, img.RGBA.Bounds(), bg, image.Point{}, draw.Src)
 
 	// Draw the text.
