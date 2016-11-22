@@ -2,6 +2,7 @@ package scene
 
 import (
 	"image"
+	"image/color"
 
 	"github.com/pankona/gomo-simra/examples/sample3/scene/config"
 	"github.com/pankona/gomo-simra/simra"
@@ -17,6 +18,7 @@ type Stage1 struct {
 	isTouching    bool
 	remainingLife int
 	life          [3]Life
+	gameovertext  [2]simra.Sprite
 }
 
 // Life represents view part of remaining life
@@ -188,9 +190,31 @@ func (scene *Stage1) registerViews() {
 	scene.views.addEventListener(scene)
 }
 
+func (scene *Stage1) showGameover() {
+	scene.gameovertext[0].X = config.ScreenWidth / 2
+	scene.gameovertext[0].Y = config.ScreenHeight/6*4 - 65/2
+	scene.gameovertext[0].W = config.ScreenWidth
+	scene.gameovertext[0].H = 65
+	simra.GetInstance().AddTextSprite("GAMEOVER",
+		60,
+		color.RGBA{255, 0, 0, 255},
+		image.Rect(0, 0, config.ScreenWidth, 65),
+		&scene.gameovertext[0])
+
+	scene.gameovertext[1].X = config.ScreenWidth / 2
+	scene.gameovertext[1].Y = config.ScreenHeight/6*3 - 65/2
+	scene.gameovertext[1].W = config.ScreenWidth
+	scene.gameovertext[1].H = 65
+	simra.GetInstance().AddTextSprite("Tap to Restart",
+		60,
+		color.RGBA{255, 0, 0, 255},
+		image.Rect(0, 0, config.ScreenWidth, 65),
+		&scene.gameovertext[1])
+}
+
 func (scene *Stage1) onFinishDead() {
 	if scene.remainingLife == 0 {
-		// TODO: gameover
+		scene.showGameover()
 		return
 	}
 
