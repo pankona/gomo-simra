@@ -2,9 +2,15 @@ package peer
 
 import (
 	"image"
+	"image/color"
+	"image/draw"
 	"log"
 	"time"
 
+	"github.com/golang/freetype/truetype"
+	"golang.org/x/image/font"
+	"golang.org/x/image/font/gofont/goregular"
+	"golang.org/x/image/math/fixed"
 	"golang.org/x/mobile/asset"
 	"golang.org/x/mobile/exp/app/debug"
 	"golang.org/x/mobile/exp/f32"
@@ -12,6 +18,7 @@ import (
 	"golang.org/x/mobile/exp/sprite"
 	"golang.org/x/mobile/exp/sprite/clock"
 	"golang.org/x/mobile/exp/sprite/glsprite"
+	"golang.org/x/mobile/geom"
 	"golang.org/x/mobile/gl"
 )
 
@@ -106,7 +113,63 @@ func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite
 	}
 
 	LogDebug("OUT")
-	return sprite.SubTex{t, rect}
+	return sprite.SubTex{T: t, R: rect}
+}
+
+// MakeTextureByText createst and return texture by speicied text
+// Loaded texture can assign using AddSprite function.
+// TODO: font parameterize
+func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle) sprite.SubTex {
+	LogDebug("IN")
+
+	dpi := float64(72)
+	width := rect.Dx()
+	height := rect.Dy()
+	img := glpeer.images.NewImage(width, height)
+
+	fg, bg := image.NewUniform(fontcolor), image.Transparent
+	draw.Draw(img.RGBA, img.RGBA.Bounds(), bg, image.Point{}, draw.Src)
+
+	// Draw the text.
+	h := font.HintingNone
+	//h = font.HintingFull
+
+	gofont, _ := truetype.Parse(goregular.TTF)
+
+	d := &font.Drawer{
+		Dst: img.RGBA,
+		Src: fg,
+		Face: truetype.NewFace(gofont, &truetype.Options{
+			Size:    fontsize,
+			DPI:     dpi,
+			Hinting: h,
+		}),
+	}
+
+	d.Dot = fixed.Point26_6{
+		X: fixed.I(10),
+		Y: fixed.I(int(fontsize * dpi / 72)),
+	}
+	d.DrawString(text)
+
+	img.Upload()
+
+	scale := geom.Pt(desiredScreenSize.scale)
+	img.Draw(
+		sz,
+		geom.Point{X: 0, Y: (sz.HeightPt - geom.Pt(height)/scale)},
+		geom.Point{X: geom.Pt(width) / scale, Y: (sz.HeightPt - geom.Pt(height)/scale)},
+		geom.Point{X: 0, Y: (sz.HeightPt - geom.Pt(height)/scale)},
+		img.RGBA.Bounds().Inset(1),
+	)
+
+	t, err := glpeer.eng.LoadTexture(img.RGBA)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	LogDebug("OUT")
+	return sprite.SubTex{T: t, R: rect}
 }
 
 // Finalize finalizes GLPeer.
