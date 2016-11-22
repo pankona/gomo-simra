@@ -118,10 +118,8 @@ func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite
 
 // MakeTextureByText createst and return texture by speicied text
 // Loaded texture can assign using AddSprite function.
-// TODO: caller can specify font and font color
-func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, rect image.Rectangle) sprite.SubTex {
-
-	// TODO: this function is completely in experimental To Be Fixed.
+// TODO: font parameterize
+func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle) sprite.SubTex {
 	LogDebug("IN")
 
 	dpi := float64(72)
@@ -129,9 +127,7 @@ func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, rect imag
 	height := rect.Dy()
 	img := glpeer.images.NewImage(width, height)
 
-	// sample. set RED as text color
-	c := color.RGBA{255, 0, 0, 255}
-	fg, bg := image.NewUniform(c), image.Transparent
+	fg, bg := image.NewUniform(fontcolor), image.Transparent
 	draw.Draw(img.RGBA, img.RGBA.Bounds(), bg, image.Point{}, draw.Src)
 
 	// Draw the text.

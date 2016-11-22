@@ -2,6 +2,7 @@ package scene
 
 import (
 	"image"
+	"image/color"
 
 	"github.com/pankona/gomo-simra/examples/sample2/scene/config"
 	"github.com/pankona/gomo-simra/simra"
@@ -47,6 +48,7 @@ func (title *Title) initialize() {
 	title.text.Y = title.text.H / 2
 	simra.GetInstance().AddTextSprite("text sample",
 		60, // fontsize
+		color.RGBA{255, 0, 0, 255},
 		image.Rect(0, 0, int(title.text.W), int(title.text.H)),
 		&title.text)
 
