@@ -190,6 +190,25 @@ func (scene *Stage1) registerViews() {
 	scene.views.addEventListener(scene)
 }
 
+// GameoverTouchListener is a listener for gameover text
+type GameoverTouchListener struct {
+}
+
+// OnTouchBegin is called when CtrlTrial scene is Touched.
+func (listener *GameoverTouchListener) OnTouchBegin(x, y float32) {
+	// nop
+}
+
+// OnTouchMove is called when CtrlTrial scene is Touched and moved.
+func (listener *GameoverTouchListener) OnTouchMove(x, y float32) {
+	// nop
+}
+
+// OnTouchEnd is called when CtrlTrial scene is Touched and it is released.
+func (listener *GameoverTouchListener) OnTouchEnd(x, y float32) {
+	// TODO: restart
+}
+
 func (scene *Stage1) showGameover() {
 	scene.gameovertext[0].X = config.ScreenWidth / 2
 	scene.gameovertext[0].Y = config.ScreenHeight/6*4 - 65/2
@@ -201,6 +220,9 @@ func (scene *Stage1) showGameover() {
 		image.Rect(0, 0, config.ScreenWidth, 65),
 		&scene.gameovertext[0])
 
+	listener := &GameoverTouchListener{}
+	scene.gameovertext[0].AddTouchListener(listener)
+
 	scene.gameovertext[1].X = config.ScreenWidth / 2
 	scene.gameovertext[1].Y = config.ScreenHeight/6*3 - 65/2
 	scene.gameovertext[1].W = config.ScreenWidth
@@ -210,6 +232,8 @@ func (scene *Stage1) showGameover() {
 		color.RGBA{255, 0, 0, 255},
 		image.Rect(0, 0, config.ScreenWidth, 65),
 		&scene.gameovertext[1])
+
+	scene.gameovertext[1].AddTouchListener(listener)
 }
 
 func (scene *Stage1) onFinishDead() {
