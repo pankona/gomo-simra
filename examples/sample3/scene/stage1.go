@@ -2,6 +2,7 @@ package scene
 
 import (
 	"image"
+	"image/color"
 
 	"github.com/pankona/gomo-simra/examples/sample3/scene/config"
 	"github.com/pankona/gomo-simra/simra"
@@ -9,13 +10,51 @@ import (
 
 // Stage1 represents scene of Stage1.
 type Stage1 struct {
-	models     models
-	views      views
-	ball       Ball
-	obstacle   [2]Obstacle
-	background [2]Background
-	isTouching bool
+	models        models
+	views         views
+	ball          Ball
+	obstacle      [2]Obstacle
+	background    [2]Background
+	isTouching    bool
+	remainingLife int
+	life          [3]Life
+	gameovertext  [2]simra.Sprite
+	restartReady  bool
 }
+
+// Life represents view part of remaining life
+type Life struct {
+	simra.Sprite
+}
+
+func (life *Life) getPosition() (x float32, y float32) {
+	x, y = life.X, life.Y
+	return
+}
+
+func (life *Life) setPosition(x float32, y float32) {
+	life.X, life.Y = x, y
+}
+
+func (life *Life) setSpeed(s float64) {
+}
+
+func (life *Life) getSpeed() float64 {
+	return 0
+}
+
+func (life *Life) setDirection(radian float64) {
+}
+func (life *Life) getDirection() float64 {
+	return 0
+}
+
+func (life *Life) move() {
+}
+
+const (
+	remainingLifeAtStart = 3
+)
 
 // Initialize initializes Stage1 scene
 // This is called from simra.
@@ -32,14 +71,16 @@ func (scene *Stage1) Initialize() {
 	// TODO: when goes to next scene, remove global touch listener
 	// simra.GetInstance().RemoveTouchListener(Stage1)
 
-	// initialize sprites
 	scene.resetPosition()
 	scene.setupSprites()
 	scene.registerViews()
 	scene.registerModels()
+	scene.remainingLife = remainingLifeAtStart
 
 	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle[0], &scene.models)
 	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle[1], &scene.models)
+
+	scene.restartReady = false
 
 	simra.LogDebug("[OUT]")
 }
@@ -57,6 +98,31 @@ func (scene *Stage1) OnTouchMove(x, y float32) {
 // OnTouchEnd is called when Stage1 scene is Touched and it is released.
 func (scene *Stage1) OnTouchEnd(x, y float32) {
 	scene.isTouching = false
+
+	if scene.restartReady {
+		// TODO: methodize
+		scene.resetPosition()
+		scene.views.restart()
+		scene.models.restart()
+		simra.GetInstance().AddSprite("heart.png",
+			image.Rect(0, 0, 384, 384),
+			&scene.life[0].Sprite)
+
+		simra.GetInstance().AddSprite("heart.png",
+			image.Rect(0, 0, 384, 384),
+			&scene.life[1].Sprite)
+
+		simra.GetInstance().AddSprite("heart.png",
+			image.Rect(0, 0, 384, 384),
+			&scene.life[2].Sprite)
+
+		simra.GetInstance().RemoveSprite(&scene.gameovertext[0])
+		simra.GetInstance().RemoveSprite(&scene.gameovertext[1])
+
+		scene.remainingLife = remainingLifeAtStart
+
+		scene.restartReady = false
+	}
 }
 
 func (scene *Stage1) resetPosition() {
@@ -97,6 +163,19 @@ func (scene *Stage1) resetPosition() {
 	// put center/lower side of screen
 	scene.obstacle[1].X = config.ScreenWidth + config.ScreenWidth/2
 	scene.obstacle[1].Y = config.ScreenHeight / 3 * 1
+
+	scene.life[0].X = 48
+	scene.life[0].Y = 30
+	scene.life[0].W = float32(48)
+	scene.life[0].H = float32(48)
+	scene.life[1].X = 48 * 2
+	scene.life[1].Y = 30
+	scene.life[1].W = float32(48)
+	scene.life[1].H = float32(48)
+	scene.life[2].X = 48 * 3
+	scene.life[2].Y = 30
+	scene.life[2].W = float32(48)
+	scene.life[2].H = float32(48)
 }
 
 func (scene *Stage1) setupSprites() {
@@ -120,6 +199,18 @@ func (scene *Stage1) setupSprites() {
 	simra.GetInstance().AddSprite("obstacle.png",
 		image.Rect(0, 0, 100, 100),
 		&scene.obstacle[1].Sprite)
+
+	simra.GetInstance().AddSprite("heart.png",
+		image.Rect(0, 0, 384, 384),
+		&scene.life[0].Sprite)
+
+	simra.GetInstance().AddSprite("heart.png",
+		image.Rect(0, 0, 384, 384),
+		&scene.life[1].Sprite)
+
+	simra.GetInstance().AddSprite("heart.png",
+		image.Rect(0, 0, 384, 384),
+		&scene.life[2].Sprite)
 }
 
 func (scene *Stage1) registerViews() {
@@ -127,10 +218,42 @@ func (scene *Stage1) registerViews() {
 	scene.views.addEventListener(scene)
 }
 
+func (scene *Stage1) showGameover() {
+	scene.gameovertext[0].X = config.ScreenWidth / 2
+	scene.gameovertext[0].Y = config.ScreenHeight/6*4 - 65/2
+	scene.gameovertext[0].W = config.ScreenWidth
+	scene.gameovertext[0].H = 65
+	simra.GetInstance().AddTextSprite("GAME OVER",
+		60,
+		color.RGBA{255, 0, 0, 255},
+		image.Rect(0, 0, config.ScreenWidth, 65),
+		&scene.gameovertext[0])
+
+	scene.gameovertext[1].X = config.ScreenWidth / 2
+	scene.gameovertext[1].Y = config.ScreenHeight/6*3 - 65/2
+	scene.gameovertext[1].W = config.ScreenWidth
+	scene.gameovertext[1].H = 65
+	simra.GetInstance().AddTextSprite("RESTART!!",
+		60,
+		color.RGBA{255, 0, 0, 255},
+		image.Rect(0, 0, config.ScreenWidth, 65),
+		&scene.gameovertext[1])
+}
+
 func (scene *Stage1) onFinishDead() {
+	if scene.remainingLife == 0 {
+		scene.showGameover()
+		scene.restartReady = true
+		return
+	}
+
+	// life is still remaining. continue.
 	scene.resetPosition()
 	scene.views.restart()
 	scene.models.restart()
+
+	simra.GetInstance().RemoveSprite(&scene.life[scene.remainingLife-1].Sprite)
+	scene.remainingLife--
 }
 
 func (scene *Stage1) registerModels() {

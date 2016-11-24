@@ -146,8 +146,10 @@ func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, fontcolor
 		}),
 	}
 
+	textWidth := d.MeasureString(text)
+
 	d.Dot = fixed.Point26_6{
-		X: fixed.I(10),
+		X: fixed.I(width/2) - textWidth/2,
 		Y: fixed.I(int(fontsize * dpi / 72)),
 	}
 	d.DrawString(text)

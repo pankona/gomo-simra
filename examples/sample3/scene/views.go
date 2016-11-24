@@ -5,8 +5,8 @@ import (
 	"math"
 )
 
-// View represents a view
-type view interface {
+// Viewer represents a view
+type viewer interface {
 	getPosition() (x float32, y float32)
 	setPosition(x float32, y float32)
 	setSpeed(s float64)
@@ -18,7 +18,7 @@ type view interface {
 
 // Views represents a collection of view for a scene
 type views struct {
-	ball             view
+	ball             viewer
 	listeners        []viewEventListener
 	isDead           bool
 	elapsedDeadFrame int
@@ -36,7 +36,7 @@ type viewEventListener interface {
 	onFinishDead()
 }
 
-func (views *views) registerBall(ball view) {
+func (views *views) registerBall(ball viewer) {
 	views.ball = ball
 }
 

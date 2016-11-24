@@ -5,8 +5,8 @@ import (
 	"math"
 )
 
-// model represents a model
-type model interface {
+// modeler represents a model
+type modeler interface {
 	getPosition() (x float32, y float32)
 	setPosition(x float32, y float32)
 	getRotate() float32
@@ -23,9 +23,9 @@ type modelEventListener interface {
 }
 
 type models struct {
-	ball        model
-	obstacles   [2]model
-	backgrounds [2]model
+	ball        modeler
+	obstacles   [2]modeler
+	backgrounds [2]modeler
 	listeners   []modelEventListener
 	isDead      bool
 }
@@ -34,19 +34,19 @@ func (models *models) restart() {
 	models.isDead = false
 }
 
-func (models *models) registerBall(ball model) {
+func (models *models) registerBall(ball modeler) {
 	ball.setSpeed(1)
 	ball.setDirection(90)
 	models.ball = ball
 }
 
-func (models *models) registerObstacle(obstacle model, index int) {
+func (models *models) registerObstacle(obstacle modeler, index int) {
 	obstacle.setSpeed(3)
 	obstacle.setDirection(180)
 	models.obstacles[index] = obstacle
 }
 
-func (models *models) registerBackground(bg model, index int) {
+func (models *models) registerBackground(bg modeler, index int) {
 	bg.setSpeed(3)
 	models.backgrounds[index] = bg
 }
