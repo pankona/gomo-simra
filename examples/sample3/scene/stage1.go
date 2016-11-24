@@ -223,7 +223,7 @@ func (scene *Stage1) showGameover() {
 	scene.gameovertext[0].Y = config.ScreenHeight/6*4 - 65/2
 	scene.gameovertext[0].W = config.ScreenWidth
 	scene.gameovertext[0].H = 65
-	simra.GetInstance().AddTextSprite("GAMEOVER",
+	simra.GetInstance().AddTextSprite("GAME OVER",
 		60,
 		color.RGBA{255, 0, 0, 255},
 		image.Rect(0, 0, config.ScreenWidth, 65),
@@ -233,7 +233,7 @@ func (scene *Stage1) showGameover() {
 	scene.gameovertext[1].Y = config.ScreenHeight/6*3 - 65/2
 	scene.gameovertext[1].W = config.ScreenWidth
 	scene.gameovertext[1].H = 65
-	simra.GetInstance().AddTextSprite("TAP TO TRY AGAIN",
+	simra.GetInstance().AddTextSprite("RESTART!!",
 		60,
 		color.RGBA{255, 0, 0, 255},
 		image.Rect(0, 0, config.ScreenWidth, 65),
