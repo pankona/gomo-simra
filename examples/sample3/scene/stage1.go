@@ -96,6 +96,7 @@ func (scene *Stage1) Initialize() {
 // OnTouchBegin is called when Stage1 scene is Touched.
 func (scene *Stage1) OnTouchBegin(x, y float32) {
 	scene.isTouching = true
+
 }
 
 // OnTouchMove is called when Stage1 scene is Touched and moved.
@@ -107,7 +108,9 @@ func (scene *Stage1) OnTouchMove(x, y float32) {
 func (scene *Stage1) OnTouchEnd(x, y float32) {
 	scene.isTouching = false
 
-	if scene.gamestate == readyToRestart {
+	if scene.gamestate == readyToStart {
+		scene.gamestate = started
+	} else if scene.gamestate == readyToRestart {
 		// TODO: methodize
 		scene.resetPosition()
 		scene.views.restart()
@@ -277,6 +280,8 @@ func (scene *Stage1) registerModels() {
 // This is used to update sprites position.
 // This will be called 60 times per sec.
 func (scene *Stage1) Drive() {
-	scene.models.Progress(scene.isTouching)
-	scene.views.Progress(scene.isTouching)
+	if scene.gamestate == started {
+		scene.models.Progress(scene.isTouching)
+		scene.views.Progress(scene.isTouching)
+	}
 }
