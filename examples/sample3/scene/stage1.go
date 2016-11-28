@@ -8,6 +8,14 @@ import (
 	"github.com/pankona/gomo-simra/simra"
 )
 
+type gameState int
+
+const (
+	readyToStart gameState = iota
+	started
+	readyToRestart
+)
+
 // Stage1 represents scene of Stage1.
 type Stage1 struct {
 	models        models
@@ -19,7 +27,7 @@ type Stage1 struct {
 	remainingLife int
 	life          [3]Life
 	gameovertext  [2]simra.Sprite
-	restartReady  bool
+	gamestate     gameState
 }
 
 // Life represents view part of remaining life
@@ -80,7 +88,7 @@ func (scene *Stage1) Initialize() {
 	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle[0], &scene.models)
 	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle[1], &scene.models)
 
-	scene.restartReady = false
+	scene.gamestate = readyToStart
 
 	simra.LogDebug("[OUT]")
 }
@@ -99,7 +107,7 @@ func (scene *Stage1) OnTouchMove(x, y float32) {
 func (scene *Stage1) OnTouchEnd(x, y float32) {
 	scene.isTouching = false
 
-	if scene.restartReady {
+	if scene.gamestate == readyToRestart {
 		// TODO: methodize
 		scene.resetPosition()
 		scene.views.restart()
@@ -121,7 +129,7 @@ func (scene *Stage1) OnTouchEnd(x, y float32) {
 
 		scene.remainingLife = remainingLifeAtStart
 
-		scene.restartReady = false
+		scene.gamestate = readyToStart
 	}
 }
 
@@ -243,7 +251,7 @@ func (scene *Stage1) showGameover() {
 func (scene *Stage1) onFinishDead() {
 	if scene.remainingLife == 0 {
 		scene.showGameover()
-		scene.restartReady = true
+		scene.gamestate = readyToRestart
 		return
 	}
 
