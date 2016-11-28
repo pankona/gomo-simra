@@ -1,8 +1,9 @@
 package scene
 
 import (
-	"github.com/pankona/gomo-simra/simra"
 	"math"
+
+	"github.com/pankona/gomo-simra/simra"
 )
 
 // modeler represents a model
@@ -95,7 +96,7 @@ func (models *models) move() {
 func (models *models) OnCollision(c1, c2 simra.Collider) {
 	if _, ok := c1.(*Ball); ok {
 		if _, ok := c2.(*Obstacle); ok {
-			// onDead
+			// collision indicates a miss. this will be decrease a life.
 			if !models.isDead {
 				models.isDead = true
 				for _, v := range models.listeners {
