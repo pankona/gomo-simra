@@ -1,5 +1,6 @@
-package: main
+package: github.com/pankona/gomo-simra
 import:
 - package: golang.org/x/mobile
   vcs: git
-  repo: git@github.com:pankona/mobile.git
+  repo: https://github.com/pankona/mobile
+  version: change_screen_size
