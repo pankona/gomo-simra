@@ -8,6 +8,14 @@ import (
 	"github.com/pankona/gomo-simra/simra"
 )
 
+type gameState int
+
+const (
+	readyToStart gameState = iota
+	started
+	readyToRestart
+)
+
 // Stage1 represents scene of Stage1.
 type Stage1 struct {
 	models        models
@@ -18,8 +26,9 @@ type Stage1 struct {
 	isTouching    bool
 	remainingLife int
 	life          [3]Life
+	readytext     [2]simra.Sprite
 	gameovertext  [2]simra.Sprite
-	restartReady  bool
+	gamestate     gameState
 }
 
 // Life represents view part of remaining life
@@ -80,7 +89,8 @@ func (scene *Stage1) Initialize() {
 	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle[0], &scene.models)
 	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle[1], &scene.models)
 
-	scene.restartReady = false
+	scene.showReadyText()
+	scene.gamestate = readyToStart
 
 	simra.LogDebug("[OUT]")
 }
@@ -88,6 +98,7 @@ func (scene *Stage1) Initialize() {
 // OnTouchBegin is called when Stage1 scene is Touched.
 func (scene *Stage1) OnTouchBegin(x, y float32) {
 	scene.isTouching = true
+
 }
 
 // OnTouchMove is called when Stage1 scene is Touched and moved.
@@ -99,7 +110,10 @@ func (scene *Stage1) OnTouchMove(x, y float32) {
 func (scene *Stage1) OnTouchEnd(x, y float32) {
 	scene.isTouching = false
 
-	if scene.restartReady {
+	if scene.gamestate == readyToStart {
+		scene.gamestate = started
+		scene.removeReadyText()
+	} else if scene.gamestate == readyToRestart {
 		// TODO: methodize
 		scene.resetPosition()
 		scene.views.restart()
@@ -121,8 +135,37 @@ func (scene *Stage1) OnTouchEnd(x, y float32) {
 
 		scene.remainingLife = remainingLifeAtStart
 
-		scene.restartReady = false
+		scene.showReadyText()
+		scene.gamestate = readyToStart
 	}
+}
+
+func (scene *Stage1) showReadyText() {
+	// ready text. will be removed after game start
+	scene.readytext[0].X = config.ScreenWidth / 2
+	scene.readytext[0].Y = config.ScreenHeight/6*4 - 65/2
+	scene.readytext[0].W = config.ScreenWidth
+	scene.readytext[0].H = 65
+	simra.GetInstance().AddTextSprite("GET READY",
+		60,
+		color.RGBA{255, 0, 0, 255},
+		image.Rect(0, 0, config.ScreenWidth, 65),
+		&scene.readytext[0])
+
+	scene.readytext[1].X = config.ScreenWidth / 2
+	scene.readytext[1].Y = config.ScreenHeight/6*3 - 65/2
+	scene.readytext[1].W = config.ScreenWidth
+	scene.readytext[1].H = 65
+	simra.GetInstance().AddTextSprite("TAP TO GO",
+		60,
+		color.RGBA{255, 0, 0, 255},
+		image.Rect(0, 0, config.ScreenWidth, 65),
+		&scene.readytext[1])
+}
+
+func (scene *Stage1) removeReadyText() {
+	simra.GetInstance().RemoveSprite(&scene.readytext[0])
+	simra.GetInstance().RemoveSprite(&scene.readytext[1])
 }
 
 func (scene *Stage1) resetPosition() {
@@ -243,7 +286,7 @@ func (scene *Stage1) showGameover() {
 func (scene *Stage1) onFinishDead() {
 	if scene.remainingLife == 0 {
 		scene.showGameover()
-		scene.restartReady = true
+		scene.gamestate = readyToRestart
 		return
 	}
 
@@ -269,6 +312,8 @@ func (scene *Stage1) registerModels() {
 // This is used to update sprites position.
 // This will be called 60 times per sec.
 func (scene *Stage1) Drive() {
-	scene.models.Progress(scene.isTouching)
-	scene.views.Progress(scene.isTouching)
+	if scene.gamestate == started {
+		scene.models.Progress(scene.isTouching)
+		scene.views.Progress(scene.isTouching)
+	}
 }
