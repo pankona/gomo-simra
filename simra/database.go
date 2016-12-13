@@ -1,80 +1,41 @@
 package simra
 
-import (
-	"log"
+import "fmt"
 
-	"github.com/boltdb/bolt"
-)
+// Databaser represents interface of database
+type Databaser interface {
+	Open() error
+	Close()
+	Put(key string, value interface{})
+	Get(key string) interface{}
+}
 
-// Database takes a role for interfaces of data store.
+// Database is a container of Databaser
 type Database struct {
-	db *bolt.DB
+	db Databaser
 }
 
-// Open opens database.
-// it is necessary to call this function before using database functions.
-func (database *Database) Open() {
-	db, err := bolt.Open("db", 0600, nil)
+// OpenDB opens database connection
+func OpenDB(databaser Databaser) *Database {
+	err := databaser.Open()
 	if err != nil {
-		log.Fatal(err)
+		_ = fmt.Errorf("failed to open database. err = %s", err)
+		return nil
 	}
-	database.db = db
+	return &Database{databaser}
 }
 
-// Close closes database.
-// it is necessary to call this function after using database functions.
+// Close closes database connection
 func (database *Database) Close() {
 	database.db.Close()
-	database.db = nil
 }
 
-// Put puts a data to database.
-// input must have ability to be cated into byte array.
+// Put stores a specified data to database
 func (database *Database) Put(key string, value interface{}) {
-	db := database.db
-	if db == nil {
-		log.Fatal("database is not opened yet.")
-		return
-	}
-
-	db.Update(func(tx *bolt.Tx) error {
-		bucket, err := tx.CreateBucketIfNotExists([]byte("my_bucket"))
-		if err != nil {
-			log.Fatal(err)
-			return nil
-		}
-		if byteArray, ok := value.([]byte); ok {
-			err = bucket.Put([]byte(key), byteArray)
-			if err != nil {
-				log.Fatal(err)
-				return nil
-			}
-		} else {
-			log.Fatal("couldn't convert input to bytearray")
-		}
-		return nil
-	})
+	database.db.Put(key, value)
 }
 
-// Get returns put data.
+// Get fetches a data from database by specified key
 func (database *Database) Get(key string) interface{} {
-	db := database.db
-	if db == nil {
-		log.Fatal("database is not opened yet.")
-		return nil
-	}
-	var value interface{}
-	err := db.View(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte("my_bucket"))
-		if bucket == nil {
-			log.Fatal("bucket not found")
-			return nil
-		}
-		value = bucket.Get([]byte(key))
-		return nil
-	})
-	if err != nil {
-		return nil
-	}
-	return value
+	return database.db.Get(key)
 }
