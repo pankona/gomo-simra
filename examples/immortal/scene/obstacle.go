@@ -1,9 +1,10 @@
 package scene
 
 import (
-	"github.com/pankona/gomo-simra/examples/sample3/scene/config"
-	"github.com/pankona/gomo-simra/simra"
 	"math"
+
+	"github.com/pankona/gomo-simra/examples/immortal/scene/config"
+	"github.com/pankona/gomo-simra/simra"
 )
 
 // Obstacle represetnts a sprite for obstacle

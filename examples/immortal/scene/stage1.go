@@ -4,7 +4,7 @@ import (
 	"image"
 	"image/color"
 
-	"github.com/pankona/gomo-simra/examples/sample3/scene/config"
+	"github.com/pankona/gomo-simra/examples/immortal/scene/config"
 	"github.com/pankona/gomo-simra/simra"
 )
 
@@ -165,9 +165,9 @@ func (scene *Stage1) resetPosition() {
 
 	// set size of obstacle
 	scene.obstacle[0].W = 50
-	scene.obstacle[0].H = 100
+	scene.obstacle[0].H = 50
 	scene.obstacle[1].W = 50
-	scene.obstacle[1].H = 100
+	scene.obstacle[1].H = 50
 
 	// put center/upper side of screen
 	scene.obstacle[0].X = config.ScreenWidth + config.ScreenWidth/2
