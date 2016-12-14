@@ -24,6 +24,7 @@ dependencies:
             fi
         - go get golang.org/x/mobile/cmd/gomobile
         - go get github.com/golang/freetype/truetype
+        - go get github.com/boltdb/bolt
         - gomobile init -v
         - go get github.com/golang/lint/golint
 
