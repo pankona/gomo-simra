@@ -259,7 +259,7 @@ func (scene *Stage1) showGameover() {
 }
 
 func (scene *Stage1) onFinishDead() {
-	if scene.remainingLife == 0 {
+	if scene.remainingLife == 1 {
 		scene.showGameover()
 		scene.gamestate = readyToRestart
 		return
