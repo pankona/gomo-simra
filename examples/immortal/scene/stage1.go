@@ -81,6 +81,10 @@ func (scene *Stage1) OnTouchEnd(x, y float32) {
 	scene.isTouching = false
 
 	if scene.gamestate == readyToStart {
+		scene.resetPosition()
+		scene.views.restart()
+		scene.models.restart()
+		scene.models.setScore(0)
 		scene.gamestate = started
 		scene.removeReadyText()
 	} else if scene.gamestate == readyToRestart {
@@ -88,6 +92,7 @@ func (scene *Stage1) OnTouchEnd(x, y float32) {
 		scene.resetPosition()
 		scene.views.restart()
 		scene.models.restart()
+		scene.models.setScore(0)
 		simra.GetInstance().AddSprite("heart.png",
 			image.Rect(0, 0, 384, 384),
 			&scene.life[0].Sprite)

@@ -24,6 +24,7 @@ var score int
 
 type modelEventListener interface {
 	onDead()
+	onScoreUpdate(score int)
 }
 
 type models struct {
@@ -32,6 +33,13 @@ type models struct {
 	backgrounds [2]modeler
 	listeners   []modelEventListener
 	isDead      bool
+}
+
+func (models *models) setScore(s int) {
+	score = s
+	for _, v := range models.listeners {
+		v.onScoreUpdate(score)
+	}
 }
 
 func (models *models) restart() {
@@ -101,6 +109,9 @@ func (models *models) Progress(isKeyTouching bool) {
 		if models.isScored() {
 			score++
 			log.Println("score:", score)
+			for _, v := range models.listeners {
+				v.onScoreUpdate(score)
+			}
 		}
 	}
 }
