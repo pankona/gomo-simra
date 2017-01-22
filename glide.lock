@@ -1,13 +1,15 @@
 hash: ee3efdb16735d8a52d150f2f8d44be8dc46b2c76196c0b9e8d2d6a9dd4250329
-updated: 2016-11-30T22:38:29.471693715+09:00
+updated: 2017-01-22T21:24:48.959893023+09:00
 imports:
+- name: github.com/boltdb/bolt
+  version: a705895fdad108f053eae7ee011ed94a0541ee13
 - name: github.com/golang/freetype
-  version: 38b4c392adc5eed94207994c4848fff99f4ac234
+  version: d9be45aaf7452cc30c0ceb1b1bf7efe1d17b7c87
   subpackages:
   - raster
   - truetype
 - name: golang.org/x/exp
-  version: 03962049e143533dbf9467cffb8a52a15595b718
+  version: f2073adf91ee59c0293b4a2e4ea3d15b1ed54fb4
   subpackages:
   - shiny/driver/gldriver
   - shiny/driver/internal/drawer
@@ -18,14 +20,14 @@ imports:
   - shiny/driver/internal/x11key
   - shiny/screen
 - name: golang.org/x/image
-  version: c39d899a5b7c98dbf377212e2c1a6f14128054b7
+  version: 83686c547965220f8b5d75e83ddc67d73420a89f
   subpackages:
   - font
   - font/gofont/goregular
   - math/f64
   - math/fixed
 - name: golang.org/x/mobile
-  version: ff4c06143858d5f33a85044f35ffc3330fffdd0b
+  version: 627b50519506c643b9493a32477821d2bdd8c23e
   repo: https://github.com/pankona/mobile
   vcs: git
   subpackages:
@@ -48,7 +50,8 @@ imports:
   - gl
   - internal/mobileinit
 - name: golang.org/x/sys
-  version: d5645953809d8b4752afb2c3224b1f1ad73dfa70
+  version: d75a52659825e75fff6158388dddc6a5b04f9ba5
   subpackages:
+  - unix
   - windows
 testImports: []
