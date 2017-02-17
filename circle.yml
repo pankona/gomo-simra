@@ -18,7 +18,7 @@ dependencies:
             mkdir -p $GOPATH
             mkdir -p ~/tmp && cd ~/tmp
             if [ ! -e $GOROOT ]; then
-                GOPKG=go1.7.5.linux-amd64.tar.gz
+                GOPKG=go1.8.linux-amd64.tar.gz
                 wget https://storage.googleapis.com/golang/$GOPKG
                 mkdir -p $GOROOT
                 tar -xf $GOPKG
