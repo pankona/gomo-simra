@@ -1,15 +1,15 @@
-hash: ee3efdb16735d8a52d150f2f8d44be8dc46b2c76196c0b9e8d2d6a9dd4250329
-updated: 2017-01-22T21:24:48.959893023+09:00
+hash: 1d5dac51c0ee749f96bcfc3bfb6a21776c5c7b72472f98dbd59d74e8fe0ecdc6
+updated: 2017-05-08T21:26:05.303411332+09:00
 imports:
 - name: github.com/boltdb/bolt
-  version: a705895fdad108f053eae7ee011ed94a0541ee13
+  version: e9cf4fae01b5a8ff89d0ec6b32f0d9c9f79aefdd
 - name: github.com/golang/freetype
-  version: d9be45aaf7452cc30c0ceb1b1bf7efe1d17b7c87
+  version: bcfeb16b74e8aea9e2fe043406f2ef74b1cb0759
   subpackages:
   - raster
   - truetype
 - name: golang.org/x/exp
-  version: f2073adf91ee59c0293b4a2e4ea3d15b1ed54fb4
+  version: 239d448f23a0d683c1ab7225da01af038355f5e9
   subpackages:
   - shiny/driver/gldriver
   - shiny/driver/internal/drawer
@@ -20,14 +20,14 @@ imports:
   - shiny/driver/internal/x11key
   - shiny/screen
 - name: golang.org/x/image
-  version: 83686c547965220f8b5d75e83ddc67d73420a89f
+  version: f483456c9f61fd7c1e170033d58ef22ff5ffe291
   subpackages:
   - font
   - font/gofont/goregular
   - math/f64
   - math/fixed
 - name: golang.org/x/mobile
-  version: 627b50519506c643b9493a32477821d2bdd8c23e
+  version: da8eea871ad42d958d4cc03a8eee0722e66f551b
   repo: https://github.com/pankona/mobile
   vcs: git
   subpackages:
@@ -50,7 +50,7 @@ imports:
   - gl
   - internal/mobileinit
 - name: golang.org/x/sys
-  version: d75a52659825e75fff6158388dddc6a5b04f9ba5
+  version: 9ccfe848b9db8435a24c424abbc07a921adf1df5
   subpackages:
   - unix
   - windows
