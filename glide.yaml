@@ -3,4 +3,3 @@ import:
 - package: golang.org/x/mobile
   vcs: git
   repo: https://github.com/pankona/mobile
-  version: change_screen_size
