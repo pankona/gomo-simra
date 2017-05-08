@@ -1,5 +1,5 @@
-hash: 67ec927049ed2e56166812bbdac477bb43f3cbe191aa68d0ea26713aa13e90b2
-updated: 2017-05-08T21:42:16.640587039+09:00
+hash: 70988ff3dada2f15f7e350747c13fdd771cf0870c79306d5ec3aa560f6ee1500
+updated: 2017-05-08T22:01:24.39075462+09:00
 imports:
 - name: github.com/boltdb/bolt
   version: 583e8937c61f1af6513608ccc75c97b6abdf4ff9
@@ -27,8 +27,7 @@ imports:
   - math/f64
   - math/fixed
 - name: golang.org/x/mobile
-  version: da8eea871ad42d958d4cc03a8eee0722e66f551b
-  repo: https://github.com/pankona/mobile
+  version: 0f3174026e2ab3ec13cad077d5a9f896936f354b
   subpackages:
   - app
   - app/internal/callfn
