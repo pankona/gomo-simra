@@ -9,7 +9,7 @@ import (
 
 func printLog(tag string, format string, a ...interface{}) {
 	pc := make([]uintptr, 10)
-	runtime.Callers(3, pc)
+	runtime.Callers(4, pc)
 	f := runtime.FuncForPC(pc[0])
 	_, line := f.FileLine(pc[0])
 	fmt.Printf("[%s][%s:%d] ", tag, f.Name(), line)
