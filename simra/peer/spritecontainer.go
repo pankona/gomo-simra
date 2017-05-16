@@ -6,6 +6,14 @@ import (
 	"golang.org/x/mobile/exp/sprite"
 )
 
+type Texture struct {
+	subTex sprite.SubTex
+}
+
+func NewTexture(s sprite.SubTex) *Texture {
+	return &Texture{subTex: s}
+}
+
 // Sprite represents a sprite.
 type Sprite struct {
 	// W = width of sprite
