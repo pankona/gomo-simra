@@ -6,10 +6,12 @@ import (
 	"golang.org/x/mobile/exp/sprite"
 )
 
+// Texture represents a subtexture
 type Texture struct {
 	subTex sprite.SubTex
 }
 
+// NewTexture returns a instance of texture
 func NewTexture(s sprite.SubTex) *Texture {
 	return &Texture{subTex: s}
 }

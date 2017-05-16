@@ -101,7 +101,12 @@ func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer a.Close()
+	defer func() {
+		err := a.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}()
 
 	img, _, err := image.Decode(a)
 	if err != nil {
