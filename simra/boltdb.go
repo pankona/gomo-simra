@@ -25,7 +25,10 @@ func (database *boltdb) Open() error {
 // Close closes database.
 // it is necessary to call this function after using database functions.
 func (database *boltdb) Close() {
-	database.db.Close()
+	err := database.db.Close()
+	if err != nil {
+		log.Println(err)
+	}
 	database.db = nil
 }
 
@@ -38,7 +41,7 @@ func (database *boltdb) Put(key string, value interface{}) {
 		return
 	}
 
-	db.Update(func(tx *bolt.Tx) error {
+	err := db.Update(func(tx *bolt.Tx) error {
 		bucket, err := tx.CreateBucketIfNotExists([]byte("my_bucket"))
 		if err != nil {
 			log.Fatal(err)
@@ -55,6 +58,9 @@ func (database *boltdb) Put(key string, value interface{}) {
 		}
 		return nil
 	})
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 // Get returns put data.
