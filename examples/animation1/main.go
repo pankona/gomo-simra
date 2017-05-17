@@ -3,7 +3,7 @@
 package main
 
 import (
-	"github.com/pankona/gomo-simra/examples/animation_sample/scene"
+	"github.com/pankona/gomo-simra/examples/animation1/scene"
 	"github.com/pankona/gomo-simra/simra"
 )
 
