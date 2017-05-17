@@ -86,16 +86,21 @@ func (sprite *Sprite) AddAnimationSet(animationName string, set *AnimationSet) {
 }
 
 // StartAnimation starts animation by specified animation name
-func (sprite *Sprite) StartAnimation(animationName string) {
+func (sprite *Sprite) StartAnimation(animationName string, shouldLoop bool, animationEndCallback func()) {
 	LogDebug("IN")
+	if sprite.animationCancel != nil {
+		// animation is already in progress. don't start.
+		// TODO: should exlude control
+		return
+	}
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	sprite.animationCancel = cancel
-	go sprite.startAnimation(ctx, animationName)
+	go sprite.startAnimation(ctx, animationName, shouldLoop, animationEndCallback)
 	LogDebug("OUT")
 }
 
-func (sprite *Sprite) startAnimation(ctx context.Context, animationName string) {
+func (sprite *Sprite) startAnimation(ctx context.Context, animationName string, shouldLoop bool, animationEndCallback func()) {
 	LogDebug("IN")
 	animationSet := sprite.animationSets[animationName]
 	if animationSet == nil {
@@ -111,8 +116,13 @@ animation:
 		case <-time.After(animationSet.interval):
 			sprite.ReplaceTexture2(animationSet.textures[loopCount])
 			loopCount = (loopCount + 1) % len(animationSet.textures)
+			if !shouldLoop && loopCount == 0 {
+				break animation
+			}
 		}
 	}
+	sprite.animationCancel = nil
+	animationEndCallback()
 	LogDebug("OUT")
 }
 

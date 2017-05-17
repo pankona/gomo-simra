@@ -17,8 +17,9 @@ const (
 
 // Title represents a scene object for Title
 type Title struct {
-	effect      *simra.Sprite
-	isAnimating bool
+	effect        *simra.Sprite
+	initialSprite *simra.Texture
+	isAnimating   bool
 }
 
 // Initialize initializes title scene
@@ -60,6 +61,7 @@ func (title *Title) initialize() {
 		sprite)
 	simra.GetInstance().AddTouchListener(title)
 	title.effect = sprite
+	title.initialSprite = simra.NewImageTexture("effect.png", image.Rect(0, 0, 239, int(sprite.H)))
 }
 
 // Drive is called from simra.
@@ -84,7 +86,11 @@ func (title *Title) OnTouchEnd(x, y float32) {
 		title.isAnimating = false
 	} else {
 		simra.LogDebug("start animation")
-		title.effect.StartAnimation("animation test")
+		shouldLoop := false
+		title.effect.StartAnimation("animation test", shouldLoop, func() {
+			simra.LogDebug("animation end")
+			title.effect.ReplaceTexture2(title.initialSprite)
+		})
 		title.isAnimating = true
 	}
 }
