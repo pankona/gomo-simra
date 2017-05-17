@@ -1,6 +1,7 @@
 package simra
 
 import (
+	"context"
 	"image"
 	"time"
 
@@ -10,7 +11,8 @@ import (
 // Sprite represents a sprite object.
 type Sprite struct {
 	peer.Sprite
-	animationSets map[string]*AnimationSet
+	animationSets   map[string]*AnimationSet
+	animationCancel func()
 }
 
 // NewSprite returns an instance of Sprite
@@ -46,10 +48,18 @@ func (animation *AnimationSet) SetInterval(interval time.Duration) {
 }
 
 // ReplaceTexture replaces sprite's texture with specified image resource.
+// TODO: deprecate. use ReplaceTexture2 and remove this, then rename function name
 func (sprite *Sprite) ReplaceTexture(assetName string, rect image.Rectangle) {
 	LogDebug("IN")
 	tex := peer.GetGLPeer().LoadTexture(assetName, rect)
 	peer.GetSpriteContainer().ReplaceTexture(&sprite.Sprite, tex)
+	LogDebug("OUT")
+}
+
+// ReplaceTexture2 replaces sprite's texture with specified image resource.
+func (sprite *Sprite) ReplaceTexture2(texture *Texture) {
+	LogDebug("IN")
+	peer.GetSpriteContainer().ReplaceTexture2(&sprite.Sprite, texture.Texture)
 	LogDebug("OUT")
 }
 
@@ -70,16 +80,47 @@ func (sprite *Sprite) RemoveAllTouchListener() {
 
 // AddAnimationSet adds a specified AnimationSet to sprite
 func (sprite *Sprite) AddAnimationSet(animationName string, set *AnimationSet) {
+	LogDebug("IN")
 	sprite.animationSets[animationName] = set
+	LogDebug("OUT")
 }
 
 // StartAnimation starts animation by specified animation name
-func (sprite *Sprite) StartAnimation(animationName string) error {
-	// TODO: implement
-	return nil
+func (sprite *Sprite) StartAnimation(animationName string) {
+	LogDebug("IN")
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+	sprite.animationCancel = cancel
+	go sprite.startAnimation(ctx, animationName)
+	LogDebug("OUT")
+}
+
+func (sprite *Sprite) startAnimation(ctx context.Context, animationName string) {
+	LogDebug("IN")
+	animationSet := sprite.animationSets[animationName]
+	if animationSet == nil {
+		panic("specified animation is not set. animation name")
+	}
+
+	loopCount := 0
+animation:
+	for {
+		select {
+		case <-ctx.Done():
+			break animation
+		case <-time.After(animationSet.interval):
+			sprite.ReplaceTexture2(animationSet.textures[loopCount])
+			loopCount = (loopCount + 1) % len(animationSet.textures)
+		}
+	}
+	LogDebug("OUT")
 }
 
 // StopAnimation stops animation
 func (sprite *Sprite) StopAnimation() {
-	// TODO: implement
+	LogDebug("IN")
+	if sprite.animationCancel != nil {
+		sprite.animationCancel()
+	}
+	LogDebug("OUT")
 }

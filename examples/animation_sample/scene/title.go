@@ -17,6 +17,8 @@ const (
 
 // Title represents a scene object for Title
 type Title struct {
+	text        *simra.Sprite
+	isAnimating bool
 }
 
 // Initialize initializes title scene
@@ -32,42 +34,62 @@ func (title *Title) Initialize() {
 }
 
 func (title *Title) initialize() {
-	temporary := simra.NewSprite()
-	temporary.W = ScreenWidth
-	temporary.H = 80
-	temporary.X = ScreenWidth / 2
-	temporary.Y = ScreenHeight / 2
+	sprite := simra.NewSprite()
+	sprite.W = ScreenWidth
+	sprite.H = 80
+	sprite.X = ScreenWidth / 2
+	sprite.Y = ScreenHeight / 2
 
 	animationSet := simra.NewAnimationSet()
-	animationSet.AddTexture(simra.NewTextTexture("a", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(temporary.W), int(temporary.H))))
-	animationSet.AddTexture(simra.NewTextTexture("n", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(temporary.W), int(temporary.H))))
-	animationSet.AddTexture(simra.NewTextTexture("i", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(temporary.W), int(temporary.H))))
-	animationSet.AddTexture(simra.NewTextTexture("m", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(temporary.W), int(temporary.H))))
-	animationSet.AddTexture(simra.NewTextTexture("a", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(temporary.W), int(temporary.H))))
-	animationSet.AddTexture(simra.NewTextTexture("t", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(temporary.W), int(temporary.H))))
-	animationSet.AddTexture(simra.NewTextTexture("i", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(temporary.W), int(temporary.H))))
-	animationSet.AddTexture(simra.NewTextTexture("o", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(temporary.W), int(temporary.H))))
-	animationSet.AddTexture(simra.NewTextTexture("n", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(temporary.W), int(temporary.H))))
-	animationSet.AddTexture(simra.NewTextTexture("t", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(temporary.W), int(temporary.H))))
-	animationSet.AddTexture(simra.NewTextTexture("e", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(temporary.W), int(temporary.H))))
-	animationSet.AddTexture(simra.NewTextTexture("s", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(temporary.W), int(temporary.H))))
-	animationSet.AddTexture(simra.NewTextTexture("t", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(temporary.W), int(temporary.H))))
-	animationSet.SetInterval(1 * time.Second)
+	animationSet.AddTexture(simra.NewTextTexture("a", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H))))
+	animationSet.AddTexture(simra.NewTextTexture("n", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H))))
+	animationSet.AddTexture(simra.NewTextTexture("i", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H))))
+	animationSet.AddTexture(simra.NewTextTexture("m", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H))))
+	animationSet.AddTexture(simra.NewTextTexture("a", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H))))
+	animationSet.AddTexture(simra.NewTextTexture("t", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H))))
+	animationSet.AddTexture(simra.NewTextTexture("i", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H))))
+	animationSet.AddTexture(simra.NewTextTexture("o", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H))))
+	animationSet.AddTexture(simra.NewTextTexture("n", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H))))
+	animationSet.AddTexture(simra.NewTextTexture("t", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H))))
+	animationSet.AddTexture(simra.NewTextTexture("e", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H))))
+	animationSet.AddTexture(simra.NewTextTexture("s", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H))))
+	animationSet.AddTexture(simra.NewTextTexture("t", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H))))
 
-	temporary.AddAnimationSet("animation test", animationSet)
+	animationSet.SetInterval(200 * time.Millisecond)
+
+	sprite.AddAnimationSet("animation test", animationSet)
 	simra.GetInstance().AddTextSprite("animation test",
 		60, // fontsize
 		color.RGBA{255, 0, 0, 255},
-		image.Rect(0, 0, int(temporary.W), int(temporary.H)),
-		temporary)
-	err := temporary.StartAnimation("animation test")
-	if err != nil {
-		panic("failed to start animation")
-	}
+		image.Rect(0, 0, int(sprite.W), int(sprite.H)),
+		sprite)
+	simra.GetInstance().AddTouchListener(title)
+	title.text = sprite
 }
 
 // Drive is called from simra.
 // This is used to update sprites position.
 // Thsi will be called 60 times per sec.
 func (title *Title) Drive() {
+}
+
+// OnTouchBegin is called when Title scene is Touched.
+func (title *Title) OnTouchBegin(x, y float32) {
+}
+
+// OnTouchMove is called when Title scene is Touched and moved.
+func (title *Title) OnTouchMove(x, y float32) {
+}
+
+// OnTouchEnd is called when Title scene is Touched and it is released.
+func (title *Title) OnTouchEnd(x, y float32) {
+	if title.isAnimating {
+		simra.LogDebug("stop animation")
+		title.text.StopAnimation()
+		title.isAnimating = false
+	} else {
+		simra.LogDebug("start animation")
+		title.text.StartAnimation("animation test")
+		title.isAnimating = true
+	}
 }

@@ -151,6 +151,18 @@ func (spritecontainer *SpriteContainer) ReplaceTexture(sprite *Sprite, subTex sp
 	LogDebug("OUT")
 }
 
+// ReplaceTexture2 replaces sprite's texture to specified one.
+func (spritecontainer *SpriteContainer) ReplaceTexture2(sprite *Sprite, texture *Texture) {
+	LogDebug("IN")
+	for i := range spritecontainer.spriteNodePairs {
+		if spritecontainer.spriteNodePairs[i].sprite == sprite {
+			node := spritecontainer.spriteNodePairs[i].node
+			GetGLPeer().eng.SetSubTex(node, texture.subTex)
+		}
+	}
+	LogDebug("OUT")
+}
+
 func isContained(sprite *Sprite, x, y float32) bool {
 	LogDebug("IN")
 	if x >= sprite.X-sprite.W/2 &&
