@@ -77,6 +77,12 @@ func (simra *Simra) AddSprite(assetName string, rect image.Rectangle, s *Sprite)
 	simra.AddImageSprite(assetName, rect, s)
 }
 
+// AddSprite2 adds a sprite to current scene with empty texture.
+func (simra *Simra) AddSprite2(s *Sprite) {
+	tex := peer.GetGLPeer().MakeTextureByText("", 0, color.RGBA{0, 0, 0, 0}, image.Rect(0, 0, 1, 1))
+	peer.GetSpriteContainer().AddSprite(&s.Sprite, tex)
+}
+
 // AddImageSprite adds a sprite to current scene.
 // To call this function, SetScene must be called in advance.
 func (simra *Simra) AddImageSprite(assetName string, rect image.Rectangle, s *Sprite) {
