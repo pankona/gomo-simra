@@ -13,6 +13,11 @@ type Sprite struct {
 	animationSets map[string]*AnimationSet
 }
 
+// NewSprite returns an instance of Sprite
+func NewSprite() *Sprite {
+	return &Sprite{animationSets: map[string]*AnimationSet{}}
+}
+
 // AnimationSet represents a set of image for animation
 type AnimationSet struct {
 	textures []*Texture
