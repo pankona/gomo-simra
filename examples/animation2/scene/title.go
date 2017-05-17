@@ -2,7 +2,6 @@ package scene
 
 import (
 	"image"
-	"image/color"
 	"time"
 
 	"github.com/pankona/gomo-simra/simra"
@@ -36,32 +35,24 @@ func (title *Title) Initialize() {
 
 func (title *Title) initialize() {
 	sprite := simra.NewSprite()
-	sprite.W = ScreenWidth
+	sprite.W = 240
 	sprite.H = 240
 	sprite.X = ScreenWidth / 2
 	sprite.Y = ScreenHeight / 2
 
 	animationSet := simra.NewAnimationSet()
-	animationSet.AddTexture(simra.NewImageTexture("effect.png", image.Rect(0, 0, 239, int(sprite.H))))
-	animationSet.AddTexture(simra.NewImageTexture("effect.png", image.Rect(240, 0, 479, int(sprite.H))))
-	animationSet.AddTexture(simra.NewImageTexture("effect.png", image.Rect(480, 0, 719, int(sprite.H))))
-	animationSet.AddTexture(simra.NewImageTexture("effect.png", image.Rect(720, 0, 959, int(sprite.H))))
-	animationSet.AddTexture(simra.NewImageTexture("effect.png", image.Rect(960, 0, 1199, int(sprite.H))))
-	animationSet.AddTexture(simra.NewImageTexture("effect.png", image.Rect(1200, 0, 1439, int(sprite.H))))
-	animationSet.AddTexture(simra.NewImageTexture("effect.png", image.Rect(1440, 0, 1679, int(sprite.H))))
-	animationSet.AddTexture(simra.NewImageTexture("effect.png", image.Rect(1680, 0, 1919, int(sprite.H))))
-
+	title.initialSprite = simra.NewImageTexture("effect.png", image.Rect(0, 0, 239, int(sprite.H)))
+	for i := 0; i < 13; i++ {
+		animationSet.AddTexture(simra.NewImageTexture("effect.png",
+			image.Rect((int)(sprite.W)*i, 0, ((int)(sprite.W)*(i+1))-1, int(sprite.H))))
+	}
 	animationSet.SetInterval(100 * time.Millisecond)
-
 	sprite.AddAnimationSet("animation test", animationSet)
-	simra.GetInstance().AddTextSprite("animation test",
-		60, // fontsize
-		color.RGBA{255, 0, 0, 255},
-		image.Rect(0, 0, int(sprite.W), int(sprite.H)),
-		sprite)
+
+	simra.GetInstance().AddSprite2(sprite)
+	sprite.ReplaceTexture2(title.initialSprite)
 	simra.GetInstance().AddTouchListener(title)
 	title.effect = sprite
-	title.initialSprite = simra.NewImageTexture("effect.png", image.Rect(0, 0, 239, int(sprite.H)))
 }
 
 // Drive is called from simra.
@@ -86,7 +77,7 @@ func (title *Title) OnTouchEnd(x, y float32) {
 		title.isAnimating = false
 	} else {
 		simra.LogDebug("start animation")
-		shouldLoop := false
+		shouldLoop := true
 		title.effect.StartAnimation("animation test", shouldLoop, func() {
 			simra.LogDebug("animation end")
 			title.effect.ReplaceTexture2(title.initialSprite)
