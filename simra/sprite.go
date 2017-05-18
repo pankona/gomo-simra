@@ -20,33 +20,6 @@ func NewSprite() *Sprite {
 	return &Sprite{animationSets: map[string]*AnimationSet{}}
 }
 
-// AnimationSet represents a set of image for animation
-type AnimationSet struct {
-	textures []*Texture
-	interval time.Duration
-}
-
-// NewAnimationSet returns an instance of AnimationSet
-func NewAnimationSet() *AnimationSet {
-	LogDebug("IN")
-	LogDebug("OUT")
-	return &AnimationSet{}
-}
-
-// AddTexture adds a specified texture to AnimationSet
-func (animation *AnimationSet) AddTexture(texture *Texture) {
-	LogDebug("IN")
-	animation.textures = append(animation.textures, texture)
-	LogDebug("OUT")
-}
-
-// SetInterval sets interval of animation
-func (animation *AnimationSet) SetInterval(interval time.Duration) {
-	LogDebug("IN")
-	animation.interval = interval
-	LogDebug("OUT")
-}
-
 // ReplaceTexture replaces sprite's texture with specified image resource.
 // TODO: deprecate. use ReplaceTexture2 and remove this, then rename function name
 func (sprite *Sprite) ReplaceTexture(assetName string, rect image.Rectangle) {
@@ -104,7 +77,7 @@ func (sprite *Sprite) startAnimation(ctx context.Context, animationName string, 
 	LogDebug("IN")
 	animationSet := sprite.animationSets[animationName]
 	if animationSet == nil {
-		panic("specified animation is not set. animation name")
+		panic("specified animation is not set. animation name = " + animationName)
 	}
 
 	loopCount := 0
