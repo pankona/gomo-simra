@@ -2,16 +2,14 @@ package simra
 
 import "sync"
 
-type Commander interface{}
-
 type Publisher interface {
-	Publish(c Commander)
+	Publish(i interface{})
 	Subscribe(id string, s Subscriber) error
 	Unsubscribe(id string)
 }
 
 type Subscriber interface {
-	OnEvent(c Commander)
+	OnEvent(i interface{})
 }
 
 type PubSub struct {
@@ -25,12 +23,12 @@ func NewPubSub() *PubSub {
 	}
 }
 
-func (p *PubSub) Publish(c Commander) {
+func (p *PubSub) Publish(i interface{}) {
 	p.m.Lock()
 	defer p.m.Unlock()
 
 	for _, v := range p.subscribers {
-		v.OnEvent(c)
+		v.OnEvent(i)
 	}
 }
 
