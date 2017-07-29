@@ -89,7 +89,7 @@ func (title *Title) OnTouchEnd(x, y float32) {
 		title.isAnimating = false
 	} else {
 		simra.LogDebug("start animation")
-		title.text.StartAnimation("animation test")
+		title.text.StartAnimation("animation test", true, func() {})
 		title.isAnimating = true
 	}
 }
