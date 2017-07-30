@@ -33,6 +33,8 @@ dependencies:
         - go get golang.org/x/mobile/cmd/gomobile
         - go get github.com/golang/freetype/truetype
         - go get github.com/boltdb/bolt
+        - go get github.com/hajimehoshi/oto
+        - go get github.com/hajimehoshi/go-mp3
         - gomobile init -v --ndk $NDK_ROOT
         - go get github.com/golang/lint/golint
 
