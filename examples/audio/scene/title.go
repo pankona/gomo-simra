@@ -72,14 +72,16 @@ func (title *Title) OnTouchEnd(x, y float32) {
 			panic(err.Error())
 		}
 		title.isPlaying = false
+
 	} else {
 		title.audio = simra.NewAudio()
-		resource, err := asset.Open("bgm_maoudamashii_8bit28.mp3")
+		resource, err := asset.Open("test_bgm.mp3")
 		if err != nil {
 			panic(err.Error())
 		}
 
-		err = title.audio.Play(resource, true, func() {
+		err = title.audio.Play(resource, false, func(err error) {
+			simra.LogDebug("playback complete callback. %s\n", err)
 			title.isPlaying = false
 		})
 		if err != nil {

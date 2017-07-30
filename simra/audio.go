@@ -1,9 +1,8 @@
 package simra
 
 import (
-	"context"
-	"fmt"
 	"io"
+	"sync"
 
 	mp3 "github.com/hajimehoshi/go-mp3"
 	"github.com/hajimehoshi/oto"
@@ -11,14 +10,16 @@ import (
 )
 
 type audio struct {
-	ctx        context.Context
-	player     *oto.Player
-	cancelFunc func()
+	player   *oto.Player
+	dec      *mp3.Decoder
+	resource asset.File
+	mu       sync.Mutex
+	isClosed bool
 }
 
 // Audioer is an interface for treating audio
 type Audioer interface {
-	Play(resource asset.File, loop bool, doneCallback func()) error
+	Play(resource asset.File, loop bool, doneCallback func(err error)) error
 	Stop() error
 }
 
@@ -27,18 +28,20 @@ func NewAudio() Audioer {
 	return &audio{}
 }
 
-func (a *audio) Play(resource asset.File, loop bool, doneCallback func()) error {
-	a.ctx, a.cancelFunc = context.WithCancel(context.Background())
-
+func (a *audio) Play(resource asset.File, loop bool, doneCallback func(err error)) error {
 	dec, err := mp3.NewDecoder(resource)
 	if err != nil {
 		return err
 	}
+	a.dec = dec
 
 	player, err := oto.NewPlayer(dec.SampleRate(), 2, 2, 8192)
 	if err != nil {
 		return err
 	}
+	a.player = player
+
+	a.resource = resource
 
 	doneChan := make(chan error)
 	go func() {
@@ -46,18 +49,15 @@ func (a *audio) Play(resource asset.File, loop bool, doneCallback func()) error 
 	}()
 
 	go func() {
-		defer dec.Close()
-		defer player.Close()
-		defer a.cancelFunc()
+		defer func() {
+			dec.Close()
+			player.Close()
+		}()
 
-		select {
-		case err := <-doneChan:
-			LogDebug("playback completed. %s\n", err)
-		case <-a.ctx.Done():
-			LogDebug("playback canceled")
-		}
-		if doneCallback != nil {
-			doneCallback()
+		for err := range doneChan {
+			if doneCallback != nil {
+				doneCallback(err)
+			}
 		}
 	}()
 
@@ -65,23 +65,40 @@ func (a *audio) Play(resource asset.File, loop bool, doneCallback func()) error 
 }
 
 func (a *audio) doPlay(player *oto.Player, r io.ReadSeeker, loop bool) error {
+	var offset, written int64
+	var err error
+	readByte := (int64)(4096 * 30)
+loop:
 	for {
-		r.Seek(0, 0)
-		_, err := io.Copy(player, r)
-		if err != nil {
-			return err
+	playback:
+		for {
+			r.Seek(offset, io.SeekStart)
+			a.mu.Lock()
+			if a.isClosed {
+				readByte = 0
+				r.Seek(0, io.SeekEnd)
+			}
+			written, err = io.CopyN(player, r, readByte)
+			a.mu.Unlock()
+			if err != nil || written == 0 {
+				// error or EOF
+				break playback
+			}
+			offset += written
 		}
-		if !loop {
-			break
+		if !loop || err != io.EOF {
+			break loop
 		}
+		offset = 0
 	}
-	return nil
+	return err
 }
 
 func (a *audio) Stop() error {
-	if a.cancelFunc == nil {
-		return fmt.Errorf("stop didn't effect. not playing now")
-	}
-	a.cancelFunc()
+	a.mu.Lock()
+	defer a.mu.Unlock()
+	//a.player.Close()
+	//a.dec.Close()
+	a.isClosed = true
 	return nil
 }
