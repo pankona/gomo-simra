@@ -1,15 +1,28 @@
 hash: 70988ff3dada2f15f7e350747c13fdd771cf0870c79306d5ec3aa560f6ee1500
-updated: 2017-05-08T22:01:24.39075462+09:00
+updated: 2017-07-30T11:23:29.116896574+09:00
 imports:
 - name: github.com/boltdb/bolt
-  version: 583e8937c61f1af6513608ccc75c97b6abdf4ff9
+  version: 2f1ce7a837dcb8da3ec595b1dac9d0632f0f99e8
 - name: github.com/golang/freetype
-  version: bcfeb16b74e8aea9e2fe043406f2ef74b1cb0759
+  version: e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4
   subpackages:
   - raster
   - truetype
+- name: github.com/gopherjs/gopherjs
+  version: 2b1d432c8a82c9bff0b0baffaeb3ec6e92974112
+  subpackages:
+  - js
+- name: github.com/hajimehoshi/go-mp3
+  version: 38fd3fbee64d4cf50b38449550183de5bd3c1bb2
+  subpackages:
+  - internal/bits
+  - internal/imdct
+- name: github.com/hajimehoshi/oto
+  version: 3f34faeeb68e18a9a7ae39056db4d4e117b805df
+  subpackages:
+  - internal/jni
 - name: golang.org/x/exp
-  version: 239d448f23a0d683c1ab7225da01af038355f5e9
+  version: be79676510e5ce293c77bb087cdab4796a461bdb
   subpackages:
   - shiny/driver/gldriver
   - shiny/driver/internal/drawer
@@ -20,14 +33,14 @@ imports:
   - shiny/driver/internal/x11key
   - shiny/screen
 - name: golang.org/x/image
-  version: f483456c9f61fd7c1e170033d58ef22ff5ffe291
+  version: 426cfd8eeb6e08ab1932954e09e3c2cb2bc6e36d
   subpackages:
   - font
   - font/gofont/goregular
   - math/f64
   - math/fixed
 - name: golang.org/x/mobile
-  version: 0f3174026e2ab3ec13cad077d5a9f896936f354b
+  version: 683b305bdbdf5901d6d9b094e4948b51a37403a2
   subpackages:
   - app
   - app/internal/callfn
@@ -39,6 +52,7 @@ imports:
   - event/size
   - event/touch
   - exp/app/debug
+  - exp/audio/al
   - exp/f32
   - exp/gl/glutil
   - exp/sprite
@@ -48,7 +62,7 @@ imports:
   - gl
   - internal/mobileinit
 - name: golang.org/x/sys
-  version: 9ccfe848b9db8435a24c424abbc07a921adf1df5
+  version: 0f826bdd13b500be0f1d4004938ad978fcc6031e
   subpackages:
   - unix
   - windows
