@@ -18,8 +18,8 @@ const (
 
 // Title represents a scene object for Title
 type Title struct {
-	resource asset.File
-	audio    simra.Audioer
+	audio     simra.Audioer
+	isPlaying bool
 }
 
 // Initialize initializes title scene
@@ -32,12 +32,6 @@ func (title *Title) Initialize() {
 	// initialize sprites
 	title.initialize()
 	simra.LogDebug("[OUT]")
-
-	resource, err := asset.Open("boing.wav")
-	if err != nil {
-		panic(err.Error())
-	}
-	title.resource = resource
 }
 
 func (title *Title) initialize() {
@@ -72,16 +66,25 @@ func (title *Title) OnTouchMove(x, y float32) {
 
 // OnTouchEnd is called when Title scene is Touched and it is released.
 func (title *Title) OnTouchEnd(x, y float32) {
-	audio := simra.NewAudio()
-	resource, err := asset.Open("boing.wav")
-	if err != nil {
-		panic(err.Error())
-	}
+	if title.isPlaying {
+		err := title.audio.Stop()
+		if err != nil {
+			panic(err.Error())
+		}
+		title.isPlaying = false
+	} else {
+		title.audio = simra.NewAudio()
+		resource, err := asset.Open("bgm_maoudamashii_8bit28.mp3")
+		if err != nil {
+			panic(err.Error())
+		}
 
-	go func() {
-		err = audio.Play(resource)
+		err = title.audio.Play(resource, true, func() {
+			title.isPlaying = false
+		})
 		if err != nil {
 			panic(err)
 		}
-	}()
+		title.isPlaying = true
+	}
 }
