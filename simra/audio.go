@@ -10,22 +10,24 @@ import (
 	"golang.org/x/mobile/asset"
 )
 
-type Audio struct {
+type audio struct {
 	ctx        context.Context
 	player     *oto.Player
 	cancelFunc func()
 }
 
+// Audioer is an interface for treating audio
 type Audioer interface {
 	Play(resource asset.File, loop bool, doneCallback func()) error
 	Stop() error
 }
 
+// NewAudio returns new audio instance that implements Audioer interface
 func NewAudio() Audioer {
-	return &Audio{}
+	return &audio{}
 }
 
-func (a *Audio) Play(resource asset.File, loop bool, doneCallback func()) error {
+func (a *audio) Play(resource asset.File, loop bool, doneCallback func()) error {
 	a.ctx, a.cancelFunc = context.WithCancel(context.Background())
 
 	dec, err := mp3.NewDecoder(resource)
@@ -62,7 +64,7 @@ func (a *Audio) Play(resource asset.File, loop bool, doneCallback func()) error 
 	return nil
 }
 
-func (a *Audio) doPlay(player *oto.Player, r io.ReadSeeker, loop bool) error {
+func (a *audio) doPlay(player *oto.Player, r io.ReadSeeker, loop bool) error {
 	for {
 		r.Seek(0, 0)
 		_, err := io.Copy(player, r)
@@ -76,7 +78,7 @@ func (a *Audio) doPlay(player *oto.Player, r io.ReadSeeker, loop bool) error {
 	return nil
 }
 
-func (a *Audio) Stop() error {
+func (a *audio) Stop() error {
 	if a.cancelFunc == nil {
 		return fmt.Errorf("stop didn't effect. not playing now")
 	}
