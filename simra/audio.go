@@ -50,13 +50,20 @@ func (a *audio) Play(resource asset.File, loop bool, doneCallback func(err error
 
 	go func() {
 		defer func() {
-			dec.Close()
-			player.Close()
+			err := dec.Close()
+			if err != nil {
+				LogError(err.Error())
+			}
+			err = player.Close()
+			if err != nil {
+				LogError(err.Error())
+			}
 		}()
 
 		for err := range doneChan {
 			if doneCallback != nil {
 				doneCallback(err)
+				break
 			}
 		}
 	}()
