@@ -9,9 +9,6 @@ import (
 )
 
 type audio struct {
-	player   *oto.Player
-	dec      *mp3.Decoder
-	resource asset.File
 	isClosed chan bool
 }
 
@@ -33,15 +30,11 @@ func (a *audio) Play(resource asset.File, loop bool, doneCallback func(err error
 	if err != nil {
 		return err
 	}
-	a.dec = dec
 
 	player, err := oto.NewPlayer(dec.SampleRate(), 2, 2, 8192)
 	if err != nil {
 		return err
 	}
-	a.player = player
-
-	a.resource = resource
 
 	doneChan := make(chan error)
 	go func() {
