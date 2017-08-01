@@ -12,7 +12,7 @@ type audio struct {
 	player   *oto.Player
 	dec      *mp3.Decoder
 	resource asset.File
-	isClosed bool
+	isClosed chan bool
 }
 
 // Audioer is an interface for treating audio
@@ -58,10 +58,8 @@ func (a *audio) Play(resource asset.File, loop bool, doneCallback func(err error
 			}
 		}()
 
-		select {
-		case <-doneChan:
-			doneCallback(err)
-		}
+		<-doneChan
+		doneCallback(err)
 	}()
 
 	return nil
@@ -76,10 +74,12 @@ loop:
 	playback:
 		for {
 			r.Seek(offset, io.SeekStart)
-			// TODO: atomic read/write isClose
-			if a.isClosed {
+			select {
+			case <-a.isClosed:
 				readByte = 0
 				r.Seek(0, io.SeekEnd)
+			default:
+				// for non-blocking
 			}
 			written, err = io.CopyN(player, r, readByte)
 			if err != nil || written == 0 {
@@ -97,6 +97,6 @@ loop:
 }
 
 func (a *audio) Stop() error {
-	a.isClosed = true
+	a.isClosed <- true
 	return nil
 }
