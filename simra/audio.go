@@ -58,11 +58,9 @@ func (a *audio) Play(resource asset.File, loop bool, doneCallback func(err error
 			}
 		}()
 
-		for err := range doneChan {
-			if doneCallback != nil {
-				doneCallback(err)
-				break
-			}
+		select {
+		case <-doneChan:
+			doneCallback(err)
 		}
 	}()
 
