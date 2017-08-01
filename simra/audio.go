@@ -23,7 +23,9 @@ type Audioer interface {
 
 // NewAudio returns new audio instance that implements Audioer interface
 func NewAudio() Audioer {
-	return &audio{}
+	return &audio{
+		isClosed: make(chan bool, 1),
+	}
 }
 
 func (a *audio) Play(resource asset.File, loop bool, doneCallback func(err error)) error {
