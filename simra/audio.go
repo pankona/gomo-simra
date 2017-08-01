@@ -2,7 +2,6 @@ package simra
 
 import (
 	"io"
-	"sync"
 
 	mp3 "github.com/hajimehoshi/go-mp3"
 	"github.com/hajimehoshi/oto"
@@ -13,7 +12,6 @@ type audio struct {
 	player   *oto.Player
 	dec      *mp3.Decoder
 	resource asset.File
-	mu       sync.Mutex
 	isClosed bool
 }
 
@@ -80,13 +78,12 @@ loop:
 	playback:
 		for {
 			r.Seek(offset, io.SeekStart)
-			a.mu.Lock()
+			// TODO: atomic read/write isClose
 			if a.isClosed {
 				readByte = 0
 				r.Seek(0, io.SeekEnd)
 			}
 			written, err = io.CopyN(player, r, readByte)
-			a.mu.Unlock()
 			if err != nil || written == 0 {
 				// error or EOF
 				break playback
@@ -102,10 +99,6 @@ loop:
 }
 
 func (a *audio) Stop() error {
-	a.mu.Lock()
-	defer a.mu.Unlock()
-	//a.player.Close()
-	//a.dec.Close()
 	a.isClosed = true
 	return nil
 }
