@@ -102,6 +102,10 @@ animation:
 // StopAnimation stops animation
 func (sprite *Sprite) StopAnimation() {
 	LogDebug("IN")
+	if sprite == nil {
+		return
+	}
+
 	if sprite.animationCancel != nil {
 		sprite.animationCancel()
 	}
