@@ -1,3 +1,4 @@
 vendor
 **/*.apk
 *.swp
+db
