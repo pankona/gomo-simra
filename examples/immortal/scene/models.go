@@ -1,6 +1,7 @@
 package scene
 
 import (
+	"log"
 	"math"
 
 	"github.com/pankona/gomo-simra/simra"
@@ -19,8 +20,11 @@ type modeler interface {
 	move()
 }
 
+var score int
+
 type modelEventListener interface {
 	onDead()
+	onScoreUpdate(score int)
 }
 
 type models struct {
@@ -29,6 +33,13 @@ type models struct {
 	backgrounds [2]modeler
 	listeners   []modelEventListener
 	isDead      bool
+}
+
+func (models *models) setScore(s int) {
+	score = s
+	for _, v := range models.listeners {
+		v.onScoreUpdate(score)
+	}
 }
 
 func (models *models) restart() {
@@ -58,6 +69,22 @@ func (models *models) addEventListener(listener modelEventListener) {
 
 var degree float32
 
+func (models *models) isScored() bool {
+
+	bx, by := models.ball.getPosition()
+	o0x, o0y := models.obstacles[0].getPosition()
+	_, o1y := models.obstacles[1].getPosition()
+	speed := models.backgrounds[0].getSpeed()
+
+	if by < o0y && by > o1y {
+		if bx > o0x-float32(speed) && bx < o0x+float32(speed) {
+			return true
+		}
+	}
+
+	return false
+}
+
 // Progress progresses the time of models 1 frame
 func (models *models) Progress(isKeyTouching bool) {
 	ball := models.ball
@@ -78,6 +105,14 @@ func (models *models) Progress(isKeyTouching bool) {
 			ball.setDirection(math.Atan2(dy, dx) * 180 / math.Pi)
 		}
 		models.move()
+
+		if models.isScored() {
+			score++
+			log.Println("score:", score)
+			for _, v := range models.listeners {
+				v.onScoreUpdate(score)
+			}
+		}
 	}
 }
 

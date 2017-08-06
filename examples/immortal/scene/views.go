@@ -1,8 +1,13 @@
 package scene
 
 import (
-	"github.com/pankona/gomo-simra/simra"
+	"image"
+	"image/color"
 	"math"
+	"strconv"
+
+	"github.com/pankona/gomo-simra/examples/sample2/scene/config"
+	"github.com/pankona/gomo-simra/simra"
 )
 
 // Viewer represents a view
@@ -22,6 +27,7 @@ type views struct {
 	listeners        []viewEventListener
 	isDead           bool
 	elapsedDeadFrame int
+	score            simra.Sprite
 }
 
 const (
@@ -71,7 +77,7 @@ func (views *views) move() {
 	ball.move()
 }
 
-// event notification from view
+// event notification from model
 func (views *views) onDead() {
 	simra.LogDebug("onDead!!")
 	views.isDead = true
@@ -84,4 +90,16 @@ func (views *views) onDead() {
 	dx -= 3
 	ball.setSpeed(math.Sqrt(dx*dx + dy*dy))
 	ball.setDirection(math.Atan2(dy, dx) * 180 / math.Pi)
+}
+
+func (views *views) onScoreUpdate(score int) {
+	views.score.X = config.ScreenWidth / 2
+	views.score.Y = config.ScreenHeight / 2
+	views.score.W = 65
+	views.score.H = 65
+	simra.GetInstance().RemoveSprite(&views.score)
+	simra.GetInstance().AddTextSprite(strconv.Itoa(score),
+		60, color.RGBA{255, 0, 0, 255},
+		image.Rect(0, 0, 65, 65),
+		&views.score)
 }

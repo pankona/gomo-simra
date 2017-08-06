@@ -4,7 +4,7 @@ import (
 	"image"
 	"image/color"
 
-	"github.com/pankona/gomo-simra/examples/sample3/scene/config"
+	"github.com/pankona/gomo-simra/examples/immortal/scene/config"
 	"github.com/pankona/gomo-simra/simra"
 )
 
@@ -81,6 +81,10 @@ func (scene *Stage1) OnTouchEnd(x, y float32) {
 	scene.isTouching = false
 
 	if scene.gamestate == readyToStart {
+		scene.resetPosition()
+		scene.views.restart()
+		scene.models.restart()
+		scene.models.setScore(0)
 		scene.gamestate = started
 		scene.removeReadyText()
 	} else if scene.gamestate == readyToRestart {
@@ -88,6 +92,7 @@ func (scene *Stage1) OnTouchEnd(x, y float32) {
 		scene.resetPosition()
 		scene.views.restart()
 		scene.models.restart()
+		scene.models.setScore(0)
 		simra.GetInstance().AddSprite("heart.png",
 			image.Rect(0, 0, 384, 384),
 			&scene.life[0].Sprite)
@@ -165,9 +170,9 @@ func (scene *Stage1) resetPosition() {
 
 	// set size of obstacle
 	scene.obstacle[0].W = 50
-	scene.obstacle[0].H = 100
+	scene.obstacle[0].H = 50
 	scene.obstacle[1].W = 50
-	scene.obstacle[1].H = 100
+	scene.obstacle[1].H = 50
 
 	// put center/upper side of screen
 	scene.obstacle[0].X = config.ScreenWidth + config.ScreenWidth/2
@@ -254,7 +259,7 @@ func (scene *Stage1) showGameover() {
 }
 
 func (scene *Stage1) onFinishDead() {
-	if scene.remainingLife == 0 {
+	if scene.remainingLife == 1 {
 		scene.showGameover()
 		scene.gamestate = readyToRestart
 		return
