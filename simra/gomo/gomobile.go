@@ -21,8 +21,8 @@ import (
 type Gomo struct {
 	glPeer         *peer.GLPeer
 	touchPeer      *peer.TouchPeer
-	onStart        chan bool
-	onStop         chan bool
+	onStart        func()
+	onStop         func()
 	updateCallback func()
 }
 
@@ -41,7 +41,7 @@ func GetInstance() *Gomo {
 }
 
 // Initialize initializes Gomo.
-func (gomo *Gomo) Initialize(onStart, onStop chan bool, updateCallback func()) {
+func (gomo *Gomo) Initialize(onStart, onStop func(), updateCallback func()) {
 	peer.LogDebug("IN")
 	gomo.glPeer = peer.GetGLPeer()
 	gomo.touchPeer = peer.GetTouchPeer()
@@ -68,12 +68,12 @@ func (gomo *Gomo) Start() {
 					gomo.glPeer.Initialize(glctx)
 
 					// time to set first scene
-					gomo.onStart <- true
+					gomo.onStart()
 					a.Send(paint.Event{})
 				case lifecycle.CrossOff:
 
 					// time to stop application
-					gomo.onStop <- true
+					gomo.onStop()
 
 					// finalize gl peer
 					gomo.glPeer.Finalize()
