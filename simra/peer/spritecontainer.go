@@ -57,6 +57,7 @@ type SpriteNodePair struct {
 
 // SpriteContainer represents array of SpriteNodePair.
 type SpriteContainer struct {
+	// TODO: should use map[Sprite]*SpriteNodePair
 	spriteNodePairs []*SpriteNodePair
 }
 
