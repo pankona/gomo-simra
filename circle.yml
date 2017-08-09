@@ -14,6 +14,7 @@ dependencies:
         - ~/tmp
 
     pre:
+        - sudo apt-get update; sudo apt-get install -y libegl1-mesa-dev libgles2-mesa-dev libx11-dev
         - |
             mkdir -p $GOPATH
             mkdir -p ~/tmp && cd ~/tmp
