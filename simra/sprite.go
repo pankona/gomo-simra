@@ -112,7 +112,7 @@ func (sprite *Sprite) StopAnimation() {
 	LogDebug("OUT")
 }
 
-// ProgressAnimtion progresses registered animation
-func (s *Sprite) ProgressAnimation() {
+// ProgressAnimation progresses registered animation
+func (sprite *Sprite) ProgressAnimation() {
 	fps.Progress()
 }

@@ -66,6 +66,11 @@ func (simra *Simra) SetScene(driver Driver) {
 
 	simra.driver = driver
 	peer.GetSpriteContainer().Initialize()
+
+	tex := peer.GetGLPeer().MakeTextureByText("", 0, color.RGBA{0, 0, 0, 0}, image.Rect(0, 0, 1, 1))
+	s := NewSprite()
+	peer.GetSpriteContainer().AddSprite(&s.Sprite, tex, s.ProgressAnimation)
+
 	driver.Initialize()
 	peer.LogDebug("OUT")
 }
@@ -80,21 +85,21 @@ func (simra *Simra) AddSprite(assetName string, rect image.Rectangle, s *Sprite)
 // AddSprite2 adds a sprite to current scene with empty texture.
 func (simra *Simra) AddSprite2(s *Sprite) {
 	tex := peer.GetGLPeer().MakeTextureByText("", 0, color.RGBA{0, 0, 0, 0}, image.Rect(0, 0, 1, 1))
-	peer.GetSpriteContainer().AddSprite(&s.Sprite, tex, s.ProgressAnimation)
+	peer.GetSpriteContainer().AddSprite(&s.Sprite, tex, nil)
 }
 
 // AddImageSprite adds a sprite to current scene.
 // To call this function, SetScene must be called in advance.
 func (simra *Simra) AddImageSprite(assetName string, rect image.Rectangle, s *Sprite) {
 	tex := peer.GetGLPeer().LoadTexture(assetName, rect)
-	peer.GetSpriteContainer().AddSprite(&s.Sprite, tex, s.ProgressAnimation)
+	peer.GetSpriteContainer().AddSprite(&s.Sprite, tex, nil)
 }
 
 // AddTextSprite adds a sprite to current scene.
 // To call this function, SetScene must be called in advance.
 func (simra *Simra) AddTextSprite(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle, s *Sprite) {
 	tex := peer.GetGLPeer().MakeTextureByText(text, fontsize, fontcolor, rect)
-	peer.GetSpriteContainer().AddSprite(&s.Sprite, tex, s.ProgressAnimation)
+	peer.GetSpriteContainer().AddSprite(&s.Sprite, tex, nil)
 }
 
 // RemoveSprite removes specified sprite from current scene.

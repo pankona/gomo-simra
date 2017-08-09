@@ -106,7 +106,9 @@ func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTe
 	sn.sprite = s
 	if sn.node == nil {
 		sn.node = GetGLPeer().newNode(func(eng sprite.Engine, n *sprite.Node, t clock.Time) {
-			arrangeCallback()
+			if arrangeCallback != nil {
+				arrangeCallback()
+			}
 		})
 		spritecontainer.spriteNodePairs = append(spritecontainer.spriteNodePairs, sn)
 	} else {
