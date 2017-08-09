@@ -42,10 +42,10 @@ dependencies:
         - echo "$GOPATH/src/$IMPORT_PATH"
         - mkdir -p "$GOPATH/src/$IMPORT_PATH"
         - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
-        - cd "$GOPATH/src/$IMPORT_PATH/examples/sample1" && gomobile build -v
-        - cd "$GOPATH/src/$IMPORT_PATH/examples/sample2" && gomobile build -v
+        - make -C "$GOPATH/src/$IMPORT_PATH/examples"
+        - make mobile -C "$GOPATH/src/$IMPORT_PATH/examples"
 
 test:
     override:
-        - cd "$GOPATH/src/$IMPORT_PATH/examples" && test -z "$(golint ./... | tee /dev/stderr)" 
-        - cd "$GOPATH/src/$IMPORT_PATH/simra" && test -z "$(golint ./... | tee /dev/stderr)" 
+        - cd "$GOPATH/src/$IMPORT_PATH/examples" && test -z "$(golint ./... | tee /dev/stderr)"
+        - cd "$GOPATH/src/$IMPORT_PATH/simra" && test -z "$(golint ./... | tee /dev/stderr)"
