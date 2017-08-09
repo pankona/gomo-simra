@@ -1,5 +1,5 @@
 hash: 70988ff3dada2f15f7e350747c13fdd771cf0870c79306d5ec3aa560f6ee1500
-updated: 2017-07-30T11:23:29.116896574+09:00
+updated: 2017-08-09T18:32:33.549402425+09:00
 imports:
 - name: github.com/boltdb/bolt
   version: 2f1ce7a837dcb8da3ec595b1dac9d0632f0f99e8
@@ -18,7 +18,7 @@ imports:
   - internal/bits
   - internal/imdct
 - name: github.com/hajimehoshi/oto
-  version: 3f34faeeb68e18a9a7ae39056db4d4e117b805df
+  version: 8ab1cc50f21ad05f93bf99dc8c44d6aa101c29c9
   subpackages:
   - internal/jni
 - name: golang.org/x/exp
@@ -40,7 +40,7 @@ imports:
   - math/f64
   - math/fixed
 - name: golang.org/x/mobile
-  version: 683b305bdbdf5901d6d9b094e4948b51a37403a2
+  version: 448c916b90896b38ba453c68282a01caf9203091
   subpackages:
   - app
   - app/internal/callfn
@@ -62,7 +62,7 @@ imports:
   - gl
   - internal/mobileinit
 - name: golang.org/x/sys
-  version: 0f826bdd13b500be0f1d4004938ad978fcc6031e
+  version: d8f5ea21b9295e315e612b4bcf4bedea93454d4d
   subpackages:
   - unix
   - windows
