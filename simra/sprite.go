@@ -3,8 +3,8 @@ package simra
 import (
 	"context"
 	"image"
-	"time"
 
+	"github.com/pankona/gomo-simra/simra/fps"
 	"github.com/pankona/gomo-simra/simra/peer"
 )
 
@@ -86,7 +86,7 @@ animation:
 		select {
 		case <-ctx.Done():
 			break animation
-		case <-time.After(animationSet.interval):
+		case <-fps.After(animationSet.interval):
 			sprite.ReplaceTexture2(animationSet.textures[loopCount])
 			loopCount = (loopCount + 1) % len(animationSet.textures)
 			if !shouldLoop && loopCount == 0 {
@@ -110,4 +110,9 @@ func (sprite *Sprite) StopAnimation() {
 		sprite.animationCancel()
 	}
 	LogDebug("OUT")
+}
+
+// ProgressAnimtion progresses registered animation
+func (s *Sprite) ProgressAnimation() {
+	fps.Progress()
 }

@@ -1,18 +1,16 @@
 package simra
 
-import "time"
-
 // AnimationSet represents a set of image for animation
 type AnimationSet struct {
 	textures []*Texture
-	interval time.Duration
+	interval int64 // frames
 }
 
 // NewAnimationSet returns an instance of AnimationSet
 func NewAnimationSet() *AnimationSet {
 	LogDebug("IN")
 	LogDebug("OUT")
-	defaultInterval := 100 * time.Millisecond
+	defaultInterval := (int64)(6)
 	return &AnimationSet{interval: defaultInterval}
 }
 
@@ -24,7 +22,7 @@ func (animation *AnimationSet) AddTexture(texture *Texture) {
 }
 
 // SetInterval sets interval of animation
-func (animation *AnimationSet) SetInterval(interval time.Duration) {
+func (animation *AnimationSet) SetInterval(interval int64) {
 	LogDebug("IN")
 	animation.interval = interval
 	LogDebug("OUT")

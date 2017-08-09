@@ -78,8 +78,12 @@ func (glpeer *GLPeer) initEng() {
 	})
 }
 
-func (glpeer *GLPeer) newNode() *sprite.Node {
-	n := &sprite.Node{}
+type arrangerFunc func(e sprite.Engine, n *sprite.Node, t clock.Time)
+
+func (a arrangerFunc) Arrange(e sprite.Engine, n *sprite.Node, t clock.Time) { a(e, n, t) }
+
+func (glpeer *GLPeer) newNode(fn arrangerFunc) *sprite.Node {
+	n := &sprite.Node{Arranger: arrangerFunc(fn)}
 	glpeer.eng.Register(n)
 	glpeer.scene.AppendChild(n)
 	return n
@@ -250,7 +254,3 @@ func (glpeer *GLPeer) apply() {
 		glpeer.eng.SetTransform(sc.node, *affine)
 	}
 }
-
-type arrangerFunc func(e sprite.Engine, n *sprite.Node, t clock.Time)
-
-func (a arrangerFunc) Arrange(e sprite.Engine, n *sprite.Node, t clock.Time) { a(e, n, t) }

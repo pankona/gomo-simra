@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"golang.org/x/mobile/exp/sprite"
+	"golang.org/x/mobile/exp/sprite/clock"
 )
 
 // Texture represents a subtexture
@@ -82,7 +83,7 @@ func (spritecontainer *SpriteContainer) Initialize() {
 }
 
 // AddSprite adds a sprite to SpriteContainer.
-func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex) {
+func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex, arrangeCallback func()) {
 	LogDebug("IN")
 	for _, snpair := range spritecontainer.spriteNodePairs {
 		if s == snpair.sprite && snpair.inuse {
@@ -104,7 +105,9 @@ func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTe
 
 	sn.sprite = s
 	if sn.node == nil {
-		sn.node = GetGLPeer().newNode()
+		sn.node = GetGLPeer().newNode(func(eng sprite.Engine, n *sprite.Node, t clock.Time) {
+			arrangeCallback()
+		})
 		spritecontainer.spriteNodePairs = append(spritecontainer.spriteNodePairs, sn)
 	} else {
 		GetGLPeer().appendChild(sn.node)
