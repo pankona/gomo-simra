@@ -2,7 +2,6 @@ package scene
 
 import (
 	"image"
-	"time"
 
 	"github.com/pankona/gomo-simra/simra"
 )
@@ -46,7 +45,7 @@ func (title *Title) initialize() {
 		animationSet.AddTexture(simra.NewImageTexture("effect.png",
 			image.Rect((int)(sprite.W)*i, 0, ((int)(sprite.W)*(i+1))-1, int(sprite.H))))
 	}
-	animationSet.SetInterval(100 * time.Millisecond)
+	animationSet.SetInterval(6)
 	sprite.AddAnimationSet("animation test", animationSet)
 
 	simra.GetInstance().AddSprite2(sprite)

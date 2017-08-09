@@ -3,7 +3,6 @@ package scene
 import (
 	"image"
 	"image/color"
-	"time"
 
 	"github.com/pankona/gomo-simra/simra"
 )
@@ -55,7 +54,7 @@ func (title *Title) initialize() {
 	animationSet.AddTexture(simra.NewTextTexture("s", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H))))
 	animationSet.AddTexture(simra.NewTextTexture("t", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H))))
 
-	animationSet.SetInterval(200 * time.Millisecond)
+	animationSet.SetInterval(12) // frames
 
 	sprite.AddAnimationSet("animation test", animationSet)
 	simra.GetInstance().AddTextSprite("animation test",
