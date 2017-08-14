@@ -13,6 +13,7 @@ type Sprite struct {
 	peer.Sprite
 	animationSets   map[string]*AnimationSet
 	animationCancel func()
+	texture         *Texture
 }
 
 // NewSprite returns an instance of Sprite
@@ -32,6 +33,8 @@ func (sprite *Sprite) ReplaceTexture(assetName string, rect image.Rectangle) {
 // ReplaceTexture2 replaces sprite's texture with specified image resource.
 func (sprite *Sprite) ReplaceTexture2(texture *Texture) {
 	LogDebug("IN")
+	// retain refarence for texture to avoid to be discarded by GC
+	sprite.texture = texture
 	peer.GetSpriteContainer().ReplaceTexture2(&sprite.Sprite, texture.Texture)
 	LogDebug("OUT")
 }
