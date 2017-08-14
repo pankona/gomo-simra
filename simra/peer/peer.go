@@ -18,7 +18,6 @@ import (
 	"golang.org/x/mobile/exp/sprite"
 	"golang.org/x/mobile/exp/sprite/clock"
 	"golang.org/x/mobile/exp/sprite/glsprite"
-	"golang.org/x/mobile/geom"
 	"golang.org/x/mobile/gl"
 )
 
@@ -134,19 +133,18 @@ func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, fontcolor
 	dpi := float64(72)
 	width := rect.Dx()
 	height := rect.Dy()
-	img := glpeer.images.NewImage(width, height)
+	img := image.NewRGBA(image.Rect(0, 0, width, height))
 
 	fg, bg := image.NewUniform(fontcolor), image.Transparent
-	draw.Draw(img.RGBA, img.RGBA.Bounds(), bg, image.Point{}, draw.Src)
+	draw.Draw(img, img.Bounds(), bg, image.Point{}, draw.Src)
 
 	// Draw the text.
 	h := font.HintingNone
-	//h = font.HintingFull
 
 	gofont, _ := truetype.Parse(goregular.TTF)
 
 	d := &font.Drawer{
-		Dst: img.RGBA,
+		Dst: img,
 		Src: fg,
 		Face: truetype.NewFace(gofont, &truetype.Options{
 			Size:    fontsize,
@@ -163,18 +161,7 @@ func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, fontcolor
 	}
 	d.DrawString(text)
 
-	img.Upload()
-
-	scale := geom.Pt(desiredScreenSize.scale)
-	img.Draw(
-		sz,
-		geom.Point{X: 0, Y: (sz.HeightPt - geom.Pt(height)/scale)},
-		geom.Point{X: geom.Pt(width) / scale, Y: (sz.HeightPt - geom.Pt(height)/scale)},
-		geom.Point{X: 0, Y: (sz.HeightPt - geom.Pt(height)/scale)},
-		img.RGBA.Bounds().Inset(1),
-	)
-
-	t, err := glpeer.eng.LoadTexture(img.RGBA)
+	t, err := glpeer.eng.LoadTexture(img)
 	if err != nil {
 		log.Fatal(err)
 	}
