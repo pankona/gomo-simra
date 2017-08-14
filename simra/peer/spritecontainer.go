@@ -17,6 +17,10 @@ func NewTexture(s sprite.SubTex) *Texture {
 	return &Texture{subTex: s}
 }
 
+func (t *Texture) Release() {
+	t.subTex.T.Release()
+}
+
 // Sprite represents a sprite.
 type Sprite struct {
 	// W = width of sprite
