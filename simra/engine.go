@@ -105,6 +105,7 @@ func (simra *Simra) AddTextSprite(text string, fontsize float64, fontcolor color
 // RemoveSprite removes specified sprite from current scene.
 // Removed sprite will be disappeared.
 func (simra *Simra) RemoveSprite(s *Sprite) {
+	s.texture = nil
 	peer.GetSpriteContainer().RemoveSprite(&s.Sprite)
 }
 
