@@ -3,6 +3,7 @@ package simra
 import (
 	"image"
 	"image/color"
+	"runtime"
 
 	"github.com/pankona/gomo-simra/simra/peer"
 )
@@ -24,5 +25,14 @@ func NewImageTexture(assetName string, rect image.Rectangle) *Texture {
 func NewTextTexture(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle) *Texture {
 	LogDebug("IN")
 	tex := peer.GetGLPeer().MakeTextureByText(text, fontsize, fontcolor, rect)
-	return &Texture{peer.NewTexture(tex)}
+	t := &Texture{peer.NewTexture(tex)}
+	runtime.SetFinalizer(t, (*Texture).release)
+	LogDebug("OUT")
+	return t
+}
+
+func (t *Texture) release() {
+	LogDebug("IN")
+	t.Texture.Release()
+	LogDebug("OUT")
 }
