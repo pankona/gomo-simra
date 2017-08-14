@@ -2,6 +2,8 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/pankona/gomo-simra)](https://goreportcard.com/report/github.com/pankona/gomo-simra)
 [![GoDoc](https://godoc.org/github.com/pankona/gomo-simra?status.svg)](https://godoc.org/github.com/pankona/gomo-simra)  
 [ZenHub](https://app.zenhub.com/workspace/o/pankona/gomo-simra/)
+<a href="https://app.zenhub.com/workspace/o/pankona/gomo-simra"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"></a>
+
 
 # gomo-simra
 
