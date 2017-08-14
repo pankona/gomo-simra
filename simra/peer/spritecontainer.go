@@ -88,7 +88,7 @@ func (spritecontainer *SpriteContainer) Initialize() {
 }
 
 // AddSprite adds a sprite to SpriteContainer.
-func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTex, arrangeCallback func()) {
+func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCallback func()) {
 	LogDebug("IN")
 	for _, snpair := range spritecontainer.spriteNodePairs {
 		if s == snpair.sprite && snpair.inuse {
@@ -120,7 +120,9 @@ func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex sprite.SubTe
 		GetGLPeer().appendChild(sn.node)
 	}
 	sn.inuse = true
-	GetGLPeer().eng.SetSubTex(sn.node, subTex)
+	if subTex != nil {
+		GetGLPeer().eng.SetSubTex(sn.node, *subTex)
+	}
 	LogDebug("OUT")
 }
 
