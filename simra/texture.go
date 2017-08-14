@@ -18,7 +18,9 @@ func NewImageTexture(assetName string, rect image.Rectangle) *Texture {
 	LogDebug("IN")
 	tex := peer.GetGLPeer().LoadTexture(assetName, rect)
 	LogDebug("OUT")
-	return &Texture{peer.NewTexture(tex)}
+	t := &Texture{peer.NewTexture(tex)}
+	runtime.SetFinalizer(t, (*Texture).release)
+	return t
 }
 
 // NewTextTexture allocates a texture from specified text
