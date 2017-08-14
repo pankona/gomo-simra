@@ -17,6 +17,7 @@ func NewTexture(s sprite.SubTex) *Texture {
 	return &Texture{subTex: s}
 }
 
+// Release releases allocated Texture from images
 func (t *Texture) Release() {
 	t.subTex.T.Release()
 }
