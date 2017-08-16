@@ -2,7 +2,7 @@ package fps
 
 var (
 	fpsTimerContainer = make(map[int]*fps)
-	mapChan           = make(chan op)
+	opQueue           = make(chan op)
 	timerID           int
 )
 
@@ -19,7 +19,7 @@ type op struct {
 }
 
 func init() {
-	go fpsTimerContainerDaemon()
+	go opQueueHandler()
 }
 
 // After waits for the duration (fps based) to elapse
@@ -34,11 +34,14 @@ func After(timeToFire int64) <-chan struct{} {
 	if timerID > 65535 {
 		timerID = 0
 	}
-	mapChan <- op{"add", fps}
+	opQueue <- op{"add", fps}
 	return fps.c
 }
 
 func (f *fps) progress() (int, bool) {
+	if f == nil {
+		return -1, false
+	}
 	f.elapsed++
 	if f.elapsed >= f.timeToFire {
 		f.c <- struct{}{}
@@ -51,13 +54,13 @@ func (f *fps) progress() (int, bool) {
 func Progress() {
 	for _, v := range fpsTimerContainer {
 		if id, fired := v.progress(); fired {
-			mapChan <- op{"delete", id}
+			opQueue <- op{"delete", id}
 		}
 	}
 }
 
-func fpsTimerContainerDaemon() {
-	for op := range mapChan {
+func opQueueHandler() {
+	for op := range opQueue {
 		switch op.op {
 		case "add":
 			fps := op.value.(*fps)
