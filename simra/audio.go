@@ -61,14 +61,14 @@ func (a *audio) Play(resource asset.File, loop bool, doneCallback func(err error
 }
 
 func (a *audio) doPlay(player *oto.Player, r io.ReadSeeker, loop bool) error {
-	var offset, written int64
+	var written int64
 	var err error
-	readByte := (int64)(4096 * 30)
+	readByte := (int64)(8192)
 loop:
 	for {
+		r.Seek(0, io.SeekStart)
 	playback:
 		for {
-			r.Seek(offset, io.SeekStart)
 			select {
 			case <-a.isClosed:
 				readByte = 0
@@ -81,12 +81,10 @@ loop:
 				// error or EOF
 				break playback
 			}
-			offset += written
 		}
 		if !loop || err != io.EOF {
 			break loop
 		}
-		offset = 0
 	}
 	return err
 }
