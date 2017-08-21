@@ -1,5 +1,5 @@
 hash: 70988ff3dada2f15f7e350747c13fdd771cf0870c79306d5ec3aa560f6ee1500
-updated: 2017-08-21T11:24:48.960141676+09:00
+updated: 2017-08-21T12:57:11.573365874+09:00
 imports:
 - name: github.com/boltdb/bolt
   version: 2f1ce7a837dcb8da3ec595b1dac9d0632f0f99e8
@@ -13,7 +13,7 @@ imports:
   subpackages:
   - js
 - name: github.com/hajimehoshi/go-mp3
-  version: 38fd3fbee64d4cf50b38449550183de5bd3c1bb2
+  version: c2f85e8c3ff60d72b4ad80e86ebc96566be7bbf4
   subpackages:
   - internal/bits
   - internal/imdct
@@ -40,7 +40,7 @@ imports:
   - math/f64
   - math/fixed
 - name: golang.org/x/mobile
-  version: 448c916b90896b38ba453c68282a01caf9203091
+  version: e66540375e9941f301a0fbd8134a06076bfc873e
   subpackages:
   - app
   - app/internal/callfn
@@ -62,7 +62,7 @@ imports:
   - gl
   - internal/mobileinit
 - name: golang.org/x/sys
-  version: d8f5ea21b9295e315e612b4bcf4bedea93454d4d
+  version: 43e60d72a8e2bd92ee98319ba9a384a0e9837c08
   subpackages:
   - unix
   - windows
