@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"math"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/pankona/gomo-simra/simra"
@@ -18,6 +19,7 @@ type Title struct {
 	numOfSprite  *simra.Sprite
 	fps          int
 	fpsText      *simra.Sprite
+	mu           sync.Mutex
 }
 
 // Initialize initializes title scene
@@ -61,7 +63,9 @@ func (title *Title) Initialize() {
 			tex = simra.NewTextTexture(strconv.Itoa(title.fps),
 				60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, title.screenWidth, 80))
 			title.fpsText.ReplaceTexture(tex)
+			title.mu.Lock()
 			title.fps = 0
+			title.mu.Unlock()
 		}
 	}()
 
@@ -83,7 +87,9 @@ func (title *Title) Drive() {
 		r := float32(degree) * math.Pi / 180
 		title.sprites[i].R = (float32)(r)
 	}
+	title.mu.Lock()
 	title.fps++
+	title.mu.Unlock()
 	//runtime.GC()
 }
 
