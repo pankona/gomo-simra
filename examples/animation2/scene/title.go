@@ -48,8 +48,8 @@ func (title *Title) initialize() {
 	animationSet.SetInterval(6)
 	sprite.AddAnimationSet("animation test", animationSet)
 
-	simra.GetInstance().AddSprite2(sprite)
-	sprite.ReplaceTexture2(title.initialSprite)
+	simra.GetInstance().AddSprite(sprite)
+	sprite.ReplaceTexture(title.initialSprite)
 	simra.GetInstance().AddTouchListener(title)
 	title.effect = sprite
 }
@@ -79,7 +79,7 @@ func (title *Title) OnTouchEnd(x, y float32) {
 		shouldLoop := true
 		title.effect.StartAnimation("animation test", shouldLoop, func() {
 			simra.LogDebug("animation end")
-			title.effect.ReplaceTexture2(title.initialSprite)
+			title.effect.ReplaceTexture(title.initialSprite)
 		})
 		title.isAnimating = true
 	}

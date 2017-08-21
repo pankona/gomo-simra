@@ -1,9 +1,10 @@
 package scene
 
 import (
+	"math"
+
 	"github.com/pankona/gomo-simra/examples/sample3/scene/config"
 	"github.com/pankona/gomo-simra/simra"
-	"math"
 )
 
 // Ball represents a ball

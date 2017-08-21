@@ -57,11 +57,11 @@ func (title *Title) initialize() {
 	animationSet.SetInterval(12) // frames
 
 	sprite.AddAnimationSet("animation test", animationSet)
-	simra.GetInstance().AddTextSprite("animation test",
-		60, // fontsize
-		color.RGBA{255, 0, 0, 255},
-		image.Rect(0, 0, int(sprite.W), int(sprite.H)),
-		sprite)
+	simra.GetInstance().AddSprite(sprite)
+	tex := simra.NewTextTexture("animation test",
+		60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H)))
+	sprite.ReplaceTexture(tex)
+
 	simra.GetInstance().AddTouchListener(title)
 	title.text = sprite
 }

@@ -88,17 +88,13 @@ func (scene *Stage1) OnTouchEnd(x, y float32) {
 		scene.resetPosition()
 		scene.views.restart()
 		scene.models.restart()
-		simra.GetInstance().AddSprite("heart.png",
-			image.Rect(0, 0, 384, 384),
-			&scene.life[0].Sprite)
 
-		simra.GetInstance().AddSprite("heart.png",
-			image.Rect(0, 0, 384, 384),
-			&scene.life[1].Sprite)
+		tex := simra.NewImageTexture("heart.png", image.Rect(0, 0, 384, 384))
 
-		simra.GetInstance().AddSprite("heart.png",
-			image.Rect(0, 0, 384, 384),
-			&scene.life[2].Sprite)
+		for i := 0; i < 3; i++ {
+			simra.GetInstance().AddSprite(&scene.life[i].Sprite)
+			scene.life[i].ReplaceTexture(tex)
+		}
 
 		simra.GetInstance().RemoveSprite(&scene.gameovertext[0])
 		simra.GetInstance().RemoveSprite(&scene.gameovertext[1])
@@ -116,21 +112,20 @@ func (scene *Stage1) showReadyText() {
 	scene.readytext[0].Y = config.ScreenHeight/6*4 - 65/2
 	scene.readytext[0].W = config.ScreenWidth
 	scene.readytext[0].H = 65
-	simra.GetInstance().AddTextSprite("GET READY",
-		60,
-		color.RGBA{255, 0, 0, 255},
-		image.Rect(0, 0, config.ScreenWidth, 65),
-		&scene.readytext[0])
+	simra.GetInstance().AddSprite(&scene.readytext[0])
 
 	scene.readytext[1].X = config.ScreenWidth / 2
 	scene.readytext[1].Y = config.ScreenHeight/6*3 - 65/2
 	scene.readytext[1].W = config.ScreenWidth
 	scene.readytext[1].H = 65
-	simra.GetInstance().AddTextSprite("TAP TO GO",
-		60,
-		color.RGBA{255, 0, 0, 255},
-		image.Rect(0, 0, config.ScreenWidth, 65),
-		&scene.readytext[1])
+	simra.GetInstance().AddSprite(&scene.readytext[1])
+
+	var tex *simra.Texture
+	tex = simra.NewTextTexture("GET READY", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
+	scene.readytext[0].ReplaceTexture(tex)
+	tex = simra.NewTextTexture("TAP TO GO", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
+	scene.readytext[1].ReplaceTexture(tex)
+
 }
 
 func (scene *Stage1) removeReadyText() {
@@ -192,38 +187,34 @@ func (scene *Stage1) resetPosition() {
 }
 
 func (scene *Stage1) setupSprites() {
+	simra.GetInstance().AddSprite(&scene.background[0].Sprite)
+	simra.GetInstance().AddSprite(&scene.background[1].Sprite)
+	simra.GetInstance().AddSprite(&scene.ball.Sprite)
+	simra.GetInstance().AddSprite(&scene.obstacle[0].Sprite)
+	simra.GetInstance().AddSprite(&scene.obstacle[1].Sprite)
+	simra.GetInstance().AddSprite(&scene.life[0].Sprite)
+	simra.GetInstance().AddSprite(&scene.life[1].Sprite)
+	simra.GetInstance().AddSprite(&scene.life[2].Sprite)
 
-	simra.GetInstance().AddSprite("bg.png",
-		image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight),
-		&scene.background[0].Sprite)
+	var tex *simra.Texture
 
-	simra.GetInstance().AddSprite("bg.png",
-		image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight),
-		&scene.background[1].Sprite)
+	tex = simra.NewImageTexture("bg.png", image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight))
+	scene.background[0].Sprite.ReplaceTexture(tex)
 
-	simra.GetInstance().AddSprite("ball.png",
-		image.Rect(0, 0, int(scene.ball.W), int(scene.ball.H)),
-		&scene.ball.Sprite)
+	tex = simra.NewImageTexture("bg.png", image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight))
+	scene.background[1].Sprite.ReplaceTexture(tex)
 
-	simra.GetInstance().AddSprite("obstacle.png",
-		image.Rect(0, 0, 100, 100),
-		&scene.obstacle[0].Sprite)
+	tex = simra.NewImageTexture("ball.png", image.Rect(0, 0, int(scene.ball.W), int(scene.ball.H)))
+	scene.ball.Sprite.ReplaceTexture(tex)
 
-	simra.GetInstance().AddSprite("obstacle.png",
-		image.Rect(0, 0, 100, 100),
-		&scene.obstacle[1].Sprite)
+	tex = simra.NewImageTexture("obstacle.png", image.Rect(0, 0, 100, 100))
+	scene.obstacle[0].Sprite.ReplaceTexture(tex)
+	scene.obstacle[1].Sprite.ReplaceTexture(tex)
 
-	simra.GetInstance().AddSprite("heart.png",
-		image.Rect(0, 0, 384, 384),
-		&scene.life[0].Sprite)
-
-	simra.GetInstance().AddSprite("heart.png",
-		image.Rect(0, 0, 384, 384),
-		&scene.life[1].Sprite)
-
-	simra.GetInstance().AddSprite("heart.png",
-		image.Rect(0, 0, 384, 384),
-		&scene.life[2].Sprite)
+	tex = simra.NewImageTexture("heart.png", image.Rect(0, 0, 384, 384))
+	scene.life[0].Sprite.ReplaceTexture(tex)
+	scene.life[1].Sprite.ReplaceTexture(tex)
+	scene.life[2].Sprite.ReplaceTexture(tex)
 }
 
 func (scene *Stage1) registerViews() {
@@ -236,21 +227,19 @@ func (scene *Stage1) showGameover() {
 	scene.gameovertext[0].Y = config.ScreenHeight/6*4 - 65/2
 	scene.gameovertext[0].W = config.ScreenWidth
 	scene.gameovertext[0].H = 65
-	simra.GetInstance().AddTextSprite("GAME OVER",
-		60,
-		color.RGBA{255, 0, 0, 255},
-		image.Rect(0, 0, config.ScreenWidth, 65),
-		&scene.gameovertext[0])
+	simra.GetInstance().AddSprite(&scene.gameovertext[0])
 
 	scene.gameovertext[1].X = config.ScreenWidth / 2
 	scene.gameovertext[1].Y = config.ScreenHeight/6*3 - 65/2
 	scene.gameovertext[1].W = config.ScreenWidth
 	scene.gameovertext[1].H = 65
-	simra.GetInstance().AddTextSprite("RESTART!!",
-		60,
-		color.RGBA{255, 0, 0, 255},
-		image.Rect(0, 0, config.ScreenWidth, 65),
-		&scene.gameovertext[1])
+	simra.GetInstance().AddSprite(&scene.gameovertext[1])
+
+	var tex *simra.Texture
+	tex = simra.NewTextTexture("GAME OVER", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
+	scene.gameovertext[0].ReplaceTexture(tex)
+	tex = simra.NewTextTexture("RESTART!!", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
+	scene.gameovertext[1].ReplaceTexture(tex)
 }
 
 func (scene *Stage1) onFinishDead() {

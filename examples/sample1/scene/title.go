@@ -35,9 +35,10 @@ func (title *Title) initialize() {
 	title.background.X = 1080 / 2 / 2
 	title.background.Y = 1920 / 2 / 2
 
-	simra.GetInstance().AddSprite("title.png",
-		image.Rect(0, 0, int(title.background.W), int(title.background.H)),
-		&title.background)
+	simra.GetInstance().AddSprite(&title.background)
+	tex := simra.NewImageTexture("title.png",
+		image.Rect(0, 0, int(title.background.W), int(title.background.H)))
+	title.background.ReplaceTexture(tex)
 
 	title.background.AddTouchListener(title)
 }

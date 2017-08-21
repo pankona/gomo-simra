@@ -1,8 +1,9 @@
 package scene
 
 import (
-	"github.com/pankona/gomo-simra/simra"
 	"math"
+
+	"github.com/pankona/gomo-simra/simra"
 )
 
 // Viewer represents a view

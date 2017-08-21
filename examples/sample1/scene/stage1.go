@@ -42,9 +42,10 @@ func (stage1 *Stage1) initGopher() {
 	stage1.gopher.X = 1080 / 2 / 2
 	stage1.gopher.Y = 1920 / 2 / 2
 
-	simra.GetInstance().AddSprite("waza-gophers.jpeg",
-		image.Rect(152, 10, 152+int(stage1.gopher.W), 10+int(stage1.gopher.H)),
-		&stage1.gopher)
+	simra.GetInstance().AddSprite(&stage1.gopher)
+	tex := simra.NewImageTexture("waza-gophers.jpeg",
+		image.Rect(152, 10, 152+int(stage1.gopher.W), 10+int(stage1.gopher.H)))
+	stage1.gopher.ReplaceTexture(tex)
 
 	stage1.gopher.AddTouchListener(stage1)
 }

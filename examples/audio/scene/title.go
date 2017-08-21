@@ -43,11 +43,11 @@ func (title *Title) initialize() {
 	sprite.H = 80
 	sprite.X = ScreenWidth / 2
 	sprite.Y = ScreenHeight / 2
-	simra.GetInstance().AddTextSprite("tap to play sound",
-		60,
-		color.RGBA{255, 0, 0, 255},
-		image.Rect(0, 0, int(sprite.W), int(sprite.H)),
-		sprite)
+	simra.GetInstance().AddSprite(sprite)
+	tex := simra.NewTextTexture("tap to play sound",
+		60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H)))
+	sprite.ReplaceTexture(tex)
+
 }
 
 // Drive is called from simra.
@@ -75,12 +75,12 @@ func (title *Title) OnTouchEnd(x, y float32) {
 
 	} else {
 		title.audio = simra.NewAudio()
-		resource, err := asset.Open("test_bgm.mp3")
+		resource, err := asset.Open("test_se.mp3")
 		if err != nil {
 			panic(err.Error())
 		}
 
-		err = title.audio.Play(resource, false, func(err error) {
+		err = title.audio.Play(resource, true, func(err error) {
 			simra.LogDebug("playback complete callback. %s\n", err)
 			title.isPlaying = false
 		})

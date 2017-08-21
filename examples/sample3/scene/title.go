@@ -38,19 +38,22 @@ func (title *Title) initialize() {
 	title.background.X = config.ScreenWidth / 2
 	title.background.Y = config.ScreenHeight / 2
 
-	simra.GetInstance().AddSprite("title.png",
-		image.Rect(0, 0, int(title.background.W), int(title.background.H)),
-		&title.background)
+	simra.GetInstance().AddSprite(&title.background)
 
 	title.text.W = 320
 	title.text.H = 80
 	title.text.X = title.text.W / 2
 	title.text.Y = title.text.H / 2
-	simra.GetInstance().AddTextSprite("text sample",
-		60, // fontsize
-		color.RGBA{255, 0, 0, 255},
-		image.Rect(0, 0, int(title.text.W), int(title.text.H)),
-		&title.text)
+	simra.GetInstance().AddSprite(&title.text)
+
+	var tex *simra.Texture
+	tex = simra.NewImageTexture("title.png",
+		image.Rect(0, 0, int(title.background.W), int(title.background.H)))
+	title.background.ReplaceTexture(tex)
+
+	tex = simra.NewTextTexture("text sample",
+		60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(title.text.W), int(title.text.H)))
+	title.text.ReplaceTexture(tex)
 
 	title.background.AddTouchListener(title)
 }
