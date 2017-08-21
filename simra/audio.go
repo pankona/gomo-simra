@@ -36,43 +36,36 @@ func (a *audio) Play(resource asset.File, loop bool, doneCallback func(err error
 		return err
 	}
 
-	doneChan := make(chan error)
 	go func() {
-		doneChan <- a.doPlay(player, dec, loop)
-	}()
-
-	go func() {
-		defer func() {
-			err := dec.Close()
-			if err != nil {
-				LogError(err.Error())
-			}
-			err = player.Close()
-			if err != nil {
-				LogError(err.Error())
-			}
-		}()
-
-		<-doneChan
+		err := a.doPlay(player, dec, resource, loop)
+		if err != nil {
+			LogError(err.Error())
+		}
+		err = dec.Close()
+		if err != nil {
+			LogError(err.Error())
+		}
+		err = player.Close()
+		if err != nil {
+			LogError(err.Error())
+		}
 		doneCallback(err)
 	}()
-
 	return nil
 }
 
-func (a *audio) doPlay(player *oto.Player, r io.ReadSeeker, loop bool) error {
+func (a *audio) doPlay(player *oto.Player, r io.ReadSeeker, f asset.File, loop bool) error {
 	var written int64
 	var err error
 	readByte := (int64)(8192)
 loop:
 	for {
-		r.Seek(0, io.SeekStart)
 	playback:
 		for {
 			select {
 			case <-a.isClosed:
 				readByte = 0
-				r.Seek(0, io.SeekEnd)
+				f.Seek(0, io.SeekEnd)
 			default:
 				// for non-blocking
 			}
@@ -85,6 +78,7 @@ loop:
 		if !loop || err != io.EOF {
 			break loop
 		}
+		f.Seek(0, io.SeekStart)
 	}
 	return err
 }
