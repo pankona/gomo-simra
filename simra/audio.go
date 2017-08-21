@@ -39,7 +39,7 @@ func (a *audio) Play(resource asset.File, loop bool, doneCallback func(err error
 
 	go func() {
 		err := a.doPlay(player, dec, resource, loop)
-		if err != nil {
+		if err != nil && err != io.EOF {
 			LogError(err.Error())
 		}
 		err = dec.Close()
