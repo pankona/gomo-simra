@@ -1,9 +1,6 @@
 package simra
 
 import (
-	"image"
-	"image/color"
-
 	"github.com/pankona/gomo-simra/simra/gomo"
 	"github.com/pankona/gomo-simra/simra/peer"
 )
@@ -74,32 +71,9 @@ func (simra *Simra) SetScene(driver Driver) {
 	peer.LogDebug("OUT")
 }
 
-// AddSprite adds a sprite to current scene.
-// To call this function, SetScene must be called in advance.
-// TODO: remove this function. this function is deprecated. use AddImageSprite instead.
-func (simra *Simra) AddSprite(assetName string, rect image.Rectangle, s *Sprite) {
-	simra.AddImageSprite(assetName, rect, s)
-}
-
 // AddSprite2 adds a sprite to current scene with empty texture.
-func (simra *Simra) AddSprite2(s *Sprite) {
+func (simra *Simra) AddSprite(s *Sprite) {
 	peer.GetSpriteContainer().AddSprite(&s.Sprite, nil, nil)
-}
-
-// AddImageSprite adds a sprite to current scene.
-// To call this function, SetScene must be called in advance.
-// TODO: remove this function. this function is deprecated. use AddSprite2 instead.
-func (simra *Simra) AddImageSprite(assetName string, rect image.Rectangle, s *Sprite) {
-	tex := peer.GetGLPeer().LoadTexture(assetName, rect)
-	peer.GetSpriteContainer().AddSprite(&s.Sprite, &tex, nil)
-}
-
-// AddTextSprite adds a sprite to current scene.
-// To call this function, SetScene must be called in advance.
-// TODO: remove this function. this function is deprecated. use AddSprite2 instead.
-func (simra *Simra) AddTextSprite(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle, s *Sprite) {
-	tex := peer.GetGLPeer().MakeTextureByText(text, fontsize, fontcolor, rect)
-	peer.GetSpriteContainer().AddSprite(&s.Sprite, &tex, nil)
 }
 
 // RemoveSprite removes specified sprite from current scene.

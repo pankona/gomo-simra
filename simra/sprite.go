@@ -2,7 +2,6 @@ package simra
 
 import (
 	"context"
-	"image"
 
 	"github.com/pankona/gomo-simra/simra/fps"
 	"github.com/pankona/gomo-simra/simra/peer"
@@ -21,17 +20,8 @@ func NewSprite() *Sprite {
 	return &Sprite{animationSets: map[string]*AnimationSet{}}
 }
 
-// ReplaceTexture replaces sprite's texture with specified image resource.
-// TODO: deprecate. use ReplaceTexture2 and remove this, then rename function name
-func (sprite *Sprite) ReplaceTexture(assetName string, rect image.Rectangle) {
-	LogDebug("IN")
-	tex := peer.GetGLPeer().LoadTexture(assetName, rect)
-	peer.GetSpriteContainer().ReplaceTexture(&sprite.Sprite, tex)
-	LogDebug("OUT")
-}
-
 // ReplaceTexture2 replaces sprite's texture with specified image resource.
-func (sprite *Sprite) ReplaceTexture2(texture *Texture) {
+func (sprite *Sprite) ReplaceTexture(texture *Texture) {
 	LogDebug("IN")
 	// retain refarence for texture to avoid to be discarded by GC
 	sprite.texture = texture
@@ -90,7 +80,7 @@ animation:
 		case <-ctx.Done():
 			break animation
 		case <-fps.After(animationSet.interval):
-			sprite.ReplaceTexture2(animationSet.textures[loopCount])
+			sprite.ReplaceTexture(animationSet.textures[loopCount])
 			loopCount = (loopCount + 1) % len(animationSet.textures)
 			if !shouldLoop && loopCount == 0 {
 				break animation
