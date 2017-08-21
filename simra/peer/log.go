@@ -3,11 +3,17 @@ package peer
 import (
 	"fmt"
 	"runtime"
+	"sync"
 
 	"github.com/pankona/gomo-simra/simra/config"
 )
 
+var printLogMutex sync.Mutex
+
 func printLog(tag string, format string, a ...interface{}) {
+	printLogMutex.Lock()
+	defer printLogMutex.Unlock()
+
 	pc := make([]uintptr, 10)
 	runtime.Callers(4, pc)
 	f := runtime.FuncForPC(pc[0])
