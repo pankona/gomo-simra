@@ -4,7 +4,6 @@ import (
 	"image"
 	"image/color"
 	"math"
-	"runtime"
 	"strconv"
 	"time"
 
@@ -80,12 +79,12 @@ var degree int
 // Thsi will be called 60 times per sec.
 func (title *Title) Drive() {
 	degree = (degree - 1) % 360
-	for i, _ := range title.sprites {
+	for i := range title.sprites {
 		r := float32(degree) * math.Pi / 180
 		title.sprites[i].R = (float32)(r)
 	}
 	title.fps++
-	runtime.GC()
+	//runtime.GC()
 }
 
 // OnTouchBegin is called when Title scene is Touched.
