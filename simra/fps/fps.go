@@ -1,9 +1,12 @@
 package fps
 
+import "sync"
+
 var (
 	fpsTimerContainer = make(map[int]*fps)
 	opQueue           = make(chan op)
 	timerID           int
+	fpsMutex          sync.Mutex
 )
 
 type fps struct {
@@ -18,10 +21,6 @@ type op struct {
 	value interface{}
 }
 
-func init() {
-	go opQueueHandler()
-}
-
 // After waits for the duration (fps based) to elapse
 // and then sends the empty channel
 func After(timeToFire int64) <-chan struct{} {
@@ -34,7 +33,9 @@ func After(timeToFire int64) <-chan struct{} {
 	if timerID > 65535 {
 		timerID = 0
 	}
-	opQueue <- op{"add", fps}
+	fpsMutex.Lock()
+	fpsTimerContainer[fps.id] = fps
+	fpsMutex.Unlock()
 	return fps.c
 }
 
@@ -52,21 +53,11 @@ func (f *fps) progress() (int, bool) {
 
 // Progress progresses elapsed frames for all timers
 func Progress() {
+	fpsMutex.Lock()
+	defer fpsMutex.Unlock()
+
 	for _, v := range fpsTimerContainer {
 		if id, fired := v.progress(); fired {
-			opQueue <- op{"delete", id}
-		}
-	}
-}
-
-func opQueueHandler() {
-	for op := range opQueue {
-		switch op.op {
-		case "add":
-			fps := op.value.(*fps)
-			fpsTimerContainer[fps.id] = fps
-		case "delete":
-			id := op.value.(int)
 			delete(fpsTimerContainer, id)
 		}
 	}
