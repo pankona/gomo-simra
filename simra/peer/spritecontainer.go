@@ -153,19 +153,7 @@ func (spritecontainer *SpriteContainer) RemoveSprites() {
 }
 
 // ReplaceTexture replaces sprite's texture to specified one.
-func (spritecontainer *SpriteContainer) ReplaceTexture(sprite *Sprite, subTex sprite.SubTex) {
-	LogDebug("IN")
-	for i := range spritecontainer.spriteNodePairs {
-		if spritecontainer.spriteNodePairs[i].sprite == sprite {
-			node := spritecontainer.spriteNodePairs[i].node
-			GetGLPeer().eng.SetSubTex(node, subTex)
-		}
-	}
-	LogDebug("OUT")
-}
-
-// ReplaceTexture2 replaces sprite's texture to specified one.
-func (spritecontainer *SpriteContainer) ReplaceTexture2(sprite *Sprite, texture *Texture) {
+func (spritecontainer *SpriteContainer) ReplaceTexture(sprite *Sprite, texture *Texture) {
 	LogDebug("IN")
 	for i := range spritecontainer.spriteNodePairs {
 		if spritecontainer.spriteNodePairs[i].sprite == sprite {
