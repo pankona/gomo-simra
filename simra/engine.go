@@ -71,7 +71,7 @@ func (simra *Simra) SetScene(driver Driver) {
 	peer.LogDebug("OUT")
 }
 
-// AddSprite2 adds a sprite to current scene with empty texture.
+// AddSprite adds a sprite to current scene with empty texture.
 func (simra *Simra) AddSprite(s *Sprite) {
 	peer.GetSpriteContainer().AddSprite(&s.Sprite, nil, nil)
 }

@@ -20,7 +20,7 @@ func NewSprite() *Sprite {
 	return &Sprite{animationSets: map[string]*AnimationSet{}}
 }
 
-// ReplaceTexture2 replaces sprite's texture with specified image resource.
+// ReplaceTexture replaces sprite's texture with specified image resource.
 func (sprite *Sprite) ReplaceTexture(texture *Texture) {
 	LogDebug("IN")
 	// retain refarence for texture to avoid to be discarded by GC
