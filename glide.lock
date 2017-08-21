@@ -1,5 +1,5 @@
 hash: 70988ff3dada2f15f7e350747c13fdd771cf0870c79306d5ec3aa560f6ee1500
-updated: 2017-08-09T18:32:33.549402425+09:00
+updated: 2017-08-21T11:24:48.960141676+09:00
 imports:
 - name: github.com/boltdb/bolt
   version: 2f1ce7a837dcb8da3ec595b1dac9d0632f0f99e8
@@ -18,7 +18,7 @@ imports:
   - internal/bits
   - internal/imdct
 - name: github.com/hajimehoshi/oto
-  version: 8ab1cc50f21ad05f93bf99dc8c44d6aa101c29c9
+  version: 58b076ceb5dde593df27749cd918caf6273ee84a
   subpackages:
   - internal/jni
 - name: golang.org/x/exp
