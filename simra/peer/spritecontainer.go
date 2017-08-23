@@ -7,21 +7,6 @@ import (
 	"golang.org/x/mobile/exp/sprite/clock"
 )
 
-// Texture represents a subtexture
-type Texture struct {
-	subTex sprite.SubTex
-}
-
-// NewTexture returns a instance of texture
-func NewTexture(s sprite.SubTex) *Texture {
-	return &Texture{subTex: s}
-}
-
-// Release releases allocated Texture from images
-func (t *Texture) Release() {
-	t.subTex.T.Release()
-}
-
 // Sprite represents a sprite.
 type Sprite struct {
 	// W = width of sprite

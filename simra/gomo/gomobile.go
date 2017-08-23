@@ -89,9 +89,8 @@ func (gomo *Gomo) Start() {
 				gomo.updateCallback()
 
 				// update notify for gl peer
-				gomo.glPeer.Update()
+				gomo.glPeer.Update(a.Publish)
 
-				a.Publish()
 				a.Send(paint.Event{})
 			case touch.Event:
 				switch e.Type {

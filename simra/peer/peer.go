@@ -5,12 +5,14 @@ import (
 	"image/color"
 	"image/draw"
 	"log"
+	"sync"
 	"time"
 
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/gofont/goregular"
 	"golang.org/x/image/math/fixed"
+	"golang.org/x/mobile/app"
 	"golang.org/x/mobile/asset"
 	"golang.org/x/mobile/exp/app/debug"
 	"golang.org/x/mobile/exp/f32"
@@ -21,9 +23,11 @@ import (
 	"golang.org/x/mobile/gl"
 )
 
-var glPeer *GLPeer
-
-var startTime = time.Now()
+var (
+	glPeer      *GLPeer
+	glPeerMutex sync.Mutex
+	startTime   = time.Now()
+)
 
 // GLPeer represents gl context.
 // Singleton.
@@ -51,6 +55,8 @@ func GetGLPeer() *GLPeer {
 // This function must be called inadvance of using GLPeer
 func (glpeer *GLPeer) Initialize(glctx gl.Context) {
 	LogDebug("IN")
+	glPeerMutex.Lock()
+	defer glPeerMutex.Unlock()
 	glpeer.glctx = glctx
 
 	// transparency of png
@@ -82,6 +88,8 @@ type arrangerFunc func(e sprite.Engine, n *sprite.Node, t clock.Time)
 func (a arrangerFunc) Arrange(e sprite.Engine, n *sprite.Node, t clock.Time) { a(e, n, t) }
 
 func (glpeer *GLPeer) newNode(fn arrangerFunc) *sprite.Node {
+	glPeerMutex.Lock()
+	defer glPeerMutex.Unlock()
 	n := &sprite.Node{Arranger: arrangerFunc(fn)}
 	glpeer.eng.Register(n)
 	glpeer.scene.AppendChild(n)
@@ -89,10 +97,14 @@ func (glpeer *GLPeer) newNode(fn arrangerFunc) *sprite.Node {
 }
 
 func (glpeer *GLPeer) appendChild(n *sprite.Node) {
+	glPeerMutex.Lock()
+	defer glPeerMutex.Unlock()
 	glpeer.scene.AppendChild(n)
 }
 
 func (glpeer *GLPeer) removeChild(n *sprite.Node) {
+	glPeerMutex.Lock()
+	defer glPeerMutex.Unlock()
 	glpeer.scene.RemoveChild(n)
 }
 
@@ -100,6 +112,9 @@ func (glpeer *GLPeer) removeChild(n *sprite.Node) {
 // Loaded texture can assign using AddSprite function.
 func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex {
 	LogDebug("IN")
+	glPeerMutex.Lock()
+	defer glPeerMutex.Unlock()
+
 	a, err := asset.Open(assetName)
 	if err != nil {
 		log.Fatal(err)
@@ -129,6 +144,8 @@ func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite
 // TODO: font parameterize
 func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle) sprite.SubTex {
 	LogDebug("IN")
+	glPeerMutex.Lock()
+	defer glPeerMutex.Unlock()
 
 	dpi := float64(72)
 	width := rect.Dx()
@@ -174,6 +191,9 @@ func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, fontcolor
 // This is called at termination of application.
 func (glpeer *GLPeer) Finalize() {
 	LogDebug("IN")
+	glPeerMutex.Lock()
+	defer glPeerMutex.Unlock()
+
 	GetSpriteContainer().RemoveSprites()
 	glpeer.eng.Release()
 	glpeer.fps.Release()
@@ -184,7 +204,11 @@ func (glpeer *GLPeer) Finalize() {
 
 // Update updates screen.
 // This is called 60 times per 1 sec.
-func (glpeer *GLPeer) Update() {
+func (glpeer *GLPeer) Update(publishFunc func() app.PublishResult) {
+	LogDebug("IN")
+	glPeerMutex.Lock()
+	defer glPeerMutex.Unlock()
+
 	if glpeer.glctx == nil {
 		return
 	}
@@ -196,6 +220,11 @@ func (glpeer *GLPeer) Update() {
 
 	glpeer.eng.Render(glpeer.scene, now, sz)
 	glpeer.fps.Draw(sz)
+
+	// app.Publish() calls glctx.Flush, it should be called within this mutex locking.
+	publishFunc()
+
+	LogDebug("OUT")
 }
 
 // Reset resets current gl context.
@@ -204,6 +233,8 @@ func (glpeer *GLPeer) Update() {
 // this function is for clean previous scene.
 func (glpeer *GLPeer) Reset() {
 	LogDebug("IN")
+	glPeerMutex.Lock()
+	defer glPeerMutex.Unlock()
 	GetSpriteContainer().RemoveSprites()
 	glpeer.initEng()
 	LogDebug("OUT")
@@ -240,4 +271,22 @@ func (glpeer *GLPeer) apply() {
 			sc.sprite.H*desiredScreenSize.scale)
 		glpeer.eng.SetTransform(sc.node, *affine)
 	}
+}
+
+// Texture represents a subtexture
+type Texture struct {
+	subTex sprite.SubTex
+}
+
+// NewTexture returns a instance of texture
+func NewTexture(s sprite.SubTex) *Texture {
+	return &Texture{subTex: s}
+}
+
+// Release releases allocated Texture from images
+func (t *Texture) Release() {
+	glPeerMutex.Lock()
+	defer glPeerMutex.Unlock()
+
+	t.subTex.T.Release()
 }
