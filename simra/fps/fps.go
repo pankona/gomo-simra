@@ -3,10 +3,9 @@ package fps
 import "sync"
 
 var (
-	fpsTimerContainer = make(map[int]*fps)
+	fpsTimerContainer sync.Map
 	opQueue           = make(chan op)
 	timerID           int
-	fpsMutex          sync.Mutex
 )
 
 type fps struct {
@@ -33,9 +32,7 @@ func After(timeToFire int64) <-chan struct{} {
 	if timerID > 65535 {
 		timerID = 0
 	}
-	fpsMutex.Lock()
-	fpsTimerContainer[fps.id] = fps
-	fpsMutex.Unlock()
+	fpsTimerContainer.Store(fps.id, fps)
 	return fps.c
 }
 
@@ -53,12 +50,11 @@ func (f *fps) progress() (int, bool) {
 
 // Progress progresses elapsed frames for all timers
 func Progress() {
-	fpsMutex.Lock()
-	defer fpsMutex.Unlock()
-
-	for _, v := range fpsTimerContainer {
-		if id, fired := v.progress(); fired {
-			delete(fpsTimerContainer, id)
+	fpsTimerContainer.Range(func(_, v interface{}) bool {
+		fps := v.(*fps)
+		if id, fired := fps.progress(); fired {
+			fpsTimerContainer.Delete(id)
 		}
-	}
+		return true
+	})
 }
