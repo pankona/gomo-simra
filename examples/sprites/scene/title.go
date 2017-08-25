@@ -70,7 +70,7 @@ func (title *Title) Initialize() {
 		}
 	}()
 
-	title.kokeshiTex = simra.NewImageTexture("sample.png", image.Rect(0, 0, 384, 384))
+	title.kokeshiTex = simra.NewImageTexture("sample2.png", image.Rect(0, 0, 64, 64))
 
 	simra.LogDebug("[OUT]")
 }
