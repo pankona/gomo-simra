@@ -99,16 +99,22 @@ func (title *Title) Drive() {
 // OnTouchBegin is called when Title scene is Touched.
 // It is caused by calling AddtouchListener for title.background sprite.
 func (title *Title) OnTouchBegin(x, y float32) {
+	title.spawnKokeshi(x, y)
 }
 
 // OnTouchMove is called when Title scene is Touched and moved.
 // It is caused by calling AddtouchListener for title.background sprite.
 func (title *Title) OnTouchMove(x, y float32) {
+	title.spawnKokeshi(x, y)
 }
 
 // OnTouchEnd is called when Title scene is Touched and it is released.
 // It is caused by calling AddtouchListener for title.background sprite.
 func (title *Title) OnTouchEnd(x, y float32) {
+	title.spawnKokeshi(x, y)
+}
+
+func (title *Title) spawnKokeshi(x, y float32) {
 	// scene end. go to next scene
 	sprite := simra.NewSprite()
 	sprite.W = 128
@@ -122,4 +128,5 @@ func (title *Title) OnTouchEnd(x, y float32) {
 	tex := simra.NewTextTexture(strconv.Itoa(len(title.sprites)),
 		60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, title.screenWidth, 80))
 	title.numOfSprite.ReplaceTexture(tex)
+
 }
