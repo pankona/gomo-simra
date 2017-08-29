@@ -1,7 +1,8 @@
 # Makefile
 
-DIRECTORIES = $(dir $(wildcard $(CURDIR)/*/.))
-BUILD_COMMAND=go
+DIRECTORIES   = $(dir $(wildcard $(CURDIR)/*/.))
+BUILD_COMMAND = go
+BUILD_TAGS    =
 
 all: $(DIRECTORIES)
 
@@ -10,6 +11,6 @@ mobile:
 
 build: $(DIRECTORIES)
 $(DIRECTORIES):
-	cd $@; $(BUILD_COMMAND) build
+	cd $@; $(BUILD_COMMAND) build -tags=$(BUILD_TAGS)
 
 .PHONY: all $(DIRECTORIES)
