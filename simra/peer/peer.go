@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/golang/freetype/truetype"
+	"github.com/pankona/gomo-simra/simra/config"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/gofont/goregular"
 	"golang.org/x/image/math/fixed"
@@ -219,7 +220,9 @@ func (glpeer *GLPeer) Update(publishFunc func() app.PublishResult) {
 	glpeer.apply()
 
 	glpeer.eng.Render(glpeer.scene, now, sz)
-	glpeer.fps.Draw(sz)
+	if config.DEBUG {
+		glpeer.fps.Draw(sz)
+	}
 
 	// app.Publish() calls glctx.Flush, it should be called within this mutex locking.
 	publishFunc()
