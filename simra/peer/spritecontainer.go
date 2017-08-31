@@ -7,36 +7,6 @@ import (
 	"golang.org/x/mobile/exp/sprite/clock"
 )
 
-// Sprite represents a sprite.
-type Sprite struct {
-	// W = width of sprite
-	W float32
-	// H = height of sprite
-	H float32
-	// X = x position of sprite
-	X float32
-	// Y = y position of sprite
-	Y float32
-	// R = radius of sprite (use for rotation)
-	R float32
-	// touchListeners is listeners to notify touch event
-	touchListeners []*TouchListener
-}
-
-// AddTouchListener registers a listener to notify touch event.
-func (sprite *Sprite) AddTouchListener(listener TouchListener) {
-	LogDebug("IN")
-	sprite.touchListeners = append(sprite.touchListeners, &listener)
-	LogDebug("OUT")
-}
-
-// RemoveAllTouchListener removes all registered listeners from sprite.
-func (sprite *Sprite) RemoveAllTouchListener() {
-	LogDebug("IN")
-	sprite.touchListeners = nil
-	LogDebug("OUT")
-}
-
 // SpriteNodePair represents pair of Sprite and sprite.Node.
 // This is used for calculate affine transformation of Node
 // from Sprite's property.

@@ -59,7 +59,6 @@ func calcScale() {
 		desiredScreenSize.fitTo = FitHeight
 		desiredScreenSize.marginWidth = float32(sz.WidthPt) - w*desiredScreenSize.scale
 		desiredScreenSize.marginHeight = 0
-
 	} else {
 		desiredScreenSize.scale = float32(sz.WidthPt) / w
 		desiredScreenSize.fitTo = FitWidth
