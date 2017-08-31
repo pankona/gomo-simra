@@ -1,5 +1,6 @@
 package peer
 
+// Spriter represents interface of Sprite
 type Spriter interface {
 	// GetWidth returns width of sprite
 	GetWidth() float32
