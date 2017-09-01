@@ -36,7 +36,7 @@ dependencies:
         - go get github.com/boltdb/bolt
         - go get github.com/hajimehoshi/oto
         - go get github.com/hajimehoshi/go-mp3
-        - gomobile init -v --ndk $NDK_ROOT
+        - gomobile init --ndk $NDK_ROOT
         - go get github.com/golang/lint/golint
 
     override:
