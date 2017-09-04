@@ -1,7 +1,6 @@
 package simra
 
 import (
-	"github.com/pankona/gomo-simra/simra/gomo"
 	"github.com/pankona/gomo-simra/simra/peer"
 )
 
@@ -46,10 +45,10 @@ func (simra *Simra) onStopped() {
 // Start needs to call to enable all function belong to simra package.
 func (simra *Simra) Start(onStart, onStop func()) {
 	peer.LogDebug("IN")
-	gomo.GetInstance().Initialize(onStart, onStop, simra.onUpdate)
+	peer.GetGomo().Initialize(onStart, onStop, simra.onUpdate)
 	peer.GetSpriteContainer().Initialize()
 
-	gomo.GetInstance().Start()
+	peer.GetGomo().Start()
 	peer.LogDebug("OUT")
 }
 
@@ -86,7 +85,8 @@ func (simra *Simra) RemoveSprite(s *Sprite) {
 // SetDesiredScreenSize configures virtual screen size.
 // This function must be called at least once before calling Start.
 func (simra *Simra) SetDesiredScreenSize(w, h float32) {
-	peer.SetDesiredScreenSize(w, h)
+	ss := peer.GetScreenSizePeer()
+	ss.SetDesiredScreenSize(w, h)
 }
 
 // AddTouchListener registers a listener for notifying touch event.

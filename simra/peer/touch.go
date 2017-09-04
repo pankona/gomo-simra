@@ -2,15 +2,12 @@ package peer
 
 import (
 	"fmt"
-
-	"golang.org/x/mobile/event/size"
 )
 
 // TouchPeer represents a Touch object.
 // Singleton.
 type TouchPeer struct {
 	touchListeners []*TouchListener
-	sz             size.Event
 }
 
 var touchPeer *TouchPeer
@@ -67,18 +64,18 @@ func (touchpeer *TouchPeer) RemoveAllTouchListener() {
 }
 
 func calcTouchedPosition(pxx, pxy float32) (float32, float32) {
-	ptx := pxx / sz.PixelsPerPt
-	pty := pxy / sz.PixelsPerPt
+	ptx := pxx / screensize.sz.PixelsPerPt
+	pty := pxy / screensize.sz.PixelsPerPt
 
 	var scale float32
-	if desiredScreenSize.fitTo == FitHeight {
-		scale = desiredScreenSize.height / float32(sz.HeightPt)
+	if screensize.fitTo == FitHeight {
+		scale = screensize.height / float32(screensize.sz.HeightPt)
 	} else {
-		scale = desiredScreenSize.width / float32(sz.WidthPt)
+		scale = screensize.width / float32(screensize.sz.WidthPt)
 	}
 
-	return (ptx - desiredScreenSize.marginWidth/2) * scale,
-		desiredScreenSize.height - (pty-desiredScreenSize.marginHeight/2)*scale
+	return (ptx - screensize.marginWidth/2) * scale,
+		screensize.height - (pty-screensize.marginHeight/2)*scale
 }
 
 // OnTouchBegin is called when touch is started.

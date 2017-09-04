@@ -248,9 +248,9 @@ func (glpeer *GLPeer) Update(publishFunc func() app.PublishResult) {
 
 	glpeer.apply()
 
-	glpeer.eng.Render(glpeer.scene, now, sz)
+	glpeer.eng.Render(glpeer.scene, now, screensize.sz)
 	if config.DEBUG {
-		glpeer.fps.Draw(sz)
+		glpeer.fps.Draw(screensize.sz)
 	}
 
 	// app.Publish() calls glctx.Flush, it should be called within this mutex locking.
@@ -287,20 +287,20 @@ func (glpeer *GLPeer) apply() {
 			{0, 1, 0},
 		}
 		affine.Translate(affine,
-			sc.sprite.X*desiredScreenSize.scale-sc.sprite.W/2*desiredScreenSize.scale+desiredScreenSize.marginWidth/2,
-			(desiredScreenSize.height-sc.sprite.Y)*desiredScreenSize.scale-sc.sprite.H/2*desiredScreenSize.scale+desiredScreenSize.marginHeight/2)
+			sc.sprite.X*screensize.scale-sc.sprite.W/2*screensize.scale+screensize.marginWidth/2,
+			(screensize.height-sc.sprite.Y)*screensize.scale-sc.sprite.H/2*screensize.scale+screensize.marginHeight/2)
 		if sc.sprite.R != 0 {
 			affine.Translate(affine,
-				0.5*sc.sprite.W*desiredScreenSize.scale,
-				0.5*sc.sprite.H*desiredScreenSize.scale)
+				0.5*sc.sprite.W*screensize.scale,
+				0.5*sc.sprite.H*screensize.scale)
 			affine.Rotate(affine, sc.sprite.R)
 			affine.Translate(affine,
-				-0.5*sc.sprite.W*desiredScreenSize.scale,
-				-0.5*sc.sprite.H*desiredScreenSize.scale)
+				-0.5*sc.sprite.W*screensize.scale,
+				-0.5*sc.sprite.H*screensize.scale)
 		}
 		affine.Scale(affine,
-			sc.sprite.W*desiredScreenSize.scale,
-			sc.sprite.H*desiredScreenSize.scale)
+			sc.sprite.W*screensize.scale,
+			sc.sprite.H*screensize.scale)
 		glpeer.eng.SetTransform(sc.node, *affine)
 	}
 }

@@ -2,7 +2,13 @@ package peer
 
 import "golang.org/x/mobile/event/size"
 
-var sz size.Event
+// ScreenSizer represents interface for configurating screen size
+type ScreenSizer interface {
+	// SetDesiredScreenSize sets virtual screen size.
+	// Any positive value can be specified to arguments.
+	// like, w=1920, h=1080
+	SetDesiredScreenSize(w, h float32)
+}
 
 const (
 	// FitHeight indicates screen should fit to height length
@@ -18,52 +24,59 @@ type screenSize struct {
 	fitTo        int
 	marginWidth  float32
 	marginHeight float32
+	sz           size.Event
 }
 
-var desiredScreenSize screenSize
+var (
+	screensize = &screenSize{}
+)
 
-// SetScreenSize sets screen size of device.
-// This will be called only from gomobile.go.
-func SetScreenSize(s size.Event) {
+// GetScreenSizePeer returns an instance of ScreenSizer
+func GetScreenSizePeer() ScreenSizer {
+	if screensize == nil {
+		screensize = &screenSize{}
+	}
+	return screensize
+}
+
+func (ss *screenSize) setScreenSize(s size.Event) {
 	LogDebug("IN")
-	sz = s
-	calcScale()
+	ss.sz = s
+	ss.calcScale()
 	LogDebug("OUT")
 }
 
-// GetScreenSize returns screen size of device.
-// This value is set by SetScreenSize in advance.
-func GetScreenSize() size.Event {
+func (ss *screenSize) getScreenSize() size.Event {
 	LogDebug("IN")
 	LogDebug("OUT")
-	return sz
+	return ss.sz
 }
 
 // SetDesiredScreenSize sets virtual screen size.
 // Any positive value can be specified to arguments.
 // like, w=1920, h=1080
-func SetDesiredScreenSize(w, h float32) {
+func (ss *screenSize) SetDesiredScreenSize(w, h float32) {
 	LogDebug("IN")
-	desiredScreenSize.height = h
-	desiredScreenSize.width = w
-	calcScale()
+	ss.height = h
+	ss.width = w
+	ss.calcScale()
 	LogDebug("OUT")
 }
 
-func calcScale() {
-	h := desiredScreenSize.height
-	w := desiredScreenSize.width
+func (ss *screenSize) calcScale() {
+	h := ss.height
+	w := ss.width
 
-	if h/float32(sz.HeightPt) > w/float32(sz.WidthPt) {
-		desiredScreenSize.scale = float32(sz.HeightPt) / h
-		desiredScreenSize.fitTo = FitHeight
-		desiredScreenSize.marginWidth = float32(sz.WidthPt) - w*desiredScreenSize.scale
-		desiredScreenSize.marginHeight = 0
+	if h/float32(ss.sz.HeightPt) > w/float32(ss.sz.WidthPt) {
+		ss.scale = float32(ss.sz.HeightPt) / h
+		ss.fitTo = FitHeight
+		ss.marginWidth = float32(ss.sz.WidthPt) - w*ss.scale
+		ss.marginHeight = 0
 	} else {
-		desiredScreenSize.scale = float32(sz.WidthPt) / w
-		desiredScreenSize.fitTo = FitWidth
-		desiredScreenSize.marginWidth = 0
-		desiredScreenSize.marginHeight = float32(sz.HeightPt) - h*desiredScreenSize.scale
+		ss.scale = float32(ss.sz.WidthPt) / w
+		ss.fitTo = FitWidth
+		ss.marginWidth = 0
+		ss.marginHeight = float32(ss.sz.HeightPt) - h*ss.scale
 	}
-	LogDebug("scale = %f", desiredScreenSize.scale)
+	LogDebug("scale = %f", ss.scale)
 }
