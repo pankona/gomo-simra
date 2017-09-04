@@ -274,7 +274,7 @@ func (glpeer *GLPeer) Reset() {
 
 func (glpeer *GLPeer) apply() {
 
-	snpairs := GetSpriteContainer().spriteNodePairs
+	snpairs := spriteContainer.spriteNodePairs
 
 	for i := range snpairs {
 		sc := snpairs[i]

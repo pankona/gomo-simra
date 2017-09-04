@@ -7,6 +7,36 @@ import (
 	"golang.org/x/mobile/exp/sprite/clock"
 )
 
+// SpriteContainerer represetnts an interface of SpriteContaienr
+type SpriteContainerer interface {
+	// Initialize initializes SpriteContainer object.
+	// This must be called to use all SpriteContainer's function in advance.
+	Initialize()
+	// AddSprite adds a sprite to SpriteContainer.
+	AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCallback func())
+	// RemoveSprite removes a spcified sprite from SpriteContainer.
+	// Since Unregister of Node is not implemented by gomobile, this function just
+	// marks the specified sprite as "not in use".
+	// The sprite marked as "not in use" will be reused at AddSprite.
+	RemoveSprite(remove *Sprite)
+	// RemoveSprites removes all registered sprites from SpriteContainer.
+	RemoveSprites()
+	// ReplaceTexture replaces sprite's texture to specified one.
+	ReplaceTexture(sprite *Sprite, texture *Texture)
+	// OnTouchBegin is called when screen is started to touch.
+	// This function calls listener's OnTouchBegin if the touched position is
+	// contained by sprite's rectangle.
+	OnTouchBegin(x, y float32)
+	// OnTouchMove is called when touch is moved (dragged).
+	// This function calls listener's OnTouchMove if the touched position is
+	// contained by sprite's rectangle.
+	OnTouchMove(x, y float32)
+	// OnTouchEnd is called when touch is ended (released).
+	// This function calls listener's OnTouchEnd if the touched position is
+	// contained by sprite's rectangle.
+	OnTouchEnd(x, y float32)
+}
+
 type spriteNodePair struct {
 	sprite *Sprite
 	node   *sprite.Node
@@ -24,7 +54,7 @@ var spriteContainer *SpriteContainer
 // GetSpriteContainer returns SpriteContainer.
 // Since SpriteContainer is singleton, use this function
 // to get instance of SpriteContainer.
-func GetSpriteContainer() *SpriteContainer {
+func GetSpriteContainer() SpriteContainerer {
 	if spriteContainer == nil {
 		spriteContainer = &SpriteContainer{}
 	}
