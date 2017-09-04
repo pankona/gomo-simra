@@ -4,6 +4,25 @@ import (
 	"fmt"
 )
 
+// Toucher reporesents an interface for touch controller
+type Toucher interface {
+	// AddTouchListener registeres a listener to notify touch event.
+	AddTouchListener(listener TouchListener)
+	// RemoveTouchListener removes specified listener.
+	RemoveTouchListener(listener TouchListener)
+	// RemoveAllTouchListener removes all registered listeners.
+	RemoveAllTouchListener()
+	// OnTouchBegin is called when touch is started.
+	// This event is notified to all registered listeners despite of the touched position.
+	OnTouchBegin(pxx, pxy float32)
+	// OnTouchMove is called when touch is moved (dragged).
+	// This event is notified to all registered listeners despite of the touched position.
+	OnTouchMove(pxx, pxy float32)
+	// OnTouchEnd is called when touch is ended (released).
+	// This event is notified to all registered listeners despite of the touched position.
+	OnTouchEnd(pxx, pxy float32)
+}
+
 // TouchPeer represents a Touch object.
 // Singleton.
 type TouchPeer struct {
@@ -22,7 +41,7 @@ type TouchListener interface {
 // GetTouchPeer returns instance of TouchPeer.
 // Since TouchPeer is singleton, it is necessary to
 // call this function to get instance of TouchPeer.
-func GetTouchPeer() *TouchPeer {
+func GetTouchPeer() Toucher {
 	LogDebug("IN")
 	if touchPeer == nil {
 		touchPeer = &TouchPeer{}

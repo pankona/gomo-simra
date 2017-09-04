@@ -14,6 +14,15 @@ import (
 	"golang.org/x/mobile/gl"
 )
 
+// Gomoer represents an interface of gomobile
+type Gomoer interface {
+	// Initialize initializes Gomo.
+	Initialize(onStart, onStop func(), updateCallback func())
+	// Start starts gomobile's main loop.
+	// Most of events handled by peer is fired by this function.
+	Start()
+}
+
 // Gomo represents gomobile instance.
 // Singleton.
 type Gomo struct {
@@ -28,7 +37,7 @@ var gomo *Gomo
 // GetGomo returns a Gomo instance.
 // Since Gomo is singleton, it is necessary to
 // call this function to get Gomo instance.
-func GetGomo() *Gomo {
+func GetGomo() Gomoer {
 	LogDebug("IN")
 	if gomo == nil {
 		gomo = &Gomo{}
