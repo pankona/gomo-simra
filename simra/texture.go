@@ -10,7 +10,7 @@ import (
 
 // Texture represents a texture.
 type Texture struct {
-	*peer.Texture
+	texture *peer.Texture
 }
 
 // NewImageTexture allocates a texture from asset image
@@ -19,7 +19,7 @@ func NewImageTexture(assetName string, rect image.Rectangle) *Texture {
 	tex := peer.GetGLPeer().LoadTexture(assetName, rect)
 	LogDebug("OUT")
 	t := &Texture{
-		Texture: peer.GetGLPeer().NewTexture(tex),
+		texture: peer.GetGLPeer().NewTexture(tex),
 	}
 	runtime.SetFinalizer(t, (*Texture).release)
 	return t
@@ -30,7 +30,7 @@ func NewTextTexture(text string, fontsize float64, fontcolor color.RGBA, rect im
 	LogDebug("IN")
 	tex := peer.GetGLPeer().MakeTextureByText(text, fontsize, fontcolor, rect)
 	t := &Texture{
-		Texture: peer.GetGLPeer().NewTexture(tex),
+		texture: peer.GetGLPeer().NewTexture(tex),
 	}
 	runtime.SetFinalizer(t, (*Texture).release)
 	LogDebug("OUT")
@@ -39,6 +39,6 @@ func NewTextTexture(text string, fontsize float64, fontcolor color.RGBA, rect im
 
 func (t *Texture) release() {
 	LogDebug("IN")
-	peer.GetGLPeer().ReleaseTexture(t.Texture)
+	peer.GetGLPeer().ReleaseTexture(t.texture)
 	LogDebug("OUT")
 }

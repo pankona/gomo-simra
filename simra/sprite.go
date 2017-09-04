@@ -44,7 +44,7 @@ func (sprite *Sprite) ReplaceTexture(texture *Texture) {
 	LogDebug("IN")
 	// retain reference for texture to avoid to be discarded by GC
 	sprite.texture = texture
-	peer.GetSpriteContainer().ReplaceTexture(&sprite.Sprite, texture.Texture)
+	peer.GetSpriteContainer().ReplaceTexture(&sprite.Sprite, texture.texture)
 	LogDebug("OUT")
 }
 
