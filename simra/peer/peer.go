@@ -54,7 +54,7 @@ type GLer interface {
 }
 
 var (
-	glPeer    *GLPeer
+	glPeer    = &GLPeer{}
 	startTime = time.Now()
 )
 
@@ -235,7 +235,6 @@ func (glpeer *GLPeer) Finalize() {
 // Update updates screen.
 // This is called 60 times per 1 sec.
 func (glpeer *GLPeer) Update(publishFunc func() app.PublishResult) {
-	LogDebug("IN")
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 
@@ -255,8 +254,6 @@ func (glpeer *GLPeer) Update(publishFunc func() app.PublishResult) {
 
 	// app.Publish() calls glctx.Flush, it should be called within this mutex locking.
 	publishFunc()
-
-	LogDebug("OUT")
 }
 
 // Reset resets current gl context.
