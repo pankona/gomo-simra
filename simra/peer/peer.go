@@ -24,6 +24,34 @@ import (
 	"golang.org/x/mobile/gl"
 )
 
+type GLer interface {
+	// Initialize initializes GLPeer.
+	// This function must be called inadvance of using GLPeer
+	Initialize(glctx gl.Context)
+	// LoadTexture return texture that is loaded by the information of arguments.
+	// Loaded texture can assign using AddSprite function.
+	LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex
+	// MakeTextureByText createst and return texture by speicied text
+	// Loaded texture can assign using AddSprite function.
+	// TODO: font parameterize
+	MakeTextureByText(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle) sprite.SubTex
+	// Finalize finalizes GLPeer.
+	// This is called at termination of application.
+	Finalize()
+	// Update updates screen.
+	// This is called 60 times per 1 sec.
+	Update(publishFunc func() app.PublishResult)
+	// Reset resets current gl context.
+	// All sprites are also cleaned.
+	// This is called at changing of scene, and
+	// this function is for clean previous scene.
+	Reset()
+	// NewTexture returns a new Texture instance
+	NewTexture(s sprite.SubTex) *Texture
+	// ReleaseTexture releases specified texture
+	ReleaseTexture(t *Texture)
+}
+
 var (
 	glPeer    *GLPeer
 	startTime = time.Now()
@@ -43,7 +71,7 @@ type GLPeer struct {
 // GetGLPeer returns a instance of GLPeer.
 // Since GLPeer is singleton, it is necessary to
 // call this function to get GLPeer instance.
-func GetGLPeer() *GLPeer {
+func GetGLPeer() GLer {
 	LogDebug("IN")
 	if glPeer == nil {
 		glPeer = &GLPeer{}
@@ -285,7 +313,7 @@ type Texture struct {
 // NewTexture returns a new Texture instance
 func (glpeer *GLPeer) NewTexture(s sprite.SubTex) *Texture {
 	return &Texture{
-		glPeer: GetGLPeer(),
+		glPeer: glpeer,
 		subTex: s,
 	}
 }
