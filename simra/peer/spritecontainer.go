@@ -7,10 +7,7 @@ import (
 	"golang.org/x/mobile/exp/sprite/clock"
 )
 
-// SpriteNodePair represents pair of Sprite and sprite.Node.
-// This is used for calculate affine transformation of Node
-// from Sprite's property.
-type SpriteNodePair struct {
+type spriteNodePair struct {
 	sprite *Sprite
 	node   *sprite.Node
 	inuse  bool
@@ -19,7 +16,7 @@ type SpriteNodePair struct {
 // SpriteContainer represents array of SpriteNodePair.
 type SpriteContainer struct {
 	// TODO: should use map[Sprite]*SpriteNodePair
-	spriteNodePairs []*SpriteNodePair
+	spriteNodePairs []*spriteNodePair
 }
 
 var spriteContainer *SpriteContainer
@@ -52,7 +49,7 @@ func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubT
 		}
 	}
 
-	var sn *SpriteNodePair
+	var sn *spriteNodePair
 	for _, snpair := range spritecontainer.spriteNodePairs {
 		if !snpair.inuse {
 			sn = snpair
@@ -60,7 +57,7 @@ func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubT
 	}
 
 	if sn == nil {
-		sn = &SpriteNodePair{}
+		sn = &spriteNodePair{}
 	}
 
 	sn.sprite = s
