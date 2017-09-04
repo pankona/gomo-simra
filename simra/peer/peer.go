@@ -25,9 +25,8 @@ import (
 )
 
 var (
-	glPeer      *GLPeer
-	glPeerMutex sync.Mutex
-	startTime   = time.Now()
+	glPeer    *GLPeer
+	startTime = time.Now()
 )
 
 // GLPeer represents gl context.
@@ -38,6 +37,7 @@ type GLPeer struct {
 	fps    *debug.FPS
 	eng    sprite.Engine
 	scene  *sprite.Node
+	mu     sync.Mutex
 }
 
 // GetGLPeer returns a instance of GLPeer.
@@ -56,8 +56,8 @@ func GetGLPeer() *GLPeer {
 // This function must be called inadvance of using GLPeer
 func (glpeer *GLPeer) Initialize(glctx gl.Context) {
 	LogDebug("IN")
-	glPeerMutex.Lock()
-	defer glPeerMutex.Unlock()
+	glpeer.mu.Lock()
+	defer glpeer.mu.Unlock()
 	glpeer.glctx = glctx
 
 	// transparency of png
@@ -89,8 +89,8 @@ type arrangerFunc func(e sprite.Engine, n *sprite.Node, t clock.Time)
 func (a arrangerFunc) Arrange(e sprite.Engine, n *sprite.Node, t clock.Time) { a(e, n, t) }
 
 func (glpeer *GLPeer) newNode(fn arrangerFunc) *sprite.Node {
-	glPeerMutex.Lock()
-	defer glPeerMutex.Unlock()
+	glpeer.mu.Lock()
+	defer glpeer.mu.Unlock()
 	n := &sprite.Node{Arranger: arrangerFunc(fn)}
 	glpeer.eng.Register(n)
 	glpeer.scene.AppendChild(n)
@@ -98,14 +98,14 @@ func (glpeer *GLPeer) newNode(fn arrangerFunc) *sprite.Node {
 }
 
 func (glpeer *GLPeer) appendChild(n *sprite.Node) {
-	glPeerMutex.Lock()
-	defer glPeerMutex.Unlock()
+	glpeer.mu.Lock()
+	defer glpeer.mu.Unlock()
 	glpeer.scene.AppendChild(n)
 }
 
 func (glpeer *GLPeer) removeChild(n *sprite.Node) {
-	glPeerMutex.Lock()
-	defer glPeerMutex.Unlock()
+	glpeer.mu.Lock()
+	defer glpeer.mu.Unlock()
 	glpeer.scene.RemoveChild(n)
 }
 
@@ -113,8 +113,8 @@ func (glpeer *GLPeer) removeChild(n *sprite.Node) {
 // Loaded texture can assign using AddSprite function.
 func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex {
 	LogDebug("IN")
-	glPeerMutex.Lock()
-	defer glPeerMutex.Unlock()
+	glpeer.mu.Lock()
+	defer glpeer.mu.Unlock()
 
 	a, err := asset.Open(assetName)
 	if err != nil {
@@ -145,8 +145,8 @@ func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite
 // TODO: font parameterize
 func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle) sprite.SubTex {
 	LogDebug("IN")
-	glPeerMutex.Lock()
-	defer glPeerMutex.Unlock()
+	glpeer.mu.Lock()
+	defer glpeer.mu.Unlock()
 
 	dpi := float64(72)
 	width := rect.Dx()
@@ -192,8 +192,8 @@ func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, fontcolor
 // This is called at termination of application.
 func (glpeer *GLPeer) Finalize() {
 	LogDebug("IN")
-	glPeerMutex.Lock()
-	defer glPeerMutex.Unlock()
+	glpeer.mu.Lock()
+	defer glpeer.mu.Unlock()
 
 	GetSpriteContainer().RemoveSprites()
 	glpeer.eng.Release()
@@ -207,8 +207,8 @@ func (glpeer *GLPeer) Finalize() {
 // This is called 60 times per 1 sec.
 func (glpeer *GLPeer) Update(publishFunc func() app.PublishResult) {
 	LogDebug("IN")
-	glPeerMutex.Lock()
-	defer glPeerMutex.Unlock()
+	glpeer.mu.Lock()
+	defer glpeer.mu.Unlock()
 
 	if glpeer.glctx == nil {
 		return
@@ -236,8 +236,8 @@ func (glpeer *GLPeer) Update(publishFunc func() app.PublishResult) {
 // this function is for clean previous scene.
 func (glpeer *GLPeer) Reset() {
 	LogDebug("IN")
-	glPeerMutex.Lock()
-	defer glPeerMutex.Unlock()
+	glpeer.mu.Lock()
+	defer glpeer.mu.Unlock()
 	GetSpriteContainer().RemoveSprites()
 	glpeer.initEng()
 	LogDebug("OUT")
@@ -276,20 +276,23 @@ func (glpeer *GLPeer) apply() {
 	}
 }
 
-// Texture represents a subtexture
+// Texture represents a texture object that contains subTex
 type Texture struct {
+	glPeer *GLPeer
 	subTex sprite.SubTex
 }
 
-// NewTexture returns a instance of texture
-func NewTexture(s sprite.SubTex) *Texture {
-	return &Texture{subTex: s}
+// NewTexture returns a new Texture instance
+func (glpeer *GLPeer) NewTexture(s sprite.SubTex) *Texture {
+	return &Texture{
+		glPeer: GetGLPeer(),
+		subTex: s,
+	}
 }
 
-// Release releases allocated Texture from images
-func (t *Texture) Release() {
-	glPeerMutex.Lock()
-	defer glPeerMutex.Unlock()
-
+// ReleaseTexture releases specified texture
+func (glpeer *GLPeer) ReleaseTexture(t *Texture) {
+	glpeer.mu.Lock()
+	glpeer.mu.Unlock()
 	t.subTex.T.Release()
 }

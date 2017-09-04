@@ -18,7 +18,9 @@ func NewImageTexture(assetName string, rect image.Rectangle) *Texture {
 	LogDebug("IN")
 	tex := peer.GetGLPeer().LoadTexture(assetName, rect)
 	LogDebug("OUT")
-	t := &Texture{peer.NewTexture(tex)}
+	t := &Texture{
+		Texture: peer.GetGLPeer().NewTexture(tex),
+	}
 	runtime.SetFinalizer(t, (*Texture).release)
 	return t
 }
@@ -27,7 +29,9 @@ func NewImageTexture(assetName string, rect image.Rectangle) *Texture {
 func NewTextTexture(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle) *Texture {
 	LogDebug("IN")
 	tex := peer.GetGLPeer().MakeTextureByText(text, fontsize, fontcolor, rect)
-	t := &Texture{peer.NewTexture(tex)}
+	t := &Texture{
+		Texture: peer.GetGLPeer().NewTexture(tex),
+	}
 	runtime.SetFinalizer(t, (*Texture).release)
 	LogDebug("OUT")
 	return t
@@ -35,6 +39,6 @@ func NewTextTexture(text string, fontsize float64, fontcolor color.RGBA, rect im
 
 func (t *Texture) release() {
 	LogDebug("IN")
-	t.Texture.Release()
+	peer.GetGLPeer().ReleaseTexture(t.Texture)
 	LogDebug("OUT")
 }
