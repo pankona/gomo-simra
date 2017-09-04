@@ -28,9 +28,9 @@ func (title *Title) Initialize() {
 }
 
 func (title *Title) initialize() {
+	title.background = simra.NewSprite()
 	// add background sprite
 	title.background.SetScale(config.ScreenWidth, config.ScreenHeight)
-
 	// put center of screen
 	title.background.SetPosition(config.ScreenWidth/2, config.ScreenHeight/2)
 
