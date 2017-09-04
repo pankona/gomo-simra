@@ -65,18 +65,18 @@ func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubT
 
 	sn.sprite = s
 	if sn.node == nil {
-		sn.node = GetGLPeer().newNode(func(eng sprite.Engine, n *sprite.Node, t clock.Time) {
+		sn.node = glPeer.newNode(func(eng sprite.Engine, n *sprite.Node, t clock.Time) {
 			if arrangeCallback != nil {
 				arrangeCallback()
 			}
 		})
 		spritecontainer.spriteNodePairs = append(spritecontainer.spriteNodePairs, sn)
 	} else {
-		GetGLPeer().appendChild(sn.node)
+		glPeer.appendChild(sn.node)
 	}
 	sn.inuse = true
 	if subTex != nil {
-		GetGLPeer().eng.SetSubTex(sn.node, *subTex)
+		glPeer.eng.SetSubTex(sn.node, *subTex)
 	}
 	LogDebug("OUT")
 }
@@ -94,7 +94,7 @@ func (spritecontainer *SpriteContainer) RemoveSprite(remove *Sprite) {
 				return
 			}
 			sn.inuse = false
-			GetGLPeer().removeChild(sn.node)
+			glPeer.removeChild(sn.node)
 		}
 	}
 	LogDebug("OUT")
@@ -113,7 +113,7 @@ func (spritecontainer *SpriteContainer) ReplaceTexture(sprite *Sprite, texture *
 	for i := range spritecontainer.spriteNodePairs {
 		if spritecontainer.spriteNodePairs[i].sprite == sprite {
 			node := spritecontainer.spriteNodePairs[i].node
-			GetGLPeer().eng.SetSubTex(node, texture.subTex)
+			glPeer.eng.SetSubTex(node, texture.subTex)
 		}
 	}
 	LogDebug("OUT")

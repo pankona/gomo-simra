@@ -24,6 +24,7 @@ import (
 	"golang.org/x/mobile/gl"
 )
 
+// GLer interface represents interface of GL
 type GLer interface {
 	// Initialize initializes GLPeer.
 	// This function must be called inadvance of using GLPeer
