@@ -7,7 +7,7 @@ import (
 
 // Background represents a sprite for background
 type Background struct {
-	simra.Sprite
+	simra.Spriter
 	speed float64
 }
 
@@ -46,8 +46,11 @@ func (bg *Background) getSpeed() float64 {
 }
 
 func (bg *Background) move() {
-	bg.Sprite.X -= float32(bg.speed)
-	if bg.Sprite.X < -1*bg.Sprite.W/2 {
-		bg.Sprite.X = config.ScreenWidth/2 + (config.ScreenWidth - float32(bg.speed))
+	p := bg.GetPosition()
+	s := bg.GetScale()
+	p.X -= (int)(bg.speed)
+	bg.SetPositionX(p.X)
+	if p.X < -1*s.W/2 {
+		bg.SetPositionX((int)(config.ScreenWidth/2 + (config.ScreenWidth - float32(bg.speed))))
 	}
 }

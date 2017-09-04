@@ -39,13 +39,12 @@ func (title *Title) initialize() {
 	simra.GetInstance().AddTouchListener(title)
 
 	sprite := simra.NewSprite()
-	sprite.W = ScreenWidth
-	sprite.H = 80
-	sprite.X = ScreenWidth / 2
-	sprite.Y = ScreenHeight / 2
+	sprite.SetScale(ScreenWidth, 80)
+	sprite.SetPosition(ScreenWidth/2, ScreenHeight/2)
 	simra.GetInstance().AddSprite(sprite)
+	s := sprite.GetScale()
 	tex := simra.NewTextTexture("tap to play sound",
-		60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(sprite.W), int(sprite.H)))
+		60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, s.W, s.H))
 	sprite.ReplaceTexture(tex)
 
 }

@@ -15,10 +15,10 @@ import (
 type Title struct {
 	screenWidth  int
 	screenHeight int
-	sprites      []*simra.Sprite
-	numOfSprite  *simra.Sprite
+	sprites      []simra.Spriter
+	numOfSprite  simra.Spriter
 	fps          int
-	fpsText      *simra.Sprite
+	fpsText      simra.Spriter
 	mu           sync.Mutex
 	kokeshiTex   *simra.Texture
 }
@@ -38,10 +38,8 @@ func (title *Title) Initialize() {
 	title.initialize()
 
 	title.numOfSprite = simra.NewSprite()
-	title.numOfSprite.X = (float32)(title.screenWidth / 2)
-	title.numOfSprite.Y = 100
-	title.numOfSprite.W = (float32)(title.screenWidth)
-	title.numOfSprite.H = 80
+	title.numOfSprite.SetPosition(title.screenWidth/2, 100)
+	title.numOfSprite.SetScale(title.screenWidth, 80)
 	simra.GetInstance().AddSprite(title.numOfSprite)
 
 	tex := simra.NewTextTexture("0",
@@ -49,10 +47,8 @@ func (title *Title) Initialize() {
 	title.numOfSprite.ReplaceTexture(tex)
 
 	title.fpsText = simra.NewSprite()
-	title.fpsText.X = (float32)(title.screenWidth / 4)
-	title.fpsText.Y = 100
-	title.fpsText.W = (float32)(title.screenWidth)
-	title.fpsText.H = 80
+	title.fpsText.SetPosition(title.screenWidth/4, 100)
+	title.fpsText.SetScale(title.screenWidth, 80)
 	simra.GetInstance().AddSprite(title.fpsText)
 
 	tex = simra.NewTextTexture("0",
@@ -88,7 +84,7 @@ func (title *Title) Drive() {
 	degree = (degree - 1) % 360
 	for i := range title.sprites {
 		r := float32(degree) * math.Pi / 180
-		title.sprites[i].R = (float32)(r)
+		title.sprites[i].SetRotate(r)
 	}
 	title.mu.Lock()
 	title.fps++
@@ -117,10 +113,8 @@ func (title *Title) OnTouchEnd(x, y float32) {
 func (title *Title) spawnKokeshi(x, y float32) {
 	// scene end. go to next scene
 	sprite := simra.NewSprite()
-	sprite.W = 128
-	sprite.H = 128
-	sprite.X = x
-	sprite.Y = y
+	sprite.SetPosition((int)(x), (int)(y))
+	sprite.SetScale(128, 128)
 	simra.GetInstance().AddSprite(sprite)
 	title.sprites = append(title.sprites, sprite)
 	sprite.ReplaceTexture(title.kokeshiTex)

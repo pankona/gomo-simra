@@ -9,8 +9,8 @@ import (
 
 // Stage1 represents a scene of Stage1
 type Stage1 struct {
-	gopher simra.Sprite
-	ball   simra.Sprite
+	gopher simra.Spriter
+	ball   simra.Spriter
 }
 
 // Initialize initializes Stage1 scene.
@@ -35,16 +35,14 @@ func (stage1 *Stage1) initSprite() {
 
 func (stage1 *Stage1) initGopher() {
 	// add gopher sprite
-	stage1.gopher.W = float32(140)
-	stage1.gopher.H = float32(90)
+	stage1.gopher.SetScale(140, 90)
 
 	// put center of screen at start
-	stage1.gopher.X = 1080 / 2 / 2
-	stage1.gopher.Y = 1920 / 2 / 2
+	stage1.gopher.SetPosition(1080/2/2, 1920/2/2)
 
-	simra.GetInstance().AddSprite(&stage1.gopher)
+	simra.GetInstance().AddSprite(stage1.gopher)
 	tex := simra.NewImageTexture("waza-gophers.jpeg",
-		image.Rect(152, 10, 152+int(stage1.gopher.W), 10+int(stage1.gopher.H)))
+		image.Rect(152, 10, 152+int(stage1.gopher.GetScale().W), 10+int(stage1.gopher.GetScale().H)))
 	stage1.gopher.ReplaceTexture(tex)
 
 	stage1.gopher.AddTouchListener(stage1)
@@ -60,26 +58,23 @@ func (stage1 *Stage1) Drive() {
 	if degree >= 360 {
 		degree = 0
 	}
-	stage1.gopher.R = float32(degree) * math.Pi / 180
+	stage1.gopher.SetRotate(float32(degree) * math.Pi / 180)
 }
 
 // OnTouchBegin is called when Title scene is Touched.
 // It is caused by calling AddtouchListener for stage1.gopher sprite.
 func (stage1 *Stage1) OnTouchBegin(x, y float32) {
-	stage1.gopher.X = x
-	stage1.gopher.Y = y
+	stage1.gopher.SetPosition((int)(x), (int)(y))
 }
 
 // OnTouchMove is called when Title scene is Touched and moved.
 // It is caused by calling AddtouchListener for stage1.gopher sprite.
 func (stage1 *Stage1) OnTouchMove(x, y float32) {
-	stage1.gopher.X = x
-	stage1.gopher.Y = y
+	stage1.gopher.SetPosition((int)(x), (int)(y))
 }
 
 // OnTouchEnd is called when Title scene is Touched and it is released.
 // It is caused by calling AddtouchListener for stage1.gopher sprite.
 func (stage1 *Stage1) OnTouchEnd(x, y float32) {
-	stage1.gopher.X = x
-	stage1.gopher.Y = y
+	stage1.gopher.SetPosition((int)(x), (int)(y))
 }

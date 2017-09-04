@@ -9,7 +9,7 @@ import (
 
 // Ball represents a ball
 type Ball struct {
-	simra.Sprite
+	simra.Spriter
 	// direction is radian.
 	direction float64
 	speed     float64
@@ -19,20 +19,21 @@ type Ball struct {
  * Ball implementation for Model interface
  */
 func (ball *Ball) setPosition(x, y float32) {
-	ball.Sprite.X = x
-	ball.Sprite.Y = y
+	ball.SetPositionX((int)(x))
+	ball.SetPositionY((int)(y))
 }
 
 func (ball *Ball) getPosition() (x, y float32) {
-	return ball.Sprite.X, ball.Sprite.Y
+	p := ball.GetPosition()
+	return (float32)(p.X), (float32)(p.Y)
 }
 
 func (ball *Ball) setRotate(r float32) {
-	ball.Sprite.R = r
+	ball.SetRotate(r)
 }
 
 func (ball *Ball) getRotate() float32 {
-	return ball.Sprite.R
+	return (float32)(ball.GetRotate())
 }
 
 func (ball *Ball) setDirection(d float64) {
@@ -58,21 +59,25 @@ func (ball *Ball) move() {
 	ball.speed = math.Sqrt(dx*dx + dy*dy)
 	ball.direction = math.Atan2(dy, dx) * 180 / math.Pi
 
-	ball.Sprite.X += float32(dx)
-	ball.Sprite.Y += float32(dy)
+	p := ball.GetPosition()
+	ball.SetPositionX(p.X + int(dx))
+	ball.SetPositionY(p.Y + int(dy))
 
-	if ball.Sprite.Y < 0 {
-		ball.Sprite.Y = 0
+	p = ball.GetPosition()
+	if p.Y < 0 {
+		ball.SetPositionY(0)
 		ball.speed = 0
 	}
 
-	if ball.Sprite.Y > config.ScreenHeight {
-		ball.Sprite.Y = config.ScreenHeight
+	if p.Y > config.ScreenHeight {
+		ball.SetPositionY(config.ScreenHeight)
 		ball.speed = 0
 	}
 }
 
 // GetXYWH returns x, y w, h of receiver
 func (ball *Ball) GetXYWH() (x, y, w, h int) {
-	return int(ball.Sprite.X), int(ball.Sprite.Y), int(ball.Sprite.W), int(ball.Sprite.H)
+	p := ball.GetPosition()
+	s := ball.GetScale()
+	return p.X, p.Y, s.W, s.H
 }

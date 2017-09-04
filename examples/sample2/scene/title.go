@@ -9,7 +9,7 @@ import (
 
 // Title represents a scene object for Title
 type Title struct {
-	background simra.Sprite
+	background simra.Spriter
 }
 
 // Initialize initializes title scene
@@ -29,18 +29,16 @@ func (title *Title) Initialize() {
 
 func (title *Title) initialize() {
 	// add background sprite
-	title.background.W = float32(config.ScreenWidth)
-	title.background.H = float32(config.ScreenHeight)
+	title.background.SetScale(config.ScreenWidth, config.ScreenHeight)
 
 	// put center of screen
-	title.background.X = config.ScreenWidth / 2
-	title.background.Y = config.ScreenHeight / 2
+	title.background.SetPosition(config.ScreenWidth/2, config.ScreenHeight/2)
 
-	simra.GetInstance().AddSprite(&title.background)
+	simra.GetInstance().AddSprite(title.background)
 
 	title.background.AddTouchListener(title)
 	tex := simra.NewImageTexture("title.png",
-		image.Rect(0, 0, int(title.background.W), int(title.background.H)))
+		image.Rect(0, 0, int(title.background.GetScale().W), int(title.background.GetScale().H)))
 	title.background.ReplaceTexture(tex)
 
 }

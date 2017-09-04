@@ -4,16 +4,16 @@ import "github.com/pankona/gomo-simra/simra"
 
 // Life represents view part of remaining life
 type Life struct {
-	simra.Sprite
+	simra.Spriter
 }
 
-func (life *Life) getPosition() (x float32, y float32) {
-	x, y = life.X, life.Y
-	return
+func (life *Life) getPosition() (float32, float32) {
+	p := life.GetPosition()
+	return (float32)(p.X), (float32)(p.Y)
 }
 
 func (life *Life) setPosition(x float32, y float32) {
-	life.X, life.Y = x, y
+	life.SetPosition((int)(x), (int)(y))
 }
 
 func (life *Life) setSpeed(s float64) {

@@ -9,7 +9,7 @@ import (
 
 // Obstacle represetnts a sprite for obstacle
 type Obstacle struct {
-	simra.Sprite
+	simra.Spriter
 	// direction is radian.
 	direction float64
 	speed     float64
@@ -17,19 +17,21 @@ type Obstacle struct {
 
 // GetXYWH returns x, y w, h of receiver
 func (obstacle *Obstacle) GetXYWH() (x, y, w, h int) {
-	return int(obstacle.Sprite.X), int(obstacle.Sprite.Y), int(obstacle.Sprite.W), int(obstacle.Sprite.H)
+	p := obstacle.GetPosition()
+	s := obstacle.GetScale()
+	return p.X, p.Y, s.W, s.H
 }
 
 /**
  * Obstacle implementation for Model interface
  */
 func (obstacle *Obstacle) setPosition(x, y float32) {
-	obstacle.Sprite.X = x
-	obstacle.Sprite.Y = y
+	obstacle.SetPosition((int)(x), (int)(y))
 }
 
-func (obstacle *Obstacle) getPosition() (x, y float32) {
-	return obstacle.Sprite.X, obstacle.Sprite.Y
+func (obstacle *Obstacle) getPosition() (float32, float32) {
+	p := obstacle.GetPosition()
+	return (float32)(p.X), (float32)(p.Y)
 }
 
 func (obstacle *Obstacle) setRotate(r float32) {
@@ -61,10 +63,13 @@ func (obstacle *Obstacle) move() {
 	obstacle.speed = math.Sqrt(dx*dx + dy*dy)
 	obstacle.direction = math.Atan2(dy, dx) * 180 / math.Pi
 
-	obstacle.Sprite.X += float32(dx)
-	obstacle.Sprite.Y += float32(dy)
+	p := obstacle.GetPosition()
+	obstacle.SetPositionX(p.X + int(dx))
+	obstacle.SetPositionY(p.Y + int(dy))
 
-	if obstacle.Sprite.X < -1*obstacle.Sprite.W/2 {
-		obstacle.Sprite.X = config.ScreenWidth + config.ScreenWidth/2
+	p = obstacle.GetPosition()
+	s := obstacle.GetScale()
+	if p.X < -1*s.W/2 {
+		obstacle.SetPositionX(config.ScreenWidth + config.ScreenWidth/2)
 	}
 }

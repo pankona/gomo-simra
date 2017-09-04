@@ -15,7 +15,7 @@ const (
 
 // Title represents a scene object for Title
 type Title struct {
-	effect        *simra.Sprite
+	effect        simra.Spriter
 	initialSprite *simra.Texture
 	isAnimating   bool
 }
@@ -34,16 +34,14 @@ func (title *Title) Initialize() {
 
 func (title *Title) initialize() {
 	sprite := simra.NewSprite()
-	sprite.W = 240
-	sprite.H = 240
-	sprite.X = ScreenWidth / 2
-	sprite.Y = ScreenHeight / 2
+	sprite.SetPosition(ScreenWidth/2, ScreenHeight/2)
+	sprite.SetScale(240, 240)
 
 	animationSet := simra.NewAnimationSet()
-	title.initialSprite = simra.NewImageTexture("effect.png", image.Rect(0, 0, 239, int(sprite.H)))
+	title.initialSprite = simra.NewImageTexture("effect.png", image.Rect(0, 0, 239, sprite.GetScale().H))
 	for i := 0; i < 13; i++ {
 		animationSet.AddTexture(simra.NewImageTexture("effect.png",
-			image.Rect((int)(sprite.W)*i, 0, ((int)(sprite.W)*(i+1))-1, int(sprite.H))))
+			image.Rect(sprite.GetScale().W*i, 0, (sprite.GetScale().W*(i+1))-1, sprite.GetScale().H)))
 	}
 	animationSet.SetInterval(6)
 	sprite.AddAnimationSet("animation test", animationSet)

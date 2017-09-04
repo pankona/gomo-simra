@@ -10,8 +10,8 @@ import (
 
 // Title represents a scene object for Title
 type Title struct {
-	background simra.Sprite
-	text       simra.Sprite
+	background simra.Spriter
+	text       simra.Spriter
 }
 
 // Initialize initializes title scene
@@ -31,28 +31,26 @@ func (title *Title) Initialize() {
 
 func (title *Title) initialize() {
 	// add background sprite
-	title.background.W = float32(config.ScreenWidth)
-	title.background.H = float32(config.ScreenHeight)
+	title.background.SetScale(config.ScreenWidth, config.ScreenHeight)
 
 	// put center of screen
-	title.background.X = config.ScreenWidth / 2
-	title.background.Y = config.ScreenHeight / 2
+	title.background.SetPosition(config.ScreenWidth/2, config.ScreenHeight/2)
 
-	simra.GetInstance().AddSprite(&title.background)
+	simra.GetInstance().AddSprite(title.background)
 
-	title.text.W = 320
-	title.text.H = 80
-	title.text.X = title.text.W / 2
-	title.text.Y = title.text.H / 2
-	simra.GetInstance().AddSprite(&title.text)
+	title.text.SetScale(320, 80)
+	s := title.text.GetScale()
+	title.text.SetPosition(s.W/2, s.H/2)
+	simra.GetInstance().AddSprite(title.text)
 
+	p := title.background.GetScale()
 	var tex *simra.Texture
-	tex = simra.NewImageTexture("title.png",
-		image.Rect(0, 0, int(title.background.W), int(title.background.H)))
+	tex = simra.NewImageTexture("title.png", image.Rect(0, 0, p.W, p.H))
 	title.background.ReplaceTexture(tex)
 
+	p = title.text.GetScale()
 	tex = simra.NewTextTexture("text sample",
-		60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(title.text.W), int(title.text.H)))
+		60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, p.W, p.H))
 	title.text.ReplaceTexture(tex)
 
 	title.background.AddTouchListener(title)
