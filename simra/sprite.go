@@ -7,6 +7,25 @@ import (
 	"github.com/pankona/gomo-simra/simra/peer"
 )
 
+// Spriter represents an interface of Sprite
+type Spriter interface {
+	// ReplaceTexture replaces sprite's texture with specified image resource.
+	ReplaceTexture(texture *Texture)
+	// AddTouchListener registers a listener for touch event.
+	// Touch event will be notified when "sprite" is touched.
+	AddTouchListener(listener peer.TouchListener)
+	// RemoveAllTouchListener removes all listeners already registered.
+	RemoveAllTouchListener()
+	// AddAnimationSet adds a specified AnimationSet to sprite
+	AddAnimationSet(animationName string, set *AnimationSet)
+	// StartAnimation starts animation by specified animation name
+	StartAnimation(animationName string, shouldLoop bool, animationEndCallback func())
+	// StopAnimation stops animation
+	StopAnimation()
+	// ProgressAnimation progresses registered animation
+	ProgressAnimation()
+}
+
 // Sprite represents a sprite object.
 type Sprite struct {
 	peer.Sprite
@@ -16,7 +35,7 @@ type Sprite struct {
 }
 
 // NewSprite returns an instance of Sprite
-func NewSprite() *Sprite {
+func NewSprite() Spriter {
 	return &Sprite{animationSets: map[string]*AnimationSet{}}
 }
 

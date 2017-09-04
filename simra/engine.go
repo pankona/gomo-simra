@@ -97,7 +97,8 @@ func (simra *simra) SetScene(driver Driver) {
 	simra.driver = driver
 	peer.GetSpriteContainer().Initialize()
 
-	s := NewSprite()
+	s := &Sprite{animationSets: map[string]*AnimationSet{}}
+
 	peer.GetSpriteContainer().AddSprite(&s.Sprite, nil, s.ProgressAnimation)
 
 	driver.Initialize()
