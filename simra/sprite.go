@@ -46,9 +46,12 @@ type Spriter interface {
 	GetRotate() float32
 }
 
+// Position represents position of sprite
 type Position struct {
 	X, Y int
 }
+
+// Scale represents size of sprite
 type Scale struct {
 	W, H int
 }
