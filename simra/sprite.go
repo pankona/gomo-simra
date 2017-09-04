@@ -26,18 +26,29 @@ type Spriter interface {
 	ProgressAnimation()
 	// SetPosition sets sprite's position
 	SetPosition(x, y int)
+	// SetPositionX sets sprite's position X
+	SetPositionX(x int)
+	// SetPositionY sets sprite's position Y
+	SetPositionY(y int)
 	// SetScale sets sprite's size
 	SetScale(w, h int)
+	// SetScaleW sets sprite's size W
+	SetScaleW(w int)
+	// SetScaleH sets sprite's size H
+	SetScaleH(h int)
 	// GetPosition gets sprites position
 	GetPosition() Position
 	// GetScale gets sprites size
 	GetScale() Scale
+	// SetRotate sets sprite's rotation
+	SetRotate(r float32)
+	// getRotate gets sprite's rotation
+	GetRotate() float32
 }
 
 type Position struct {
 	X, Y int
 }
-
 type Scale struct {
 	W, H int
 }
@@ -149,8 +160,24 @@ func (sprite *sprite) SetPosition(x, y int) {
 	sprite.X, sprite.Y = (float32)(x), (float32)(y)
 }
 
+func (sprite *sprite) SetPositionX(x int) {
+	sprite.X = (float32)(x)
+}
+
+func (sprite *sprite) SetPositionY(y int) {
+	sprite.Y = (float32)(y)
+}
+
 func (sprite *sprite) SetScale(w, h int) {
 	sprite.W, sprite.H = (float32)(w), (float32)(h)
+}
+
+func (sprite *sprite) SetScaleW(w int) {
+	sprite.W = (float32)(w)
+}
+
+func (sprite *sprite) SetScaleH(h int) {
+	sprite.H = (float32)(h)
 }
 
 func (sprite *sprite) GetPosition() Position {
@@ -159,4 +186,12 @@ func (sprite *sprite) GetPosition() Position {
 
 func (sprite *sprite) GetScale() Scale {
 	return Scale{(int)(sprite.W), (int)(sprite.H)}
+}
+
+func (sprite *sprite) SetRotate(r float32) {
+	sprite.R = r
+}
+
+func (sprite *sprite) GetRotate() float32 {
+	return sprite.R
 }
