@@ -24,10 +24,26 @@ type Spriter interface {
 	StopAnimation()
 	// ProgressAnimation progresses registered animation
 	ProgressAnimation()
+	// SetPosition sets sprite's position
+	SetPosition(x, y int)
+	// SetScale sets sprite's size
+	SetScale(w, h int)
+	// GetPosition gets sprites position
+	GetPosition() Position
+	// GetScale gets sprites size
+	GetScale() Scale
+}
+
+type Position struct {
+	X, Y int
+}
+
+type Scale struct {
+	W, H int
 }
 
 // Sprite represents a sprite object.
-type Sprite struct {
+type sprite struct {
 	peer.Sprite
 	animationSets   map[string]*AnimationSet
 	animationCancel func()
@@ -36,11 +52,11 @@ type Sprite struct {
 
 // NewSprite returns an instance of Sprite
 func NewSprite() Spriter {
-	return &Sprite{animationSets: map[string]*AnimationSet{}}
+	return &sprite{animationSets: map[string]*AnimationSet{}}
 }
 
 // ReplaceTexture replaces sprite's texture with specified image resource.
-func (sprite *Sprite) ReplaceTexture(texture *Texture) {
+func (sprite *sprite) ReplaceTexture(texture *Texture) {
 	LogDebug("IN")
 	// retain reference for texture to avoid to be discarded by GC
 	sprite.texture = texture
@@ -50,28 +66,28 @@ func (sprite *Sprite) ReplaceTexture(texture *Texture) {
 
 // AddTouchListener registers a listener for touch event.
 // Touch event will be notified when "sprite" is touched.
-func (sprite *Sprite) AddTouchListener(listener peer.TouchListener) {
+func (sprite *sprite) AddTouchListener(listener peer.TouchListener) {
 	LogDebug("IN")
 	sprite.Sprite.AddTouchListener(listener)
 	LogDebug("OUT")
 }
 
 // RemoveAllTouchListener removes all listeners already registered.
-func (sprite *Sprite) RemoveAllTouchListener() {
+func (sprite *sprite) RemoveAllTouchListener() {
 	LogDebug("IN")
 	sprite.Sprite.RemoveAllTouchListener()
 	LogDebug("OUT")
 }
 
 // AddAnimationSet adds a specified AnimationSet to sprite
-func (sprite *Sprite) AddAnimationSet(animationName string, set *AnimationSet) {
+func (sprite *sprite) AddAnimationSet(animationName string, set *AnimationSet) {
 	LogDebug("IN")
 	sprite.animationSets[animationName] = set
 	LogDebug("OUT")
 }
 
 // StartAnimation starts animation by specified animation name
-func (sprite *Sprite) StartAnimation(animationName string, shouldLoop bool, animationEndCallback func()) {
+func (sprite *sprite) StartAnimation(animationName string, shouldLoop bool, animationEndCallback func()) {
 	LogDebug("IN")
 	if sprite.animationCancel != nil {
 		// animation is already in progress. don't start.
@@ -85,7 +101,7 @@ func (sprite *Sprite) StartAnimation(animationName string, shouldLoop bool, anim
 	LogDebug("OUT")
 }
 
-func (sprite *Sprite) startAnimation(ctx context.Context, animationName string, shouldLoop bool, animationEndCallback func()) {
+func (sprite *sprite) startAnimation(ctx context.Context, animationName string, shouldLoop bool, animationEndCallback func()) {
 	LogDebug("IN")
 	animationSet := sprite.animationSets[animationName]
 	if animationSet == nil {
@@ -112,7 +128,7 @@ animation:
 }
 
 // StopAnimation stops animation
-func (sprite *Sprite) StopAnimation() {
+func (sprite *sprite) StopAnimation() {
 	LogDebug("IN")
 	if sprite == nil {
 		return
@@ -125,6 +141,22 @@ func (sprite *Sprite) StopAnimation() {
 }
 
 // ProgressAnimation progresses registered animation
-func (sprite *Sprite) ProgressAnimation() {
+func (sprite *sprite) ProgressAnimation() {
 	fps.Progress()
+}
+
+func (sprite *sprite) SetPosition(x, y int) {
+	sprite.X, sprite.Y = (float32)(x), (float32)(y)
+}
+
+func (sprite *sprite) SetScale(w, h int) {
+	sprite.W, sprite.H = (float32)(w), (float32)(h)
+}
+
+func (sprite *sprite) GetPosition() Position {
+	return Position{(int)(sprite.X), (int)(sprite.Y)}
+}
+
+func (sprite *sprite) GetScale() Scale {
+	return Scale{(int)(sprite.W), (int)(sprite.H)}
 }

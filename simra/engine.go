@@ -12,10 +12,10 @@ type Simraer interface {
 	// If a driver is already set, it is replaced with new one.
 	SetScene(driver Driver)
 	// AddSprite adds a sprite to current scene with empty texture.
-	AddSprite(s *Sprite)
+	AddSprite(s Spriter)
 	// RemoveSprite removes specified sprite from current scene.
 	// Removed sprite will be disappeared.
-	RemoveSprite(s *Sprite)
+	RemoveSprite(s Spriter)
 	// SetDesiredScreenSize configures virtual screen size.
 	// This function must be called at least once before calling Start.
 	SetDesiredScreenSize(w, h float32)
@@ -97,7 +97,7 @@ func (simra *simra) SetScene(driver Driver) {
 	simra.driver = driver
 	peer.GetSpriteContainer().Initialize()
 
-	s := &Sprite{animationSets: map[string]*AnimationSet{}}
+	s := &sprite{animationSets: map[string]*AnimationSet{}}
 
 	peer.GetSpriteContainer().AddSprite(&s.Sprite, nil, s.ProgressAnimation)
 
@@ -106,15 +106,17 @@ func (simra *simra) SetScene(driver Driver) {
 }
 
 // AddSprite adds a sprite to current scene with empty texture.
-func (simra *simra) AddSprite(s *Sprite) {
-	peer.GetSpriteContainer().AddSprite(&s.Sprite, nil, nil)
+func (simra *simra) AddSprite(s Spriter) {
+	sp := s.(*sprite)
+	peer.GetSpriteContainer().AddSprite(&sp.Sprite, nil, nil)
 }
 
 // RemoveSprite removes specified sprite from current scene.
 // Removed sprite will be disappeared.
-func (simra *simra) RemoveSprite(s *Sprite) {
-	s.texture = nil
-	peer.GetSpriteContainer().RemoveSprite(&s.Sprite)
+func (simra *simra) RemoveSprite(s Spriter) {
+	sp := s.(*sprite)
+	sp.texture = nil
+	peer.GetSpriteContainer().RemoveSprite(&sp.Sprite)
 }
 
 // SetDesiredScreenSize configures virtual screen size.
