@@ -50,6 +50,8 @@ func (scene *Stage1) Initialize() {
 	// TODO: when goes to next scene, remove global touch listener
 	// simra.GetInstance().RemoveTouchListener(Stage1)
 
+	scene.initialize()
+
 	scene.resetPosition()
 	scene.setupSprites()
 	scene.registerViews()
@@ -63,6 +65,21 @@ func (scene *Stage1) Initialize() {
 	scene.gamestate = readyToStart
 
 	simra.LogDebug("[OUT]")
+}
+
+func (scene *Stage1) initialize() {
+	scene.readytext[0] = simra.NewSprite()
+	scene.readytext[1] = simra.NewSprite()
+	scene.background[0].Spriter = simra.NewSprite()
+	scene.background[1].Spriter = simra.NewSprite()
+	scene.ball.Spriter = simra.NewSprite()
+	scene.obstacle[0].Spriter = simra.NewSprite()
+	scene.obstacle[1].Spriter = simra.NewSprite()
+	scene.life[0].Spriter = simra.NewSprite()
+	scene.life[1].Spriter = simra.NewSprite()
+	scene.life[2].Spriter = simra.NewSprite()
+	scene.gameovertext[0] = simra.NewSprite()
+	scene.gameovertext[1] = simra.NewSprite()
 }
 
 // OnTouchBegin is called when Stage1 scene is Touched.
@@ -92,7 +109,7 @@ func (scene *Stage1) OnTouchEnd(x, y float32) {
 		tex := simra.NewImageTexture("heart.png", image.Rect(0, 0, 384, 384))
 
 		for i := 0; i < 3; i++ {
-			simra.GetInstance().AddSprite(scene.life[i])
+			simra.GetInstance().AddSprite(scene.life[i].Spriter)
 			scene.life[i].ReplaceTexture(tex)
 		}
 
@@ -130,32 +147,19 @@ func (scene *Stage1) removeReadyText() {
 }
 
 func (scene *Stage1) resetPosition() {
-	// set size of background
+	simra.LogDebug("IN")
 	scene.background[0].SetScale(config.ScreenWidth+1, config.ScreenHeight)
-
-	// put center of screen
 	scene.background[0].SetPosition(config.ScreenWidth/2, config.ScreenHeight/2)
 
-	// set size of background
 	scene.background[1].SetScale(config.ScreenWidth+1, config.ScreenHeight)
-
-	// put out of screen
 	scene.background[1].SetPosition(config.ScreenWidth/2+(config.ScreenWidth), config.ScreenHeight/2)
 
-	// set size of ball
 	scene.ball.SetScale(48, 48)
-
-	// put center of screen at start
 	scene.ball.SetPosition(config.ScreenWidth/2, config.ScreenHeight/2)
 
-	// set size of obstacle
 	scene.obstacle[0].SetScale(50, 100)
-	scene.obstacle[1].SetScale(50, 100)
-
-	// put center/upper side of screen
 	scene.obstacle[0].SetPosition(config.ScreenWidth+config.ScreenWidth/2, config.ScreenHeight/3*2)
-
-	// put center/lower side of screen
+	scene.obstacle[1].SetScale(50, 100)
 	scene.obstacle[1].SetPosition(config.ScreenWidth+config.ScreenWidth/2, config.ScreenHeight/3*1)
 
 	scene.life[0].SetPosition(48, 30)
@@ -164,17 +168,18 @@ func (scene *Stage1) resetPosition() {
 	scene.life[1].SetScale(48, 48)
 	scene.life[2].SetPosition(48*3, 30)
 	scene.life[2].SetScale(48, 48)
+	simra.LogDebug("OUT")
 }
 
 func (scene *Stage1) setupSprites() {
-	simra.GetInstance().AddSprite(scene.background[0])
-	simra.GetInstance().AddSprite(scene.background[1])
-	simra.GetInstance().AddSprite(scene.ball)
-	simra.GetInstance().AddSprite(scene.obstacle[0])
-	simra.GetInstance().AddSprite(scene.obstacle[1])
-	simra.GetInstance().AddSprite(scene.life[0])
-	simra.GetInstance().AddSprite(scene.life[1])
-	simra.GetInstance().AddSprite(scene.life[2])
+	simra.GetInstance().AddSprite(scene.background[0].Spriter)
+	simra.GetInstance().AddSprite(scene.background[1].Spriter)
+	simra.GetInstance().AddSprite(scene.ball.Spriter)
+	simra.GetInstance().AddSprite(scene.obstacle[0].Spriter)
+	simra.GetInstance().AddSprite(scene.obstacle[1].Spriter)
+	simra.GetInstance().AddSprite(scene.life[0].Spriter)
+	simra.GetInstance().AddSprite(scene.life[1].Spriter)
+	simra.GetInstance().AddSprite(scene.life[2].Spriter)
 
 	var tex *simra.Texture
 
@@ -220,6 +225,7 @@ func (scene *Stage1) showGameover() {
 }
 
 func (scene *Stage1) onFinishDead() {
+	simra.LogDebug("IN")
 	if scene.remainingLife == 0 {
 		scene.showGameover()
 		scene.gamestate = readyToRestart
@@ -231,8 +237,9 @@ func (scene *Stage1) onFinishDead() {
 	scene.views.restart()
 	scene.models.restart()
 
-	simra.GetInstance().RemoveSprite(&scene.life[scene.remainingLife-1])
+	simra.GetInstance().RemoveSprite(scene.life[scene.remainingLife-1].Spriter)
 	scene.remainingLife--
+	simra.LogDebug("OUT")
 }
 
 func (scene *Stage1) registerModels() {

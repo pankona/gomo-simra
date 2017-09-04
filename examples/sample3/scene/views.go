@@ -30,7 +30,9 @@ const (
 )
 
 func (views *views) restart() {
+	simra.LogDebug("IN")
 	views.isDead = false
+	simra.LogDebug("OUT")
 }
 
 type viewEventListener interface {
