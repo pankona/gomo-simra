@@ -10,7 +10,6 @@ import (
 // Stage1 represents a scene of Stage1
 type Stage1 struct {
 	gopher simra.Spriter
-	ball   simra.Spriter
 }
 
 // Initialize initializes Stage1 scene.
@@ -34,6 +33,7 @@ func (stage1 *Stage1) initSprite() {
 }
 
 func (stage1 *Stage1) initGopher() {
+	stage1.gopher = simra.NewSprite()
 	// add gopher sprite
 	stage1.gopher.SetScale(140, 90)
 
