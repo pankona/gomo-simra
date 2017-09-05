@@ -63,16 +63,16 @@ func GetSpriteContainer() SpriteContainerer {
 
 // Initialize initializes SpriteContainer object.
 // This must be called to use all SpriteContainer's function in advance.
-func (spritecontainer *SpriteContainer) Initialize() {
+func (sc *SpriteContainer) Initialize() {
 	LogDebug("IN")
-	GetTouchPeer().AddTouchListener(spritecontainer)
+	GetTouchPeer().AddTouchListener(sc)
 	LogDebug("OUT")
 }
 
 // AddSprite adds a sprite to SpriteContainer.
-func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCallback func()) {
+func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCallback func()) {
 	LogDebug("IN")
-	for _, snpair := range spritecontainer.spriteNodePairs {
+	for _, snpair := range sc.spriteNodePairs {
 		if s == snpair.sprite && snpair.inuse {
 			LogDebug("this sprite is already added and currently still being available.")
 			return
@@ -80,7 +80,7 @@ func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubT
 	}
 
 	var sn *spriteNodePair
-	for _, snpair := range spritecontainer.spriteNodePairs {
+	for _, snpair := range sc.spriteNodePairs {
 		if !snpair.inuse {
 			sn = snpair
 		}
@@ -92,18 +92,18 @@ func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubT
 
 	sn.sprite = s
 	if sn.node == nil {
-		sn.node = spritecontainer.glpeer.newNode(func(eng sprite.Engine, n *sprite.Node, t clock.Time) {
+		sn.node = sc.glpeer.newNode(func(eng sprite.Engine, n *sprite.Node, t clock.Time) {
 			if arrangeCallback != nil {
 				arrangeCallback()
 			}
 		})
-		spritecontainer.spriteNodePairs = append(spritecontainer.spriteNodePairs, sn)
+		sc.spriteNodePairs = append(sc.spriteNodePairs, sn)
 	} else {
-		spritecontainer.glpeer.appendChild(sn.node)
+		sc.glpeer.appendChild(sn.node)
 	}
 	sn.inuse = true
 	if subTex != nil {
-		spritecontainer.glpeer.eng.SetSubTex(sn.node, *subTex)
+		sc.glpeer.eng.SetSubTex(sn.node, *subTex)
 	}
 	LogDebug("OUT")
 }
@@ -112,35 +112,35 @@ func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubT
 // Since Unregister of Node is not implemented by gomobile, this function just
 // marks the specified sprite as "not in use".
 // The sprite marked as "not in use" will be reused at AddSprite.
-func (spritecontainer *SpriteContainer) RemoveSprite(remove *Sprite) {
+func (sc *SpriteContainer) RemoveSprite(remove *Sprite) {
 	LogDebug("IN")
-	for _, sn := range spritecontainer.spriteNodePairs {
+	for _, sn := range sc.spriteNodePairs {
 		if sn.sprite == remove {
 			if !sn.inuse {
 				LogDebug("already removed.")
 				return
 			}
 			sn.inuse = false
-			spritecontainer.glpeer.removeChild(sn.node)
+			sc.glpeer.removeChild(sn.node)
 		}
 	}
 	LogDebug("OUT")
 }
 
 // RemoveSprites removes all registered sprites from SpriteContainer.
-func (spritecontainer *SpriteContainer) RemoveSprites() {
+func (sc *SpriteContainer) RemoveSprites() {
 	LogDebug("IN")
-	spritecontainer.spriteNodePairs = nil
+	sc.spriteNodePairs = nil
 	LogDebug("OUT")
 }
 
 // ReplaceTexture replaces sprite's texture to specified one.
-func (spritecontainer *SpriteContainer) ReplaceTexture(sprite *Sprite, texture *Texture) {
+func (sc *SpriteContainer) ReplaceTexture(sprite *Sprite, texture *Texture) {
 	LogDebug("IN")
-	for i := range spritecontainer.spriteNodePairs {
-		if spritecontainer.spriteNodePairs[i].sprite == sprite {
-			node := spritecontainer.spriteNodePairs[i].node
-			spritecontainer.glpeer.eng.SetSubTex(node, texture.subTex)
+	for i := range sc.spriteNodePairs {
+		if sc.spriteNodePairs[i].sprite == sprite {
+			node := sc.spriteNodePairs[i].node
+			sc.glpeer.eng.SetSubTex(node, texture.subTex)
 		}
 	}
 	LogDebug("OUT")
@@ -162,11 +162,11 @@ func isContained(sprite *Sprite, x, y float32) bool {
 // OnTouchBegin is called when screen is started to touch.
 // This function calls listener's OnTouchBegin if the touched position is
 // contained by sprite's rectangle.
-func (spritecontainer *SpriteContainer) OnTouchBegin(x, y float32) {
+func (sc *SpriteContainer) OnTouchBegin(x, y float32) {
 	LogDebug("IN")
-	for i := range spritecontainer.spriteNodePairs {
-		listeners := spritecontainer.spriteNodePairs[i].sprite.touchListeners
-		if isContained(spritecontainer.spriteNodePairs[i].sprite, x, y) {
+	for i := range sc.spriteNodePairs {
+		listeners := sc.spriteNodePairs[i].sprite.touchListeners
+		if isContained(sc.spriteNodePairs[i].sprite, x, y) {
 			for j := range listeners {
 				listener := listeners[j]
 				if listener == nil {
@@ -184,11 +184,11 @@ func (spritecontainer *SpriteContainer) OnTouchBegin(x, y float32) {
 // OnTouchMove is called when touch is moved (dragged).
 // This function calls listener's OnTouchMove if the touched position is
 // contained by sprite's rectangle.
-func (spritecontainer *SpriteContainer) OnTouchMove(x, y float32) {
+func (sc *SpriteContainer) OnTouchMove(x, y float32) {
 	LogDebug("IN")
-	for i := range spritecontainer.spriteNodePairs {
-		listeners := spritecontainer.spriteNodePairs[i].sprite.touchListeners
-		if isContained(spritecontainer.spriteNodePairs[i].sprite, x, y) {
+	for i := range sc.spriteNodePairs {
+		listeners := sc.spriteNodePairs[i].sprite.touchListeners
+		if isContained(sc.spriteNodePairs[i].sprite, x, y) {
 			for j := range listeners {
 				listener := listeners[j]
 				if listener == nil {
@@ -206,11 +206,11 @@ func (spritecontainer *SpriteContainer) OnTouchMove(x, y float32) {
 // OnTouchEnd is called when touch is ended (released).
 // This function calls listener's OnTouchEnd if the touched position is
 // contained by sprite's rectangle.
-func (spritecontainer *SpriteContainer) OnTouchEnd(x, y float32) {
+func (sc *SpriteContainer) OnTouchEnd(x, y float32) {
 	LogDebug("IN")
-	for i := range spritecontainer.spriteNodePairs {
-		listeners := spritecontainer.spriteNodePairs[i].sprite.touchListeners
-		if isContained(spritecontainer.spriteNodePairs[i].sprite, x, y) {
+	for i := range sc.spriteNodePairs {
+		listeners := sc.spriteNodePairs[i].sprite.touchListeners
+		if isContained(sc.spriteNodePairs[i].sprite, x, y) {
 			for j := range listeners {
 				listener := listeners[j]
 				if listener == nil {
