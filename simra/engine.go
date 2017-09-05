@@ -45,15 +45,12 @@ type simra struct {
 	comap  []*collisionMap
 }
 
-var sim *simra
+var sim = &simra{}
 
 // GetInstance returns instance of Simra.
 // It is necessary to call this function to get Simra instance
 // since Simra is single instance.
 func GetInstance() Simraer {
-	if sim == nil {
-		sim = &simra{}
-	}
 	return sim
 }
 
