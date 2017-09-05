@@ -35,7 +35,7 @@ func waitOnCollision(t *testing.T, shouldCallback bool) {
 	}
 }
 
-func Test_AddCollisionListener(t *testing.T) {
+func TestAddCollisionListener(t *testing.T) {
 	var c1, c2 c
 	var l l
 
@@ -63,7 +63,7 @@ func Test_AddCollisionListener(t *testing.T) {
 	}
 }
 
-func Test_RemoveCollisionListener(t *testing.T) {
+func TestRemoveCollisionListener(t *testing.T) {
 
 	var c1, c2 c
 	var l l
