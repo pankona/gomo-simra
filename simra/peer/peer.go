@@ -73,11 +73,6 @@ type GLPeer struct {
 // Since GLPeer is singleton, it is necessary to
 // call this function to get GLPeer instance.
 func GetGLPeer() GLer {
-	LogDebug("IN")
-	if glPeer == nil {
-		glPeer = &GLPeer{}
-	}
-	LogDebug("OUT")
 	return glPeer
 }
 

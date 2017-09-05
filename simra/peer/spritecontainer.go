@@ -47,17 +47,17 @@ type spriteNodePair struct {
 type SpriteContainer struct {
 	// TODO: should use map[Sprite]*SpriteNodePair
 	spriteNodePairs []*spriteNodePair
+	glpeer          *GLPeer
 }
 
-var spriteContainer *SpriteContainer
+var spriteContainer = &SpriteContainer{
+	glpeer: glPeer,
+}
 
 // GetSpriteContainer returns SpriteContainer.
 // Since SpriteContainer is singleton, use this function
 // to get instance of SpriteContainer.
 func GetSpriteContainer() SpriteContainerer {
-	if spriteContainer == nil {
-		spriteContainer = &SpriteContainer{}
-	}
 	return spriteContainer
 }
 
@@ -92,18 +92,18 @@ func (spritecontainer *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubT
 
 	sn.sprite = s
 	if sn.node == nil {
-		sn.node = glPeer.newNode(func(eng sprite.Engine, n *sprite.Node, t clock.Time) {
+		sn.node = spritecontainer.glpeer.newNode(func(eng sprite.Engine, n *sprite.Node, t clock.Time) {
 			if arrangeCallback != nil {
 				arrangeCallback()
 			}
 		})
 		spritecontainer.spriteNodePairs = append(spritecontainer.spriteNodePairs, sn)
 	} else {
-		glPeer.appendChild(sn.node)
+		spritecontainer.glpeer.appendChild(sn.node)
 	}
 	sn.inuse = true
 	if subTex != nil {
-		glPeer.eng.SetSubTex(sn.node, *subTex)
+		spritecontainer.glpeer.eng.SetSubTex(sn.node, *subTex)
 	}
 	LogDebug("OUT")
 }
@@ -121,7 +121,7 @@ func (spritecontainer *SpriteContainer) RemoveSprite(remove *Sprite) {
 				return
 			}
 			sn.inuse = false
-			glPeer.removeChild(sn.node)
+			spritecontainer.glpeer.removeChild(sn.node)
 		}
 	}
 	LogDebug("OUT")
@@ -140,7 +140,7 @@ func (spritecontainer *SpriteContainer) ReplaceTexture(sprite *Sprite, texture *
 	for i := range spritecontainer.spriteNodePairs {
 		if spritecontainer.spriteNodePairs[i].sprite == sprite {
 			node := spritecontainer.spriteNodePairs[i].node
-			glPeer.eng.SetSubTex(node, texture.subTex)
+			spritecontainer.glpeer.eng.SetSubTex(node, texture.subTex)
 		}
 	}
 	LogDebug("OUT")
