@@ -74,7 +74,7 @@ func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCa
 	LogDebug("IN")
 	for _, snpair := range sc.spriteNodePairs {
 		if s == snpair.sprite && snpair.inuse {
-			return fmt.Errorf("this sprite is already added and currently still being available.")
+			return fmt.Errorf("this sprite is already added and currently still being available")
 		}
 	}
 
