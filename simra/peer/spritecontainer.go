@@ -47,11 +47,11 @@ type spriteNodePair struct {
 type SpriteContainer struct {
 	// TODO: should use map[Sprite]*SpriteNodePair
 	spriteNodePairs []*spriteNodePair
-	glpeer          GLer
+	gler            GLer
 }
 
 var spriteContainer = &SpriteContainer{
-	glpeer: glPeer,
+	gler: glPeer,
 }
 
 // GetSpriteContainer returns SpriteContainer.
@@ -92,18 +92,18 @@ func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCa
 
 	sn.sprite = s
 	if sn.node == nil {
-		sn.node = sc.glpeer.NewNode(func(eng sprite.Engine, n *sprite.Node, t clock.Time) {
+		sn.node = sc.gler.NewNode(func(eng sprite.Engine, n *sprite.Node, t clock.Time) {
 			if arrangeCallback != nil {
 				arrangeCallback()
 			}
 		})
 		sc.spriteNodePairs = append(sc.spriteNodePairs, sn)
 	} else {
-		sc.glpeer.AppendChild(sn.node)
+		sc.gler.AppendChild(sn.node)
 	}
 	sn.inuse = true
 	if subTex != nil {
-		sc.glpeer.SetSubTex(sn.node, subTex)
+		sc.gler.SetSubTex(sn.node, subTex)
 	}
 	LogDebug("OUT")
 }
@@ -121,7 +121,7 @@ func (sc *SpriteContainer) RemoveSprite(remove *Sprite) {
 				return
 			}
 			sn.inuse = false
-			sc.glpeer.RemoveChild(sn.node)
+			sc.gler.RemoveChild(sn.node)
 		}
 	}
 	LogDebug("OUT")
@@ -140,7 +140,7 @@ func (sc *SpriteContainer) ReplaceTexture(sprite *Sprite, texture *Texture) {
 	for i := range sc.spriteNodePairs {
 		if sc.spriteNodePairs[i].sprite == sprite {
 			node := sc.spriteNodePairs[i].node
-			sc.glpeer.SetSubTex(node, &texture.subTex)
+			sc.gler.SetSubTex(node, &texture.subTex)
 		}
 	}
 	LogDebug("OUT")
