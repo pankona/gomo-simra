@@ -52,3 +52,4 @@ test:
     override:
         - cd "$GOPATH/src/$IMPORT_PATH/examples" && test -z "$(golint ./... | tee /dev/stderr)"
         - cd "$GOPATH/src/$IMPORT_PATH/simra"    && test -z "$(golint ./... | tee /dev/stderr)"
+        - cd "$GOPATH/src/$IMPORT_PATH/simra"    && go test ./...
