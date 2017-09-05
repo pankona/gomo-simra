@@ -13,7 +13,7 @@ type SpriteContainerer interface {
 	// This must be called to use all SpriteContainer's function in advance.
 	Initialize()
 	// AddSprite adds a sprite to SpriteContainer.
-	AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCallback func())
+	AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCallback func()) error
 	// RemoveSprite removes a spcified sprite from SpriteContainer.
 	// Since Unregister of Node is not implemented by gomobile, this function just
 	// marks the specified sprite as "not in use".
@@ -70,12 +70,11 @@ func (sc *SpriteContainer) Initialize() {
 }
 
 // AddSprite adds a sprite to SpriteContainer.
-func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCallback func()) {
+func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCallback func()) error {
 	LogDebug("IN")
 	for _, snpair := range sc.spriteNodePairs {
 		if s == snpair.sprite && snpair.inuse {
-			LogDebug("this sprite is already added and currently still being available.")
-			return
+			return fmt.Errorf("this sprite is already added and currently still being available.")
 		}
 	}
 
@@ -106,6 +105,7 @@ func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCa
 		sc.gler.SetSubTex(sn.node, subTex)
 	}
 	LogDebug("OUT")
+	return nil
 }
 
 // RemoveSprite removes a spcified sprite from SpriteContainer.
