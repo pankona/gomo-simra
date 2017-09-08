@@ -3,7 +3,7 @@ package peer
 // Spriter represents interface of Sprite
 type Spriter interface {
 	// AddTouchListener registers a listener to notify touch event.
-	AddTouchListener(listener TouchListener)
+	AddTouchListener(l TouchListener)
 	// RemoveAllTouchListener removes all registered listeners from sprite.
 	RemoveAllTouchListener()
 }
@@ -31,15 +31,15 @@ type Sprite struct {
 }
 
 // AddTouchListener registers a listener to notify touch event.
-func (sprite *Sprite) AddTouchListener(listener TouchListener) {
+func (s *Sprite) AddTouchListener(l TouchListener) {
 	LogDebug("IN")
-	sprite.touchListeners = append(sprite.touchListeners, &listener)
+	s.touchListeners = append(s.touchListeners, &l)
 	LogDebug("OUT")
 }
 
 // RemoveAllTouchListener removes all registered listeners from sprite.
-func (sprite *Sprite) RemoveAllTouchListener() {
+func (s *Sprite) RemoveAllTouchListener() {
 	LogDebug("IN")
-	sprite.touchListeners = nil
+	s.touchListeners = nil
 	LogDebug("OUT")
 }
