@@ -174,6 +174,19 @@ func TestRemoveSprites(t *testing.T) {
 	}
 }
 
+func TestReplaceTexture(t *testing.T) {
+	sc := &SpriteContainer{}
+	sc.gler = &mockGLer{}
+
+	s := &Sprite{}
+	err := sc.AddSprite(s, nil, nil)
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+	tex := &Texture{}
+	sc.ReplaceTexture(s, tex)
+}
+
 func BenchmarkAddSprite(b *testing.B) {
 	sc := &SpriteContainer{}
 	sc.gler = &mockGLer{}
