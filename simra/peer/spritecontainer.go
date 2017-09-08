@@ -152,10 +152,15 @@ func isContained(sprite *Sprite, x, y float32) bool {
 	return false
 }
 
-// OnTouchBegin is called when screen is started to touch.
-// This function calls listener's OnTouchBegin if the touched position is
-// contained by sprite's rectangle.
-func (sc *SpriteContainer) OnTouchBegin(x, y float32) {
+type event int
+
+const (
+	touchBegin event = iota
+	touchMove
+	touchEnd
+)
+
+func (sc *SpriteContainer) emitTouchEvent(x, y float32, e event) {
 	LogDebug("IN")
 	sc.spriteNodePairs.Range(func(k, v interface{}) bool {
 		s := v.(*spriteNodePair).sprite
@@ -167,11 +172,30 @@ func (sc *SpriteContainer) OnTouchBegin(x, y float32) {
 					fmt.Println("listener is nil!")
 					continue
 				}
-				(*listener).OnTouchBegin(x, y)
+				switch e {
+				case touchBegin:
+					(*listener).OnTouchBegin(x, y)
+				case touchMove:
+					(*listener).OnTouchMove(x, y)
+				case touchEnd:
+					(*listener).OnTouchEnd(x, y)
+				default:
+					panic("unknown touch event!")
+				}
 			}
 		}
 		return true
 	})
+	LogDebug("OUT")
+
+}
+
+// OnTouchBegin is called when screen is started to touch.
+// This function calls listener's OnTouchBegin if the touched position is
+// contained by sprite's rectangle.
+func (sc *SpriteContainer) OnTouchBegin(x, y float32) {
+	LogDebug("IN")
+	sc.emitTouchEvent(x, y, touchBegin)
 	LogDebug("OUT")
 }
 
@@ -180,21 +204,7 @@ func (sc *SpriteContainer) OnTouchBegin(x, y float32) {
 // contained by sprite's rectangle.
 func (sc *SpriteContainer) OnTouchMove(x, y float32) {
 	LogDebug("IN")
-	sc.spriteNodePairs.Range(func(k, v interface{}) bool {
-		s := v.(*spriteNodePair).sprite
-		listeners := s.touchListeners
-		if isContained(s, x, y) {
-			for j := range listeners {
-				listener := listeners[j]
-				if listener == nil {
-					fmt.Println("listener is nil!")
-					continue
-				}
-				(*listener).OnTouchMove(x, y)
-			}
-		}
-		return true
-	})
+	sc.emitTouchEvent(x, y, touchMove)
 	LogDebug("OUT")
 }
 
@@ -203,20 +213,6 @@ func (sc *SpriteContainer) OnTouchMove(x, y float32) {
 // contained by sprite's rectangle.
 func (sc *SpriteContainer) OnTouchEnd(x, y float32) {
 	LogDebug("IN")
-	sc.spriteNodePairs.Range(func(k, v interface{}) bool {
-		s := v.(*spriteNodePair).sprite
-		listeners := s.touchListeners
-		if isContained(s, x, y) {
-			for j := range listeners {
-				listener := listeners[j]
-				if listener == nil {
-					fmt.Println("listener is nil!")
-					continue
-				}
-				(*listener).OnTouchEnd(x, y)
-			}
-		}
-		return true
-	})
+	sc.emitTouchEvent(x, y, touchEnd)
 	LogDebug("OUT")
 }
