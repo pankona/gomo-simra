@@ -46,12 +46,6 @@ func (ss *screenSize) setScreenSize(s size.Event) {
 	LogDebug("OUT")
 }
 
-func (ss *screenSize) getScreenSize() size.Event {
-	LogDebug("IN")
-	LogDebug("OUT")
-	return ss.sz
-}
-
 // SetDesiredScreenSize sets virtual screen size.
 // Any positive value can be specified to arguments.
 // like, w=1920, h=1080

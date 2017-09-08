@@ -124,7 +124,7 @@ func (a arrangerFunc) Arrange(e sprite.Engine, n *sprite.Node, t clock.Time) { a
 func (glpeer *GLPeer) NewNode(fn arrangerFunc) *sprite.Node {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
-	n := &sprite.Node{Arranger: arrangerFunc(fn)}
+	n := &sprite.Node{Arranger: fn}
 	glpeer.eng.Register(n)
 	glpeer.scene.AppendChild(n)
 	return n
@@ -156,9 +156,9 @@ func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite
 		log.Fatal(err)
 	}
 	defer func() {
-		err := a.Close()
-		if err != nil {
-			log.Println(err)
+		closeErr := a.Close()
+		if closeErr != nil {
+			log.Println(closeErr)
 		}
 	}()
 
@@ -282,7 +282,7 @@ func (glpeer *GLPeer) SetSubTex(n *sprite.Node, subTex *sprite.SubTex) {
 
 func (glpeer *GLPeer) apply() {
 
-	snpairs := spriteContainer.spriteNodePairs
+	snpairs := &spriteContainer.spriteNodePairs
 
 	snpairs.Range(func(k, v interface{}) bool {
 		sn := v.(*spriteNodePair)
@@ -332,6 +332,6 @@ func (glpeer *GLPeer) NewTexture(s sprite.SubTex) *Texture {
 // ReleaseTexture releases specified texture
 func (glpeer *GLPeer) ReleaseTexture(t *Texture) {
 	glpeer.mu.Lock()
-	glpeer.mu.Unlock()
+	defer glpeer.mu.Unlock()
 	t.subTex.T.Release()
 }

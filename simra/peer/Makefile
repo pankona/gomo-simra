@@ -12,4 +12,6 @@ cover:
 	@go tool cover -html=.cover.out -o .cover.html
 
 metalinter:
+	@echo gometalinter is running...
 	@gometalinter ./...
+	@echo gometalinter finished!
