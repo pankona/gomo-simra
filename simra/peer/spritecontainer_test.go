@@ -254,6 +254,5 @@ func BenchmarkAddSprite(b *testing.B) {
 		if err != nil {
 			b.Fatalf(err.Error())
 		}
-		//sc.RemoveSprite(s)
 	}
 }
