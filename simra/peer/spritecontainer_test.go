@@ -35,7 +35,7 @@ func (m *mockGLer) RemoveChild(n *sprite.Node) {
 	// nop
 }
 
-func mapLen(m sync.Map) int {
+func mapLen(m *sync.Map) int {
 	count := 0
 	m.Range(func(k, v interface{}) bool {
 		count++
@@ -53,8 +53,8 @@ func TestAddAndRemoveSprite(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed add Sprite. err: %s", err.Error())
 	}
-	if mapLen(sc.spriteNodePairs) != 1 {
-		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(spriteContainer.spriteNodePairs), 0)
+	if mapLen(&sc.spriteNodePairs) != 1 {
+		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
 	}
 
 	s2 := &Sprite{}
@@ -62,19 +62,19 @@ func TestAddAndRemoveSprite(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed add Sprite. err: %s", err.Error())
 	}
-	if mapLen(sc.spriteNodePairs) != 2 {
-		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(spriteContainer.spriteNodePairs), 0)
+	if mapLen(&sc.spriteNodePairs) != 2 {
+		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
 	}
 
 	// RemoveSprite marks sprites as "not in use",
 	// length of spriteContainer will not be changed
 	sc.RemoveSprite(s1)
-	if mapLen(sc.spriteNodePairs) != 2 {
-		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(spriteContainer.spriteNodePairs), 0)
+	if mapLen(&sc.spriteNodePairs) != 2 {
+		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
 	}
 	sc.RemoveSprite(s2)
-	if mapLen(sc.spriteNodePairs) != 2 {
-		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(spriteContainer.spriteNodePairs), 0)
+	if mapLen(&sc.spriteNodePairs) != 2 {
+		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
 	}
 
 	// if there're "not in use" sprite in spriteContainer,
@@ -84,15 +84,15 @@ func TestAddAndRemoveSprite(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed add Sprite. err: %s", err.Error())
 	}
-	if mapLen(sc.spriteNodePairs) != 2 {
-		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(spriteContainer.spriteNodePairs), 0)
+	if mapLen(&sc.spriteNodePairs) != 2 {
+		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
 	}
 	err = sc.AddSprite(s2, nil, nil)
 	if err != nil {
 		t.Fatalf("failed add Sprite. err: %s", err.Error())
 	}
-	if mapLen(sc.spriteNodePairs) != 2 {
-		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(spriteContainer.spriteNodePairs), 0)
+	if mapLen(&sc.spriteNodePairs) != 2 {
+		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
 	}
 
 	// if there's not "not in use" sprite in spriteContainer,
@@ -102,8 +102,8 @@ func TestAddAndRemoveSprite(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed add Sprite. err: %s", err.Error())
 	}
-	if mapLen(sc.spriteNodePairs) != 3 {
-		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(spriteContainer.spriteNodePairs), 0)
+	if mapLen(&sc.spriteNodePairs) != 3 {
+		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
 	}
 }
 
@@ -116,8 +116,8 @@ func TestAddSpriteDuplicate(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed add Sprite. err: %s", err.Error())
 	}
-	if mapLen(sc.spriteNodePairs) != 1 {
-		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(spriteContainer.spriteNodePairs), 0)
+	if mapLen(&sc.spriteNodePairs) != 1 {
+		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
 	}
 
 	// if specified sprite is already added, it will be ignored.
@@ -125,8 +125,8 @@ func TestAddSpriteDuplicate(t *testing.T) {
 	if err == nil {
 		t.Fatalf("unexpected behaviour. AddSprite should return error for duplicated adding")
 	}
-	if mapLen(sc.spriteNodePairs) != 1 {
-		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(spriteContainer.spriteNodePairs), 0)
+	if mapLen(&sc.spriteNodePairs) != 1 {
+		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
 	}
 }
 
@@ -139,19 +139,19 @@ func TestRemoveSpriteDuplicate(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed add Sprite. err: %s", err.Error())
 	}
-	if mapLen(sc.spriteNodePairs) != 1 {
-		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(spriteContainer.spriteNodePairs), 0)
+	if mapLen(&sc.spriteNodePairs) != 1 {
+		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
 	}
 
 	sc.RemoveSprite(s1)
-	if mapLen(sc.spriteNodePairs) != 1 {
-		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(spriteContainer.spriteNodePairs), 0)
+	if mapLen(&sc.spriteNodePairs) != 1 {
+		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
 	}
 
 	// if specified sprite is already removed, it will be ignored.
 	sc.RemoveSprite(s1)
-	if mapLen(sc.spriteNodePairs) != 1 {
-		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(spriteContainer.spriteNodePairs), 0)
+	if mapLen(&sc.spriteNodePairs) != 1 {
+		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
 	}
 }
 
@@ -165,12 +165,12 @@ func TestRemoveSprites(t *testing.T) {
 			t.Fatalf(err.Error())
 		}
 	}
-	if mapLen(sc.spriteNodePairs) != 10 {
+	if mapLen(&sc.spriteNodePairs) != 10 {
 		t.Fatalf("unexpected map length")
 	}
 
 	sc.RemoveSprites()
-	if mapLen(sc.spriteNodePairs) != 0 {
+	if mapLen(&sc.spriteNodePairs) != 0 {
 		t.Fatalf("unexpected map length")
 	}
 }
