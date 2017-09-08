@@ -2,14 +2,6 @@ package peer
 
 // Spriter represents interface of Sprite
 type Spriter interface {
-	// GetWidth returns width of sprite
-	GetWidth() int
-	// GetHeight returns height of sprite
-	GetHeight() int
-	// GetX returns x position of sprite
-	GetX() int
-	// GetY returns y position of sprite
-	GetY() int
 	// AddTouchListener registers a listener to notify touch event.
 	AddTouchListener(listener TouchListener)
 	// RemoveAllTouchListener removes all registered listeners from sprite.
@@ -36,26 +28,6 @@ type Sprite struct {
 	R float32
 	// touchListeners is listeners to notify touch event
 	touchListeners []*TouchListener
-}
-
-// GetWidth returns width of sprite
-func (sprite *Sprite) GetWidth() int {
-	return sprite.W
-}
-
-// GetHeight returns height of sprite
-func (sprite *Sprite) GetHeight() int {
-	return sprite.H
-}
-
-// GetX returns x position of sprite
-func (sprite *Sprite) GetX() int {
-	return sprite.X
-}
-
-// GetY returns y position of sprite
-func (sprite *Sprite) GetY() int {
-	return sprite.Y
 }
 
 // AddTouchListener registers a listener to notify touch event.
