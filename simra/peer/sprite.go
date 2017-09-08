@@ -3,13 +3,13 @@ package peer
 // Spriter represents interface of Sprite
 type Spriter interface {
 	// GetWidth returns width of sprite
-	GetWidth() float32
+	GetWidth() int
 	// GetHeight returns height of sprite
-	GetHeight() float32
+	GetHeight() int
 	// GetX returns x position of sprite
-	GetX() float32
+	GetX() int
 	// GetY returns y position of sprite
-	GetY() float32
+	GetY() int
 	// AddTouchListener registers a listener to notify touch event.
 	AddTouchListener(listener TouchListener)
 	// RemoveAllTouchListener removes all registered listeners from sprite.
@@ -25,13 +25,13 @@ func NewSprite() Spriter {
 // Deprecated. this will be unexposed.
 type Sprite struct {
 	// W = width of sprite
-	W float32
+	W int
 	// H = height of sprite
-	H float32
+	H int
 	// X = x position of sprite
-	X float32
+	X int
 	// Y = y position of sprite
-	Y float32
+	Y int
 	// R = radius of sprite (use for rotation)
 	R float32
 	// touchListeners is listeners to notify touch event
@@ -39,22 +39,22 @@ type Sprite struct {
 }
 
 // GetWidth returns width of sprite
-func (sprite *Sprite) GetWidth() float32 {
+func (sprite *Sprite) GetWidth() int {
 	return sprite.W
 }
 
 // GetHeight returns height of sprite
-func (sprite *Sprite) GetHeight() float32 {
+func (sprite *Sprite) GetHeight() int {
 	return sprite.H
 }
 
 // GetX returns x position of sprite
-func (sprite *Sprite) GetX() float32 {
+func (sprite *Sprite) GetX() int {
 	return sprite.X
 }
 
 // GetY returns y position of sprite
-func (sprite *Sprite) GetY() float32 {
+func (sprite *Sprite) GetY() int {
 	return sprite.Y
 }
 

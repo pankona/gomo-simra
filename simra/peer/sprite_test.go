@@ -11,16 +11,16 @@ func TestGetters(t *testing.T) {
 		R: 50,
 	}
 	if s.GetWidth() != 10 {
-		t.Error("unexpected result. [got] %d [want] %d", s.GetWidth(), 10)
+		t.Errorf("unexpected result. [got] %d [want] %d", s.GetWidth(), 10)
 	}
 	if s.GetHeight() != 20 {
-		t.Error("unexpected result. [got] %d [want] %d", s.GetHeight(), 10)
+		t.Errorf("unexpected result. [got] %d [want] %d", s.GetHeight(), 10)
 	}
 	if s.GetX() != 30 {
-		t.Error("unexpected result. [got] %d [want] %d", s.GetX(), 10)
+		t.Errorf("unexpected result. [got] %d [want] %d", s.GetX(), 10)
 	}
 	if s.GetY() != 40 {
-		t.Error("unexpected result. [got] %d [want] %d", s.GetY(), 10)
+		t.Errorf("unexpected result. [got] %d [want] %d", s.GetY(), 10)
 	}
 }
 

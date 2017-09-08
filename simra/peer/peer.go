@@ -296,20 +296,20 @@ func (glpeer *GLPeer) apply() {
 			{0, 1, 0},
 		}
 		affine.Translate(affine,
-			s.X*screensize.scale-s.W/2*screensize.scale+screensize.marginWidth/2,
-			(screensize.height-s.Y)*screensize.scale-s.H/2*screensize.scale+screensize.marginHeight/2)
+			(float32)(s.X)*screensize.scale-(float32)(s.W)/2*screensize.scale+screensize.marginWidth/2,
+			(screensize.height-(float32)(s.Y))*screensize.scale-(float32)(s.H)/2*screensize.scale+screensize.marginHeight/2)
 		if s.R != 0 {
 			affine.Translate(affine,
-				0.5*s.W*screensize.scale,
-				0.5*s.H*screensize.scale)
+				0.5*(float32)(s.W)*screensize.scale,
+				0.5*(float32)(s.H)*screensize.scale)
 			affine.Rotate(affine, s.R)
 			affine.Translate(affine,
-				-0.5*s.W*screensize.scale,
-				-0.5*s.H*screensize.scale)
+				-0.5*(float32)(s.W)*screensize.scale,
+				-0.5*(float32)(s.H)*screensize.scale)
 		}
 		affine.Scale(affine,
-			s.W*screensize.scale,
-			s.H*screensize.scale)
+			(float32)(s.W)*screensize.scale,
+			(float32)(s.H)*screensize.scale)
 		glpeer.eng.SetTransform(sn.node, *affine)
 		return true
 	})
