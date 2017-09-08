@@ -74,14 +74,15 @@ func (sc *SpriteContainer) Initialize() {
 // AddSprite adds a sprite to SpriteContainer.
 func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCallback func()) error {
 	LogDebug("IN")
-	i, _ := sc.spriteNodePairs.Load(s)
-	sn, ok := i.(*spriteNodePair)
-	if ok && sn.inuse {
-		return fmt.Errorf("this sprite is already added and currently still being available")
-	}
-
-	if sn == nil {
+	var sn *spriteNodePair
+	i, ok := sc.spriteNodePairs.Load(s)
+	if !ok {
 		sn = &spriteNodePair{}
+	} else {
+		sn = i.(*spriteNodePair)
+		if sn.inuse {
+			return fmt.Errorf("this sprite is already added and currently still being available")
+		}
 	}
 
 	sn.sprite = s
@@ -134,8 +135,7 @@ func (sc *SpriteContainer) RemoveSprites() {
 func (sc *SpriteContainer) ReplaceTexture(sprite *Sprite, texture *Texture) {
 	LogDebug("IN")
 	if i, ok := sc.spriteNodePairs.Load(sprite); ok {
-		sn := i.(*spriteNodePair)
-		node := sn.node
+		node := i.(*spriteNodePair).node
 		sc.gler.SetSubTex(node, &texture.subTex)
 	}
 	LogDebug("OUT")
@@ -163,8 +163,8 @@ func (sc *SpriteContainer) OnTouchBegin(x, y float32) {
 		s := v.(*spriteNodePair).sprite
 		listeners := s.touchListeners
 		if isContained(s, x, y) {
-			for j := range listeners {
-				listener := listeners[j]
+			for i := range listeners {
+				listener := listeners[i]
 				if listener == nil {
 					fmt.Println("listener is nil!")
 					continue
