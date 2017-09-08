@@ -57,7 +57,6 @@ func (ss *screenSize) SetDesiredScreenSize(w, h float32) {
 func (ss *screenSize) calcScale() {
 	h := ss.height
 	w := ss.width
-
 	if h/float32(ss.sz.HeightPt) > w/float32(ss.sz.WidthPt) {
 		ss.scale = float32(ss.sz.HeightPt) / h
 		ss.fitTo = fitHeight
