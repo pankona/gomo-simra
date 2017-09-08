@@ -143,3 +143,17 @@ func TestRemoveSpriteDuplicate(t *testing.T) {
 		t.Errorf("unexpected result. [got] %d [want] %d", len(spriteContainer.spriteNodePairs), 0)
 	}
 }
+
+func BenchmarkAddSprite(b *testing.B) {
+	sc := &SpriteContainer{}
+	sc.gler = &mockGLer{}
+	//s := &Sprite{}
+	for i := 0; i < b.N; i++ {
+		//err := sc.AddSprite(s, nil, nil)
+		err := sc.AddSprite(&Sprite{}, nil, nil)
+		if err != nil {
+			b.Fatalf(err.Error())
+		}
+		//sc.RemoveSprite(s)
+	}
+}
