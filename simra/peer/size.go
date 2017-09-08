@@ -15,10 +15,8 @@ type ScreenSizer interface {
 }
 
 const (
-	// FitHeight indicates screen should fit to height length
-	FitHeight = iota
-	// FitWidth indicates screen should fit to width length
-	FitWidth
+	fitHeight = iota
+	fitWidth
 )
 
 type screenSize struct {
@@ -62,12 +60,12 @@ func (ss *screenSize) calcScale() {
 
 	if h/float32(ss.sz.HeightPt) > w/float32(ss.sz.WidthPt) {
 		ss.scale = float32(ss.sz.HeightPt) / h
-		ss.fitTo = FitHeight
+		ss.fitTo = fitHeight
 		ss.marginWidth = float32(ss.sz.WidthPt) - w*ss.scale
 		ss.marginHeight = 0
 	} else {
 		ss.scale = float32(ss.sz.WidthPt) / w
-		ss.fitTo = FitWidth
+		ss.fitTo = fitWidth
 		ss.marginWidth = 0
 		ss.marginHeight = float32(ss.sz.HeightPt) - h*ss.scale
 	}
