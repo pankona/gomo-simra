@@ -18,11 +18,8 @@ type Spriter interface {
 
 // NewSprite returns an instance of Spriter
 func NewSprite() Spriter {
-	return &privateSprite{}
+	return &Sprite{}
 }
-
-// TODO: remove after replacing &Sprite{} with NewSprite()
-type privateSprite = Sprite
 
 // Sprite represents a sprite.
 // Deprecated. this will be unexposed.
