@@ -1,6 +1,5 @@
 
 all:
-	@make --no-print-directory test
 	@make --no-print-directory cover
 	@make --no-print-directory metalinter
 
