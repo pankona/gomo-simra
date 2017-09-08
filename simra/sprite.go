@@ -160,35 +160,35 @@ func (sprite *sprite) ProgressAnimation() {
 }
 
 func (sprite *sprite) SetPosition(x, y int) {
-	sprite.X, sprite.Y = (float32)(x), (float32)(y)
+	sprite.X, sprite.Y = x, y
 }
 
 func (sprite *sprite) SetPositionX(x int) {
-	sprite.X = (float32)(x)
+	sprite.X = x
 }
 
 func (sprite *sprite) SetPositionY(y int) {
-	sprite.Y = (float32)(y)
+	sprite.Y = y
 }
 
 func (sprite *sprite) SetScale(w, h int) {
-	sprite.W, sprite.H = (float32)(w), (float32)(h)
+	sprite.W, sprite.H = w, h
 }
 
 func (sprite *sprite) SetScaleW(w int) {
-	sprite.W = (float32)(w)
+	sprite.W = w
 }
 
 func (sprite *sprite) SetScaleH(h int) {
-	sprite.H = (float32)(h)
+	sprite.H = h
 }
 
 func (sprite *sprite) GetPosition() Position {
-	return Position{(int)(sprite.X), (int)(sprite.Y)}
+	return Position{sprite.X, sprite.Y}
 }
 
 func (sprite *sprite) GetScale() Scale {
-	return Scale{(int)(sprite.W), (int)(sprite.H)}
+	return Scale{sprite.W, sprite.H}
 }
 
 func (sprite *sprite) SetRotate(r float32) {
