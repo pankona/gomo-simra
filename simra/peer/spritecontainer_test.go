@@ -3,6 +3,7 @@ package peer
 import (
 	"sync"
 	"testing"
+	"time"
 
 	"golang.org/x/mobile/exp/sprite"
 )
@@ -185,6 +186,62 @@ func TestReplaceTexture(t *testing.T) {
 	}
 	tex := &Texture{}
 	sc.ReplaceTexture(s, tex)
+}
+
+type listener struct {
+	touchBegin func(x, y float32)
+	touchMove  func(x, y float32)
+	touchEnd   func(x, y float32)
+}
+
+func (l *listener) OnTouchBegin(x, y float32) {
+	l.touchBegin(x, y)
+}
+func (l *listener) OnTouchMove(x, y float32) {
+	l.touchMove(x, y)
+}
+func (l *listener) OnTouchEnd(x, y float32) {
+	l.touchEnd(x, y)
+}
+
+func TestTouchEvent(t *testing.T) {
+	sc := &SpriteContainer{}
+	sc.gler = &mockGLer{}
+
+	s := &Sprite{}
+	err := sc.AddSprite(s, nil, nil)
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+	var wg sync.WaitGroup
+	s.AddTouchListener(&listener{
+		touchBegin: func(x, y float32) {
+			wg.Done()
+		},
+		touchMove: func(x, y float32) {
+			wg.Done()
+		},
+		touchEnd: func(x, y float32) {
+			wg.Done()
+		},
+	})
+	wg.Add(3)
+	sc.OnTouchBegin(0, 0)
+	sc.OnTouchMove(0, 0)
+	sc.OnTouchEnd(0, 0)
+
+	waitChan := make(chan struct{})
+	go func() {
+		wg.Wait()
+		waitChan <- struct{}{}
+	}()
+
+	select {
+	case <-waitChan:
+		// success. nop.
+	case <-time.After(3 * time.Second):
+		t.Error("touch event didn't fired as expected")
+	}
 }
 
 func BenchmarkAddSprite(b *testing.B) {
