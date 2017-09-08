@@ -167,18 +167,13 @@ func (sc *SpriteContainer) emitTouchEvent(x, y float32, e event) {
 		listeners := s.touchListeners
 		if isContained(s, x, y) {
 			for i := range listeners {
-				listener := listeners[i]
-				if listener == nil {
-					fmt.Println("listener is nil!")
-					continue
-				}
 				switch e {
 				case touchBegin:
-					(*listener).OnTouchBegin(x, y)
+					(*listeners[i]).OnTouchBegin(x, y)
 				case touchMove:
-					(*listener).OnTouchMove(x, y)
+					(*listeners[i]).OnTouchMove(x, y)
 				case touchEnd:
-					(*listener).OnTouchEnd(x, y)
+					(*listeners[i]).OnTouchEnd(x, y)
 				default:
 					panic("unknown touch event!")
 				}
@@ -187,32 +182,25 @@ func (sc *SpriteContainer) emitTouchEvent(x, y float32, e event) {
 		return true
 	})
 	LogDebug("OUT")
-
 }
 
 // OnTouchBegin is called when screen is started to touch.
 // This function calls listener's OnTouchBegin if the touched position is
 // contained by sprite's rectangle.
 func (sc *SpriteContainer) OnTouchBegin(x, y float32) {
-	LogDebug("IN")
 	sc.emitTouchEvent(x, y, touchBegin)
-	LogDebug("OUT")
 }
 
 // OnTouchMove is called when touch is moved (dragged).
 // This function calls listener's OnTouchMove if the touched position is
 // contained by sprite's rectangle.
 func (sc *SpriteContainer) OnTouchMove(x, y float32) {
-	LogDebug("IN")
 	sc.emitTouchEvent(x, y, touchMove)
-	LogDebug("OUT")
 }
 
 // OnTouchEnd is called when touch is ended (released).
 // This function calls listener's OnTouchEnd if the touched position is
 // contained by sprite's rectangle.
 func (sc *SpriteContainer) OnTouchEnd(x, y float32) {
-	LogDebug("IN")
 	sc.emitTouchEvent(x, y, touchEnd)
-	LogDebug("OUT")
 }
