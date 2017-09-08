@@ -46,8 +46,6 @@ type spriteNodePair struct {
 
 // SpriteContainer represents array of SpriteNodePair.
 type SpriteContainer struct {
-	// TODO: should use map[Sprite]*SpriteNodePair
-	//map[*Sprite]*spriteNodePair
 	spriteNodePairs sync.Map
 	gler            GLer
 }
