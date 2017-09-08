@@ -2,6 +2,7 @@ package peer
 
 import (
 	"fmt"
+	"sync"
 
 	"golang.org/x/mobile/exp/sprite"
 	"golang.org/x/mobile/exp/sprite/clock"
@@ -46,7 +47,8 @@ type spriteNodePair struct {
 // SpriteContainer represents array of SpriteNodePair.
 type SpriteContainer struct {
 	// TODO: should use map[Sprite]*SpriteNodePair
-	spriteNodePairs []*spriteNodePair
+	//map[*Sprite]*spriteNodePair
+	spriteNodePairs sync.Map
 	gler            GLer
 }
 
@@ -72,17 +74,10 @@ func (sc *SpriteContainer) Initialize() {
 // AddSprite adds a sprite to SpriteContainer.
 func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCallback func()) error {
 	LogDebug("IN")
-	for _, snpair := range sc.spriteNodePairs {
-		if s == snpair.sprite && snpair.inuse {
-			return fmt.Errorf("this sprite is already added and currently still being available")
-		}
-	}
-
-	var sn *spriteNodePair
-	for _, snpair := range sc.spriteNodePairs {
-		if !snpair.inuse {
-			sn = snpair
-		}
+	i, _ := sc.spriteNodePairs.Load(s)
+	sn, ok := i.(*spriteNodePair)
+	if ok && sn.inuse {
+		return fmt.Errorf("this sprite is already added and currently still being available")
 	}
 
 	if sn == nil {
@@ -96,7 +91,7 @@ func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCa
 				arrangeCallback()
 			}
 		})
-		sc.spriteNodePairs = append(sc.spriteNodePairs, sn)
+		sc.spriteNodePairs.Store(s, sn)
 	} else {
 		sc.gler.AppendChild(sn.node)
 	}
@@ -114,34 +109,34 @@ func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCa
 // The sprite marked as "not in use" will be reused at AddSprite.
 func (sc *SpriteContainer) RemoveSprite(remove *Sprite) {
 	LogDebug("IN")
-	for _, sn := range sc.spriteNodePairs {
-		if sn.sprite == remove {
-			if !sn.inuse {
-				LogDebug("already removed.")
-				return
-			}
-			sn.inuse = false
-			sc.gler.RemoveChild(sn.node)
-		}
+	i, ok := sc.spriteNodePairs.Load(remove)
+	if !ok {
+		return
 	}
+	sn := i.(*spriteNodePair)
+	if !sn.inuse {
+		LogDebug("already removed.")
+		return
+	}
+	sn.inuse = false
+	sc.gler.RemoveChild(sn.node)
 	LogDebug("OUT")
 }
 
 // RemoveSprites removes all registered sprites from SpriteContainer.
 func (sc *SpriteContainer) RemoveSprites() {
 	LogDebug("IN")
-	sc.spriteNodePairs = nil
+	sc.spriteNodePairs = sync.Map{}
 	LogDebug("OUT")
 }
 
 // ReplaceTexture replaces sprite's texture to specified one.
 func (sc *SpriteContainer) ReplaceTexture(sprite *Sprite, texture *Texture) {
 	LogDebug("IN")
-	for i := range sc.spriteNodePairs {
-		if sc.spriteNodePairs[i].sprite == sprite {
-			node := sc.spriteNodePairs[i].node
-			sc.gler.SetSubTex(node, &texture.subTex)
-		}
+	if i, ok := sc.spriteNodePairs.Load(sprite); ok {
+		sn := i.(*spriteNodePair)
+		node := sn.node
+		sc.gler.SetSubTex(node, &texture.subTex)
 	}
 	LogDebug("OUT")
 }
@@ -164,20 +159,21 @@ func isContained(sprite *Sprite, x, y float32) bool {
 // contained by sprite's rectangle.
 func (sc *SpriteContainer) OnTouchBegin(x, y float32) {
 	LogDebug("IN")
-	for i := range sc.spriteNodePairs {
-		listeners := sc.spriteNodePairs[i].sprite.touchListeners
-		if isContained(sc.spriteNodePairs[i].sprite, x, y) {
+	sc.spriteNodePairs.Range(func(k, v interface{}) bool {
+		s := v.(*spriteNodePair).sprite
+		listeners := s.touchListeners
+		if isContained(s, x, y) {
 			for j := range listeners {
 				listener := listeners[j]
 				if listener == nil {
 					fmt.Println("listener is nil!")
 					continue
 				}
-
 				(*listener).OnTouchBegin(x, y)
 			}
 		}
-	}
+		return true
+	})
 	LogDebug("OUT")
 }
 
@@ -186,20 +182,21 @@ func (sc *SpriteContainer) OnTouchBegin(x, y float32) {
 // contained by sprite's rectangle.
 func (sc *SpriteContainer) OnTouchMove(x, y float32) {
 	LogDebug("IN")
-	for i := range sc.spriteNodePairs {
-		listeners := sc.spriteNodePairs[i].sprite.touchListeners
-		if isContained(sc.spriteNodePairs[i].sprite, x, y) {
+	sc.spriteNodePairs.Range(func(k, v interface{}) bool {
+		s := v.(*spriteNodePair).sprite
+		listeners := s.touchListeners
+		if isContained(s, x, y) {
 			for j := range listeners {
 				listener := listeners[j]
 				if listener == nil {
 					fmt.Println("listener is nil!")
 					continue
 				}
-
 				(*listener).OnTouchMove(x, y)
 			}
 		}
-	}
+		return true
+	})
 	LogDebug("OUT")
 }
 
@@ -208,19 +205,20 @@ func (sc *SpriteContainer) OnTouchMove(x, y float32) {
 // contained by sprite's rectangle.
 func (sc *SpriteContainer) OnTouchEnd(x, y float32) {
 	LogDebug("IN")
-	for i := range sc.spriteNodePairs {
-		listeners := sc.spriteNodePairs[i].sprite.touchListeners
-		if isContained(sc.spriteNodePairs[i].sprite, x, y) {
+	sc.spriteNodePairs.Range(func(k, v interface{}) bool {
+		s := v.(*spriteNodePair).sprite
+		listeners := s.touchListeners
+		if isContained(s, x, y) {
 			for j := range listeners {
 				listener := listeners[j]
 				if listener == nil {
 					fmt.Println("listener is nil!")
 					continue
 				}
-
 				(*listener).OnTouchEnd(x, y)
 			}
 		}
-	}
+		return true
+	})
 	LogDebug("OUT")
 }

@@ -284,33 +284,35 @@ func (glpeer *GLPeer) apply() {
 
 	snpairs := spriteContainer.spriteNodePairs
 
-	for i := range snpairs {
-		sc := snpairs[i]
-		if sc.sprite == nil || !sc.inuse {
-			continue
+	snpairs.Range(func(k, v interface{}) bool {
+		sn := v.(*spriteNodePair)
+		if sn.sprite == nil || !sn.inuse {
+			return true
 		}
+		s := sn.sprite
 
 		affine := &f32.Affine{
 			{1, 0, 0},
 			{0, 1, 0},
 		}
 		affine.Translate(affine,
-			sc.sprite.X*screensize.scale-sc.sprite.W/2*screensize.scale+screensize.marginWidth/2,
-			(screensize.height-sc.sprite.Y)*screensize.scale-sc.sprite.H/2*screensize.scale+screensize.marginHeight/2)
-		if sc.sprite.R != 0 {
+			s.X*screensize.scale-s.W/2*screensize.scale+screensize.marginWidth/2,
+			(screensize.height-s.Y)*screensize.scale-s.H/2*screensize.scale+screensize.marginHeight/2)
+		if s.R != 0 {
 			affine.Translate(affine,
-				0.5*sc.sprite.W*screensize.scale,
-				0.5*sc.sprite.H*screensize.scale)
-			affine.Rotate(affine, sc.sprite.R)
+				0.5*s.W*screensize.scale,
+				0.5*s.H*screensize.scale)
+			affine.Rotate(affine, s.R)
 			affine.Translate(affine,
-				-0.5*sc.sprite.W*screensize.scale,
-				-0.5*sc.sprite.H*screensize.scale)
+				-0.5*s.W*screensize.scale,
+				-0.5*s.H*screensize.scale)
 		}
 		affine.Scale(affine,
-			sc.sprite.W*screensize.scale,
-			sc.sprite.H*screensize.scale)
-		glpeer.eng.SetTransform(sc.node, *affine)
-	}
+			s.W*screensize.scale,
+			s.H*screensize.scale)
+		glpeer.eng.SetTransform(sn.node, *affine)
+		return true
+	})
 }
 
 // Texture represents a texture object that contains subTex
