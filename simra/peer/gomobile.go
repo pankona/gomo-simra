@@ -56,57 +56,74 @@ func (gomo *Gomo) Initialize(onStart, onStop func(), updateCallback func()) {
 	LogDebug("OUT")
 }
 
+func handleLifeCycle(a app.App, e lifecycle.Event) {
+	switch e.Crosses(lifecycle.StageVisible) {
+	case lifecycle.CrossOn:
+
+		// initialize gl peer
+		glctx, _ := e.DrawContext.(gl.Context)
+		glPeer.Initialize(glctx)
+
+		// time to set first scene
+		gomo.onStart()
+		a.Send(paint.Event{})
+	case lifecycle.CrossOff:
+
+		// time to stop application
+		gomo.onStop()
+
+		// finalize gl peer
+		glPeer.Finalize()
+	}
+
+}
+
+func handleSize(a app.App, e size.Event) {
+	screensize.setScreenSize(e)
+}
+
+func handlePaint(a app.App, e paint.Event) {
+	if e.External {
+		return
+	}
+	// update notify for simra
+	gomo.updateCallback()
+	// update notify for gl peer
+	glPeer.Update(a.Publish)
+	a.Send(paint.Event{})
+}
+
+func handleTouch(a app.App, e touch.Event) {
+	switch e.Type {
+	case touch.TypeBegin:
+		touchPeer.OnTouchBegin(e.X, e.Y)
+	case touch.TypeMove:
+		touchPeer.OnTouchMove(e.X, e.Y)
+	case touch.TypeEnd:
+		touchPeer.OnTouchEnd(e.X, e.Y)
+	}
+}
+
+func handleEvent(a app.App, e interface{}) {
+	switch e := a.Filter(e).(type) {
+	case lifecycle.Event:
+		handleLifeCycle(a, e)
+	case size.Event:
+		handleSize(a, e)
+	case paint.Event:
+		handlePaint(a, e)
+	case touch.Event:
+		handleTouch(a, e)
+	}
+}
+
 // Start starts gomobile's main loop.
 // Most of events handled by peer is fired by this function.
 func (gomo *Gomo) Start() {
 	LogDebug("IN")
 	app.Main(func(a app.App) {
 		for e := range a.Events() {
-
-			switch e := a.Filter(e).(type) {
-			case lifecycle.Event:
-				switch e.Crosses(lifecycle.StageVisible) {
-				case lifecycle.CrossOn:
-
-					// initialize gl peer
-					glctx, _ := e.DrawContext.(gl.Context)
-					glPeer.Initialize(glctx)
-
-					// time to set first scene
-					gomo.onStart()
-					a.Send(paint.Event{})
-				case lifecycle.CrossOff:
-
-					// time to stop application
-					gomo.onStop()
-
-					// finalize gl peer
-					glPeer.Finalize()
-				}
-			case size.Event:
-				screensize.setScreenSize(e)
-			case paint.Event:
-				if e.External {
-					continue
-				}
-
-				// update notify for simra
-				gomo.updateCallback()
-
-				// update notify for gl peer
-				glPeer.Update(a.Publish)
-
-				a.Send(paint.Event{})
-			case touch.Event:
-				switch e.Type {
-				case touch.TypeBegin:
-					touchPeer.OnTouchBegin(e.X, e.Y)
-				case touch.TypeMove:
-					touchPeer.OnTouchMove(e.X, e.Y)
-				case touch.TypeEnd:
-					touchPeer.OnTouchEnd(e.X, e.Y)
-				}
-			}
+			handleEvent(a, e)
 		}
 	})
 	LogDebug("OUT")
