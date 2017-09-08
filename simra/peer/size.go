@@ -4,6 +4,10 @@ import "golang.org/x/mobile/event/size"
 
 // ScreenSizer represents interface for configurating screen size
 type ScreenSizer interface {
+	// SetScreenSize sets device's actual screen size.
+	// currently this function is called only from gomobile.go,
+	// at updating window size, or orientating of screen.
+	SetScreenSize(s size.Event)
 	// SetDesiredScreenSize sets virtual screen size.
 	// Any positive value can be specified to arguments.
 	// like, w=1920, h=1080
@@ -27,19 +31,14 @@ type screenSize struct {
 	sz           size.Event
 }
 
-var (
-	screensize = &screenSize{}
-)
+var screensize = &screenSize{}
 
 // GetScreenSizePeer returns an instance of ScreenSizer
 func GetScreenSizePeer() ScreenSizer {
-	if screensize == nil {
-		screensize = &screenSize{}
-	}
 	return screensize
 }
 
-func (ss *screenSize) setScreenSize(s size.Event) {
+func (ss *screenSize) SetScreenSize(s size.Event) {
 	LogDebug("IN")
 	ss.sz = s
 	ss.calcScale()
@@ -72,5 +71,4 @@ func (ss *screenSize) calcScale() {
 		ss.marginWidth = 0
 		ss.marginHeight = float32(ss.sz.HeightPt) - h*ss.scale
 	}
-	LogDebug("scale = %f", ss.scale)
 }

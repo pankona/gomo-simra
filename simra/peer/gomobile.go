@@ -79,7 +79,7 @@ func handleLifeCycle(a app.App, e lifecycle.Event) {
 }
 
 func handleSize(a app.App, e size.Event) {
-	screensize.setScreenSize(e)
+	screensize.SetScreenSize(e)
 }
 
 func handlePaint(a app.App, e paint.Event) {
