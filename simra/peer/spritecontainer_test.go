@@ -154,6 +154,26 @@ func TestRemoveSpriteDuplicate(t *testing.T) {
 	}
 }
 
+func TestRemoveSprites(t *testing.T) {
+	sc := &SpriteContainer{}
+	sc.gler = &mockGLer{}
+
+	for i := 0; i < 10; i++ {
+		err := sc.AddSprite(&Sprite{}, nil, nil)
+		if err != nil {
+			t.Fatalf(err.Error())
+		}
+	}
+	if mapLen(sc.spriteNodePairs) != 10 {
+		t.Fatalf("unexpected map length")
+	}
+
+	sc.RemoveSprites()
+	if mapLen(sc.spriteNodePairs) != 0 {
+		t.Fatalf("unexpected map length")
+	}
+}
+
 func BenchmarkAddSprite(b *testing.B) {
 	sc := &SpriteContainer{}
 	sc.gler = &mockGLer{}
