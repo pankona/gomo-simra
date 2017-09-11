@@ -44,9 +44,9 @@ func GetTouchPeer() Toucher {
 }
 
 // AddTouchListener registeres a listener to notify touch event.
-func (touchpeer *TouchPeer) AddTouchListener(listener TouchListener) {
+func (tp *TouchPeer) AddTouchListener(listener TouchListener) {
 	LogDebug("IN")
-	touchpeer.touchListeners = append(touchpeer.touchListeners, listener)
+	tp.touchListeners = append(tp.touchListeners, listener)
 	LogDebug("OUT")
 }
 
@@ -61,63 +61,63 @@ func remove(listeners []TouchListener, remove TouchListener) []TouchListener {
 }
 
 // RemoveTouchListener removes specified listener.
-func (touchpeer *TouchPeer) RemoveTouchListener(listener TouchListener) {
+func (tp *TouchPeer) RemoveTouchListener(listener TouchListener) {
 	LogDebug("IN")
-	touchpeer.touchListeners = remove(touchpeer.touchListeners, listener)
+	tp.touchListeners = remove(tp.touchListeners, listener)
 	LogDebug("OUT")
 }
 
 // RemoveAllTouchListeners removes all registered listeners.
-func (touchpeer *TouchPeer) RemoveAllTouchListeners() {
+func (tp *TouchPeer) RemoveAllTouchListeners() {
 	LogDebug("IN")
-	touchpeer.touchListeners = nil
+	tp.touchListeners = nil
 	LogDebug("OUT")
 }
 
-func (touchpeer *TouchPeer) calcTouchedPosition(pxx, pxy float32) (float32, float32) {
-	ptx := pxx / touchpeer.screensize.sz.PixelsPerPt
-	pty := pxy / touchpeer.screensize.sz.PixelsPerPt
+func (tp *TouchPeer) calcTouchedPosition(pxx, pxy float32) (float32, float32) {
+	ptx := pxx / tp.screensize.sz.PixelsPerPt
+	pty := pxy / tp.screensize.sz.PixelsPerPt
 
 	var scale float32
-	if touchpeer.screensize.fitTo == fitHeight {
-		scale = touchpeer.screensize.height / float32(touchpeer.screensize.sz.HeightPt)
+	if tp.screensize.fitTo == fitHeight {
+		scale = tp.screensize.height / float32(tp.screensize.sz.HeightPt)
 	} else {
-		scale = touchpeer.screensize.width / float32(touchpeer.screensize.sz.WidthPt)
+		scale = tp.screensize.width / float32(tp.screensize.sz.WidthPt)
 	}
 
-	return (ptx - touchpeer.screensize.marginWidth/2) * scale,
-		touchpeer.screensize.height - (pty-touchpeer.screensize.marginHeight/2)*scale
+	return (ptx - tp.screensize.marginWidth/2) * scale,
+		tp.screensize.height - (pty-tp.screensize.marginHeight/2)*scale
 }
 
 // OnTouchBegin is called when touch is started.
 // This event is notified to all registered listeners despite of the touched position.
-func (touchpeer *TouchPeer) OnTouchBegin(pxx, pxy float32) {
+func (tp *TouchPeer) OnTouchBegin(pxx, pxy float32) {
 	LogDebug("IN")
-	x, y := touchpeer.calcTouchedPosition(pxx, pxy)
-	for i := range touchpeer.touchListeners {
-		touchpeer.touchListeners[i].OnTouchBegin(x, y)
+	x, y := tp.calcTouchedPosition(pxx, pxy)
+	for i := range tp.touchListeners {
+		tp.touchListeners[i].OnTouchBegin(x, y)
 	}
 	LogDebug("OUT")
 }
 
 // OnTouchMove is called when touch is moved (dragged).
 // This event is notified to all registered listeners despite of the touched position.
-func (touchpeer *TouchPeer) OnTouchMove(pxx, pxy float32) {
+func (tp *TouchPeer) OnTouchMove(pxx, pxy float32) {
 	LogDebug("IN")
-	x, y := touchpeer.calcTouchedPosition(pxx, pxy)
-	for i := range touchpeer.touchListeners {
-		touchpeer.touchListeners[i].OnTouchMove(x, y)
+	x, y := tp.calcTouchedPosition(pxx, pxy)
+	for i := range tp.touchListeners {
+		tp.touchListeners[i].OnTouchMove(x, y)
 	}
 	LogDebug("OUT")
 }
 
 // OnTouchEnd is called when touch is ended (released).
 // This event is notified to all registered listeners despite of the touched position.
-func (touchpeer *TouchPeer) OnTouchEnd(pxx, pxy float32) {
+func (tp *TouchPeer) OnTouchEnd(pxx, pxy float32) {
 	LogDebug("IN")
-	x, y := touchpeer.calcTouchedPosition(pxx, pxy)
-	for i := range touchpeer.touchListeners {
-		touchpeer.touchListeners[i].OnTouchEnd(x, y)
+	x, y := tp.calcTouchedPosition(pxx, pxy)
+	for i := range tp.touchListeners {
+		tp.touchListeners[i].OnTouchEnd(x, y)
 	}
 	LogDebug("OUT")
 }
