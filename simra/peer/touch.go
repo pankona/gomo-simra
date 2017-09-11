@@ -1,9 +1,5 @@
 package peer
 
-import (
-	"fmt"
-)
-
 // Toucher reporesents an interface for touch controller
 type Toucher interface {
 	// AddTouchListener registeres a listener to notify touch event.
@@ -11,7 +7,7 @@ type Toucher interface {
 	// RemoveTouchListener removes specified listener.
 	RemoveTouchListener(listener TouchListener)
 	// RemoveAllTouchListener removes all registered listeners.
-	RemoveAllTouchListener()
+	RemoveAllTouchListeners()
 	// OnTouchBegin is called when touch is started.
 	// This event is notified to all registered listeners despite of the touched position.
 	OnTouchBegin(pxx, pxy float32)
@@ -26,10 +22,10 @@ type Toucher interface {
 // TouchPeer represents a Touch object.
 // Singleton.
 type TouchPeer struct {
-	touchListeners []*TouchListener
+	touchListeners []TouchListener
 }
 
-var touchPeer *TouchPeer
+var touchPeer = &TouchPeer{}
 
 // TouchListener is interface to be notifed touch event.
 type TouchListener interface {
@@ -42,24 +38,18 @@ type TouchListener interface {
 // Since TouchPeer is singleton, it is necessary to
 // call this function to get instance of TouchPeer.
 func GetTouchPeer() Toucher {
-	LogDebug("IN")
-	if touchPeer == nil {
-		touchPeer = &TouchPeer{}
-	}
-	LogDebug("OUT")
 	return touchPeer
 }
 
 // AddTouchListener registeres a listener to notify touch event.
 func (touchpeer *TouchPeer) AddTouchListener(listener TouchListener) {
 	LogDebug("IN")
-	touchpeer.touchListeners = append(touchpeer.touchListeners, &listener)
+	touchpeer.touchListeners = append(touchpeer.touchListeners, listener)
 	LogDebug("OUT")
 }
 
-func remove(listeners []*TouchListener, remove *TouchListener) []*TouchListener {
-	result := []*TouchListener{}
-
+func remove(listeners []TouchListener, remove TouchListener) []TouchListener {
+	result := []TouchListener{}
 	for _, listener := range listeners {
 		if listener != remove {
 			result = append(result, listener)
@@ -71,12 +61,12 @@ func remove(listeners []*TouchListener, remove *TouchListener) []*TouchListener 
 // RemoveTouchListener removes specified listener.
 func (touchpeer *TouchPeer) RemoveTouchListener(listener TouchListener) {
 	LogDebug("IN")
-	touchpeer.touchListeners = remove(touchpeer.touchListeners, &listener)
+	touchpeer.touchListeners = remove(touchpeer.touchListeners, listener)
 	LogDebug("OUT")
 }
 
-// RemoveAllTouchListener removes all registered listeners.
-func (touchpeer *TouchPeer) RemoveAllTouchListener() {
+// RemoveAllTouchListeners removes all registered listeners.
+func (touchpeer *TouchPeer) RemoveAllTouchListeners() {
 	LogDebug("IN")
 	touchpeer.touchListeners = nil
 	LogDebug("OUT")
@@ -101,16 +91,9 @@ func calcTouchedPosition(pxx, pxy float32) (float32, float32) {
 // This event is notified to all registered listeners despite of the touched position.
 func (touchpeer *TouchPeer) OnTouchBegin(pxx, pxy float32) {
 	LogDebug("IN")
-
 	x, y := calcTouchedPosition(pxx, pxy)
 	for i := range touchpeer.touchListeners {
-		listener := touchpeer.touchListeners[i]
-		if listener == nil {
-			fmt.Println("listener is nil!")
-			continue
-		}
-
-		(*listener).OnTouchBegin(x, y)
+		touchpeer.touchListeners[i].OnTouchBegin(x, y)
 	}
 	LogDebug("OUT")
 }
@@ -119,17 +102,9 @@ func (touchpeer *TouchPeer) OnTouchBegin(pxx, pxy float32) {
 // This event is notified to all registered listeners despite of the touched position.
 func (touchpeer *TouchPeer) OnTouchMove(pxx, pxy float32) {
 	LogDebug("IN")
-
 	x, y := calcTouchedPosition(pxx, pxy)
-
 	for i := range touchpeer.touchListeners {
-		listener := touchpeer.touchListeners[i]
-		if listener == nil {
-			fmt.Println("listener is nil!")
-			continue
-		}
-
-		(*listener).OnTouchMove(x, y)
+		touchpeer.touchListeners[i].OnTouchMove(x, y)
 	}
 	LogDebug("OUT")
 }
@@ -138,17 +113,9 @@ func (touchpeer *TouchPeer) OnTouchMove(pxx, pxy float32) {
 // This event is notified to all registered listeners despite of the touched position.
 func (touchpeer *TouchPeer) OnTouchEnd(pxx, pxy float32) {
 	LogDebug("IN")
-
 	x, y := calcTouchedPosition(pxx, pxy)
-
 	for i := range touchpeer.touchListeners {
-		listener := touchpeer.touchListeners[i]
-		if listener == nil {
-			fmt.Println("listener is nil!")
-			continue
-		}
-
-		(*listener).OnTouchEnd(x, y)
+		touchpeer.touchListeners[i].OnTouchEnd(x, y)
 	}
 	LogDebug("OUT")
 }
