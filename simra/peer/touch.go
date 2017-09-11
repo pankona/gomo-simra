@@ -22,6 +22,7 @@ type Toucher interface {
 // TouchPeer represents a Touch object.
 // Singleton.
 type TouchPeer struct {
+	screensize     *screenSize
 	touchListeners []TouchListener
 }
 
@@ -38,6 +39,7 @@ type TouchListener interface {
 // Since TouchPeer is singleton, it is necessary to
 // call this function to get instance of TouchPeer.
 func GetTouchPeer() Toucher {
+	touchPeer.screensize = screensize
 	return touchPeer
 }
 
@@ -72,26 +74,26 @@ func (touchpeer *TouchPeer) RemoveAllTouchListeners() {
 	LogDebug("OUT")
 }
 
-func calcTouchedPosition(pxx, pxy float32) (float32, float32) {
-	ptx := pxx / screensize.sz.PixelsPerPt
-	pty := pxy / screensize.sz.PixelsPerPt
+func (touchpeer *TouchPeer) calcTouchedPosition(pxx, pxy float32) (float32, float32) {
+	ptx := pxx / touchpeer.screensize.sz.PixelsPerPt
+	pty := pxy / touchpeer.screensize.sz.PixelsPerPt
 
 	var scale float32
-	if screensize.fitTo == fitHeight {
-		scale = screensize.height / float32(screensize.sz.HeightPt)
+	if touchpeer.screensize.fitTo == fitHeight {
+		scale = touchpeer.screensize.height / float32(touchpeer.screensize.sz.HeightPt)
 	} else {
-		scale = screensize.width / float32(screensize.sz.WidthPt)
+		scale = touchpeer.screensize.width / float32(touchpeer.screensize.sz.WidthPt)
 	}
 
-	return (ptx - screensize.marginWidth/2) * scale,
-		screensize.height - (pty-screensize.marginHeight/2)*scale
+	return (ptx - touchpeer.screensize.marginWidth/2) * scale,
+		touchpeer.screensize.height - (pty-touchpeer.screensize.marginHeight/2)*scale
 }
 
 // OnTouchBegin is called when touch is started.
 // This event is notified to all registered listeners despite of the touched position.
 func (touchpeer *TouchPeer) OnTouchBegin(pxx, pxy float32) {
 	LogDebug("IN")
-	x, y := calcTouchedPosition(pxx, pxy)
+	x, y := touchpeer.calcTouchedPosition(pxx, pxy)
 	for i := range touchpeer.touchListeners {
 		touchpeer.touchListeners[i].OnTouchBegin(x, y)
 	}
@@ -102,7 +104,7 @@ func (touchpeer *TouchPeer) OnTouchBegin(pxx, pxy float32) {
 // This event is notified to all registered listeners despite of the touched position.
 func (touchpeer *TouchPeer) OnTouchMove(pxx, pxy float32) {
 	LogDebug("IN")
-	x, y := calcTouchedPosition(pxx, pxy)
+	x, y := touchpeer.calcTouchedPosition(pxx, pxy)
 	for i := range touchpeer.touchListeners {
 		touchpeer.touchListeners[i].OnTouchMove(x, y)
 	}
@@ -113,7 +115,7 @@ func (touchpeer *TouchPeer) OnTouchMove(pxx, pxy float32) {
 // This event is notified to all registered listeners despite of the touched position.
 func (touchpeer *TouchPeer) OnTouchEnd(pxx, pxy float32) {
 	LogDebug("IN")
-	x, y := calcTouchedPosition(pxx, pxy)
+	x, y := touchpeer.calcTouchedPosition(pxx, pxy)
 	for i := range touchpeer.touchListeners {
 		touchpeer.touchListeners[i].OnTouchEnd(x, y)
 	}
