@@ -26,19 +26,21 @@ type Gomoer interface {
 // Gomo represents gomobile instance.
 // Singleton.
 type Gomo struct {
+	gl             GLer
+	screensize     ScreenSizer
+	touch          Toucher
 	onStart        func()
 	onStop         func()
 	updateCallback func()
-	screenSize     ScreenSizer
 }
 
-var gomo = &Gomo{}
-
 // GetGomo returns a Gomo instance.
-// Since Gomo is singleton, it is necessary to
-// call this function to get Gomo instance.
 func GetGomo() Gomoer {
-	return gomo
+	return &Gomo{
+		gl:         GetGLPeer(),
+		screensize: GetScreenSizePeer(),
+		touch:      GetTouchPeer(),
+	}
 }
 
 // Initialize initializes Gomo.
@@ -47,7 +49,7 @@ func (g *Gomo) Initialize(onStart, onStop func(), updateCallback func()) {
 	g.onStart = onStart
 	g.onStop = onStop
 	g.updateCallback = updateCallback
-	g.screenSize = screensize
+	g.screensize = screensize
 	LogDebug("OUT")
 }
 
@@ -56,24 +58,21 @@ func (g *Gomo) handleLifeCycle(a app.App, e lifecycle.Event) {
 	case lifecycle.CrossOn:
 		// initialize gl peer
 		glctx, _ := e.DrawContext.(gl.Context)
-		glPeer.Initialize(glctx)
-
+		g.gl.Initialize(glctx)
 		// time to set first scene
-		gomo.onStart()
+		g.onStart()
 		a.Send(paint.Event{})
-
 	case lifecycle.CrossOff:
 		// time to stop application
-		gomo.onStop()
-
+		g.onStop()
 		// finalize gl peer
-		glPeer.Finalize()
+		g.gl.Finalize()
 	}
 
 }
 
 func (g *Gomo) handleSize(a app.App, e size.Event) {
-	screensize.SetScreenSize(e)
+	g.screensize.SetScreenSize(e)
 }
 
 func (g *Gomo) handlePaint(a app.App, e paint.Event) {
@@ -83,18 +82,18 @@ func (g *Gomo) handlePaint(a app.App, e paint.Event) {
 	// update notify for simra
 	g.updateCallback()
 	// update notify for gl peer
-	glPeer.Update(a.Publish)
+	g.gl.Update(a.Publish)
 	a.Send(paint.Event{})
 }
 
 func (g *Gomo) handleTouch(a app.App, e touch.Event) {
 	switch e.Type {
 	case touch.TypeBegin:
-		touchPeer.OnTouchBegin(e.X, e.Y)
+		g.touch.OnTouchBegin(e.X, e.Y)
 	case touch.TypeMove:
-		touchPeer.OnTouchMove(e.X, e.Y)
+		g.touch.OnTouchMove(e.X, e.Y)
 	case touch.TypeEnd:
-		touchPeer.OnTouchEnd(e.X, e.Y)
+		g.touch.OnTouchEnd(e.X, e.Y)
 	}
 }
 
