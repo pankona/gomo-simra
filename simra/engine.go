@@ -76,10 +76,10 @@ func (simra *simra) onStopped() {
 // Start needs to call to enable all function belong to simra package.
 func (simra *simra) Start(onStart, onStop func()) {
 	peer.LogDebug("IN")
-	peer.GetGomo().Initialize(onStart, onStop, simra.onUpdate)
 	peer.GetSpriteContainer().Initialize()
-
-	peer.GetGomo().Start()
+	gomo := peer.GetGomo()
+	gomo.Initialize(onStart, onStop, simra.onUpdate)
+	gomo.Start()
 	peer.LogDebug("OUT")
 }
 
