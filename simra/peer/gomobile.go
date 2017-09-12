@@ -32,17 +32,12 @@ type Gomo struct {
 	screenSize     ScreenSizer
 }
 
-var gomo *Gomo
+var gomo = &Gomo{}
 
 // GetGomo returns a Gomo instance.
 // Since Gomo is singleton, it is necessary to
 // call this function to get Gomo instance.
 func GetGomo() Gomoer {
-	LogDebug("IN")
-	if gomo == nil {
-		gomo = &Gomo{}
-	}
-	LogDebug("OUT")
 	return gomo
 }
 
@@ -59,7 +54,6 @@ func (gomo *Gomo) Initialize(onStart, onStop func(), updateCallback func()) {
 func handleLifeCycle(a app.App, e lifecycle.Event) {
 	switch e.Crosses(lifecycle.StageVisible) {
 	case lifecycle.CrossOn:
-
 		// initialize gl peer
 		glctx, _ := e.DrawContext.(gl.Context)
 		glPeer.Initialize(glctx)
@@ -67,8 +61,8 @@ func handleLifeCycle(a app.App, e lifecycle.Event) {
 		// time to set first scene
 		gomo.onStart()
 		a.Send(paint.Event{})
-	case lifecycle.CrossOff:
 
+	case lifecycle.CrossOff:
 		// time to stop application
 		gomo.onStop()
 
