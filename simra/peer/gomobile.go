@@ -42,16 +42,16 @@ func GetGomo() Gomoer {
 }
 
 // Initialize initializes Gomo.
-func (gomo *Gomo) Initialize(onStart, onStop func(), updateCallback func()) {
+func (g *Gomo) Initialize(onStart, onStop func(), updateCallback func()) {
 	LogDebug("IN")
-	gomo.onStart = onStart
-	gomo.onStop = onStop
-	gomo.updateCallback = updateCallback
-	gomo.screenSize = screensize
+	g.onStart = onStart
+	g.onStop = onStop
+	g.updateCallback = updateCallback
+	g.screenSize = screensize
 	LogDebug("OUT")
 }
 
-func handleLifeCycle(a app.App, e lifecycle.Event) {
+func (g *Gomo) handleLifeCycle(a app.App, e lifecycle.Event) {
 	switch e.Crosses(lifecycle.StageVisible) {
 	case lifecycle.CrossOn:
 		// initialize gl peer
@@ -72,22 +72,22 @@ func handleLifeCycle(a app.App, e lifecycle.Event) {
 
 }
 
-func handleSize(a app.App, e size.Event) {
+func (g *Gomo) handleSize(a app.App, e size.Event) {
 	screensize.SetScreenSize(e)
 }
 
-func handlePaint(a app.App, e paint.Event) {
+func (g *Gomo) handlePaint(a app.App, e paint.Event) {
 	if e.External {
 		return
 	}
 	// update notify for simra
-	gomo.updateCallback()
+	g.updateCallback()
 	// update notify for gl peer
 	glPeer.Update(a.Publish)
 	a.Send(paint.Event{})
 }
 
-func handleTouch(a app.App, e touch.Event) {
+func (g *Gomo) handleTouch(a app.App, e touch.Event) {
 	switch e.Type {
 	case touch.TypeBegin:
 		touchPeer.OnTouchBegin(e.X, e.Y)
@@ -98,26 +98,26 @@ func handleTouch(a app.App, e touch.Event) {
 	}
 }
 
-func handleEvent(a app.App, e interface{}) {
+func (g *Gomo) handleEvent(a app.App, e interface{}) {
 	switch e := a.Filter(e).(type) {
 	case lifecycle.Event:
-		handleLifeCycle(a, e)
+		g.handleLifeCycle(a, e)
 	case size.Event:
-		handleSize(a, e)
+		g.handleSize(a, e)
 	case paint.Event:
-		handlePaint(a, e)
+		g.handlePaint(a, e)
 	case touch.Event:
-		handleTouch(a, e)
+		g.handleTouch(a, e)
 	}
 }
 
 // Start starts gomobile's main loop.
 // Most of events handled by peer is fired by this function.
-func (gomo *Gomo) Start() {
+func (g *Gomo) Start() {
 	LogDebug("IN")
 	app.Main(func(a app.App) {
 		for e := range a.Events() {
-			handleEvent(a, e)
+			g.handleEvent(a, e)
 		}
 	})
 	LogDebug("OUT")
