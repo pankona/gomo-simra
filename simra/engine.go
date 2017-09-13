@@ -77,7 +77,7 @@ func (simra *simra) onUpdate(i interface{}) {
 func (simra *simra) onStopped() {
 	peer.LogDebug("IN")
 	simra.driver = nil
-	peer.GetGLPeer().Finalize()
+	simra.gl.Finalize()
 	peer.LogDebug("OUT")
 }
 
@@ -96,7 +96,7 @@ func (simra *simra) onGomoStop(e lifecycle.Event) {
 // Start needs to call to enable all function belong to simra package.
 func (simra *simra) Start(onStart, onStop func()) {
 	peer.LogDebug("IN")
-	gl := peer.GetGLPeer()
+	gl := peer.NewGLPeer()
 	sc := peer.GetSpriteContainer()
 	sc.Initialize(gl)
 	simra.gl = gl

@@ -73,10 +73,8 @@ type GLPeer struct {
 	mu        sync.Mutex
 }
 
-// GetGLPeer returns a instance of GLPeer.
-// Since GLPeer is singleton, it is necessary to
-// call this function to get GLPeer instance.
-func GetGLPeer() GLer {
+// NewGLPeer returns a instance of GLPeer
+func NewGLPeer() GLer {
 	return &GLPeer{}
 }
 
