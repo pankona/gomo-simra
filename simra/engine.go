@@ -1,6 +1,7 @@
 package simra
 
 import (
+	"github.com/pankona/gomo-simra/simra/fps"
 	"github.com/pankona/gomo-simra/simra/peer"
 )
 
@@ -93,10 +94,7 @@ func (simra *simra) SetScene(driver Driver) {
 
 	simra.driver = driver
 	peer.GetSpriteContainer().Initialize()
-
-	s := &sprite{animationSets: map[string]*AnimationSet{}}
-
-	peer.GetSpriteContainer().AddSprite(&s.Sprite, nil, s.ProgressAnimation)
+	peer.GetSpriteContainer().AddSprite(&peer.Sprite{}, nil, fps.Progress)
 
 	driver.Initialize()
 	peer.LogDebug("OUT")

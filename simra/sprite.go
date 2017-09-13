@@ -22,8 +22,6 @@ type Spriter interface {
 	StartAnimation(animationName string, shouldLoop bool, animationEndCallback func())
 	// StopAnimation stops animation
 	StopAnimation()
-	// ProgressAnimation progresses registered animation
-	ProgressAnimation()
 	// SetPosition sets sprite's position
 	SetPosition(x, y int)
 	// SetPositionX sets sprite's position X
@@ -152,11 +150,6 @@ func (sprite *sprite) StopAnimation() {
 		sprite.animationCancel()
 	}
 	LogDebug("OUT")
-}
-
-// ProgressAnimation progresses registered animation
-func (sprite *sprite) ProgressAnimation() {
-	fps.Progress()
 }
 
 func (sprite *sprite) SetPosition(x, y int) {
