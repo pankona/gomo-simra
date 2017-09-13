@@ -61,20 +61,18 @@ type GLer interface {
 	SetSubTex(n *sprite.Node, subTex *sprite.SubTex)
 }
 
-var (
-	glPeer    = &GLPeer{}
-	startTime = time.Now()
-)
+var glPeer = &GLPeer{}
 
 // GLPeer represents gl context.
 // Singleton.
 type GLPeer struct {
-	glctx  gl.Context
-	images *glutil.Images
-	fps    *debug.FPS
-	eng    sprite.Engine
-	scene  *sprite.Node
-	mu     sync.Mutex
+	glctx     gl.Context
+	startTime time.Time
+	images    *glutil.Images
+	fps       *debug.FPS
+	eng       sprite.Engine
+	scene     *sprite.Node
+	mu        sync.Mutex
 }
 
 // GetGLPeer returns a instance of GLPeer.
@@ -91,6 +89,7 @@ func (glpeer *GLPeer) Initialize(glctx gl.Context) {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 	glpeer.glctx = glctx
+	glpeer.startTime = time.Now()
 
 	// transparency of png
 	glpeer.glctx.Enable(gl.BLEND)
@@ -249,7 +248,7 @@ func (glpeer *GLPeer) Update(publishFunc func() app.PublishResult) {
 	}
 	glpeer.glctx.ClearColor(0, 0, 0, 1) // black background
 	glpeer.glctx.Clear(gl.COLOR_BUFFER_BIT)
-	now := clock.Time(time.Since(startTime) * 60 / time.Second)
+	now := clock.Time(time.Since(glpeer.startTime) * 60 / time.Second)
 
 	glpeer.apply()
 
