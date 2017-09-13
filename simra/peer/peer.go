@@ -61,8 +61,6 @@ type GLer interface {
 	SetSubTex(n *sprite.Node, subTex *sprite.SubTex)
 }
 
-var glPeer = &GLPeer{}
-
 // GLPeer represents gl context.
 // Singleton.
 type GLPeer struct {
@@ -79,7 +77,7 @@ type GLPeer struct {
 // Since GLPeer is singleton, it is necessary to
 // call this function to get GLPeer instance.
 func GetGLPeer() GLer {
-	return glPeer
+	return &GLPeer{}
 }
 
 // Initialize initializes GLPeer.
