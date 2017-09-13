@@ -16,10 +16,12 @@ type Texture struct {
 // NewImageTexture allocates a texture from asset image
 func NewImageTexture(assetName string, rect image.Rectangle) *Texture {
 	LogDebug("IN")
-	tex := peer.GetGLPeer().LoadTexture(assetName, rect)
+	// FIXME:
+	gl := GetInstance().(*simra).gl
+	tex := gl.LoadTexture(assetName, rect)
 	LogDebug("OUT")
 	t := &Texture{
-		texture: peer.GetGLPeer().NewTexture(tex),
+		texture: gl.NewTexture(tex),
 	}
 	runtime.SetFinalizer(t, (*Texture).release)
 	return t
@@ -28,9 +30,11 @@ func NewImageTexture(assetName string, rect image.Rectangle) *Texture {
 // NewTextTexture allocates a texture from specified text
 func NewTextTexture(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle) *Texture {
 	LogDebug("IN")
-	tex := peer.GetGLPeer().MakeTextureByText(text, fontsize, fontcolor, rect)
+	// FIXME:
+	gl := GetInstance().(*simra).gl
+	tex := gl.MakeTextureByText(text, fontsize, fontcolor, rect)
 	t := &Texture{
-		texture: peer.GetGLPeer().NewTexture(tex),
+		texture: gl.NewTexture(tex),
 	}
 	runtime.SetFinalizer(t, (*Texture).release)
 	LogDebug("OUT")
@@ -39,6 +43,8 @@ func NewTextTexture(text string, fontsize float64, fontcolor color.RGBA, rect im
 
 func (t *Texture) release() {
 	LogDebug("IN")
-	peer.GetGLPeer().ReleaseTexture(t.texture)
+	// FIXME:
+	gl := GetInstance().(*simra).gl
+	gl.ReleaseTexture(t.texture)
 	LogDebug("OUT")
 }
