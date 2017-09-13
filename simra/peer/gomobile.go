@@ -35,9 +35,9 @@ type Gomo struct {
 }
 
 // GetGomo returns a Gomo instance.
-func GetGomo() Gomoer {
+func GetGomo(gler GLer) Gomoer {
 	return &Gomo{
-		gl:         GetGLPeer(),
+		gl:         gler,
 		screensize: GetScreenSizePeer(),
 		touch:      GetTouchPeer(),
 	}

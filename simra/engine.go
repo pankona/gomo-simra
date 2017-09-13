@@ -78,7 +78,8 @@ func (simra *simra) onStopped() {
 func (simra *simra) Start(onStart, onStop func()) {
 	peer.LogDebug("IN")
 	peer.GetSpriteContainer().Initialize()
-	gomo := peer.GetGomo()
+	gl := peer.GetGLPeer()
+	gomo := peer.GetGomo(gl)
 	gomo.Initialize(onStart, onStop, simra.onUpdate)
 	gomo.Start()
 	peer.LogDebug("OUT")
