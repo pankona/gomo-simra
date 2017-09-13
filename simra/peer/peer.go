@@ -28,7 +28,7 @@ import (
 type GLer interface {
 	// Initialize initializes GLPeer.
 	// This function must be called inadvance of using GLPeer
-	Initialize(glctx gl.Context)
+	Initialize(i interface{})
 	// LoadTexture return texture that is loaded by the information of arguments.
 	// Loaded texture can assign using AddSprite function.
 	LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex
@@ -41,7 +41,7 @@ type GLer interface {
 	Finalize()
 	// Update updates screen.
 	// This is called 60 times per 1 sec.
-	Update(sc SpriteContainerer, publishFunc func() app.PublishResult)
+	Update(sc SpriteContainerer, i interface{})
 	// Reset resets current gl context.
 	// All sprites are also cleaned.
 	// This is called at changing of scene, and
@@ -80,7 +80,9 @@ func NewGLPeer() GLer {
 
 // Initialize initializes GLPeer.
 // This function must be called inadvance of using GLPeer
-func (glpeer *GLPeer) Initialize(glctx gl.Context) {
+// FIXME:
+func (glpeer *GLPeer) Initialize(i interface{}) {
+	glctx := i.(gl.Context)
 	LogDebug("IN")
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
@@ -234,7 +236,8 @@ func (glpeer *GLPeer) Finalize() {
 
 // Update updates screen.
 // This is called 60 times per 1 sec.
-func (glpeer *GLPeer) Update(sc SpriteContainerer, publishFunc func() app.PublishResult) {
+// FIXME:
+func (glpeer *GLPeer) Update(sc SpriteContainerer, i interface{}) {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 
@@ -253,7 +256,7 @@ func (glpeer *GLPeer) Update(sc SpriteContainerer, publishFunc func() app.Publis
 	}
 
 	// app.Publish() calls glctx.Flush, it should be called within this mutex locking.
-	publishFunc()
+	i.(func() app.PublishResult)()
 }
 
 // Reset resets current gl context.

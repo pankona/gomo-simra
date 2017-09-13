@@ -3,9 +3,6 @@ package simra
 import (
 	"github.com/pankona/gomo-simra/simra/fps"
 	"github.com/pankona/gomo-simra/simra/peer"
-	"golang.org/x/mobile/app"
-	"golang.org/x/mobile/event/lifecycle"
-	"golang.org/x/mobile/gl"
 )
 
 // Simraer represents an interface of simra instance
@@ -66,12 +63,13 @@ type point struct {
 	x, y int
 }
 
+// FIXME:
 func (simra *simra) onUpdate(i interface{}) {
 	if simra.driver != nil {
 		simra.driver.Drive()
 	}
 	simra.collisionCheckAndNotify()
-	simra.gl.Update(simra.spritecontainer, i.(func() app.PublishResult))
+	simra.gl.Update(simra.spritecontainer, i)
 }
 
 func (simra *simra) onStopped() {
@@ -81,13 +79,13 @@ func (simra *simra) onStopped() {
 	peer.LogDebug("OUT")
 }
 
-func (simra *simra) onGomoStart(e lifecycle.Event) {
-	glctx, _ := e.DrawContext.(gl.Context)
-	simra.gl.Initialize(glctx)
+// FIXME:
+func (simra *simra) onGomoStart(i interface{}) {
+	simra.gl.Initialize(i)
 	simra.onStart()
 }
 
-func (simra *simra) onGomoStop(e lifecycle.Event) {
+func (simra *simra) onGomoStop() {
 	simra.spritecontainer.Initialize(simra.gl)
 	simra.gl.Finalize()
 	simra.onStop()
