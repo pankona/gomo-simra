@@ -12,7 +12,7 @@ import (
 type SpriteContainerer interface {
 	// Initialize initializes SpriteContainer object.
 	// This must be called to use all SpriteContainer's function in advance.
-	Initialize()
+	Initialize(gl GLer)
 	// AddSprite adds a sprite to SpriteContainer.
 	AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCallback func()) error
 	// RemoveSprite removes a spcified sprite from SpriteContainer.
@@ -22,6 +22,8 @@ type SpriteContainerer interface {
 	RemoveSprite(remove *Sprite)
 	// RemoveSprites removes all registered sprites from SpriteContainer.
 	RemoveSprites()
+	// GetSpriteNodePairs returns map represntation of sprite and node pair
+	GetSpriteNodePairs() *sync.Map
 	// ReplaceTexture replaces sprite's texture to specified one.
 	ReplaceTexture(sprite *Sprite, texture *Texture)
 	// OnTouchBegin is called when screen is started to touch.
@@ -47,24 +49,21 @@ type spriteNodePair struct {
 // SpriteContainer represents array of SpriteNodePair.
 type SpriteContainer struct {
 	spriteNodePairs sync.Map // map[*Sprite]*spriteNodePair
-	gler            GLer
-}
-
-var spriteContainer = &SpriteContainer{
-	gler: glPeer,
+	gl              GLer
 }
 
 // GetSpriteContainer returns SpriteContainer.
 // Since SpriteContainer is singleton, use this function
 // to get instance of SpriteContainer.
 func GetSpriteContainer() SpriteContainerer {
-	return spriteContainer
+	return &SpriteContainer{}
 }
 
 // Initialize initializes SpriteContainer object.
 // This must be called to use all SpriteContainer's function in advance.
-func (sc *SpriteContainer) Initialize() {
+func (sc *SpriteContainer) Initialize(gl GLer) {
 	LogDebug("IN")
+	sc.gl = gl
 	GetTouchPeer().AddTouchListener(sc)
 	LogDebug("OUT")
 }
@@ -85,18 +84,18 @@ func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCa
 
 	sn.sprite = s
 	if sn.node == nil {
-		sn.node = sc.gler.NewNode(func(eng sprite.Engine, n *sprite.Node, t clock.Time) {
+		sn.node = sc.gl.NewNode(func(eng sprite.Engine, n *sprite.Node, t clock.Time) {
 			if arrangeCallback != nil {
 				arrangeCallback()
 			}
 		})
 		sc.spriteNodePairs.Store(s, sn)
 	} else {
-		sc.gler.AppendChild(sn.node)
+		sc.gl.AppendChild(sn.node)
 	}
 	sn.inuse = true
 	if subTex != nil {
-		sc.gler.SetSubTex(sn.node, subTex)
+		sc.gl.SetSubTex(sn.node, subTex)
 	}
 	LogDebug("OUT")
 	return nil
@@ -118,7 +117,7 @@ func (sc *SpriteContainer) RemoveSprite(remove *Sprite) {
 		return
 	}
 	sn.inuse = false
-	sc.gler.RemoveChild(sn.node)
+	sc.gl.RemoveChild(sn.node)
 	LogDebug("OUT")
 }
 
@@ -129,12 +128,17 @@ func (sc *SpriteContainer) RemoveSprites() {
 	LogDebug("OUT")
 }
 
+// GetSpriteNodePairs returns map represntation of sprite and node pair
+func (sc *SpriteContainer) GetSpriteNodePairs() *sync.Map {
+	return &sc.spriteNodePairs
+}
+
 // ReplaceTexture replaces sprite's texture to specified one.
 func (sc *SpriteContainer) ReplaceTexture(sprite *Sprite, texture *Texture) {
 	LogDebug("IN")
 	if i, ok := sc.spriteNodePairs.Load(sprite); ok {
 		node := i.(*spriteNodePair).node
-		sc.gler.SetSubTex(node, &texture.subTex)
+		sc.gl.SetSubTex(node, &texture.subTex)
 	}
 	LogDebug("OUT")
 }

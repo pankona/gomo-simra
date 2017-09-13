@@ -41,7 +41,7 @@ type GLer interface {
 	Finalize()
 	// Update updates screen.
 	// This is called 60 times per 1 sec.
-	Update(publishFunc func() app.PublishResult)
+	Update(sc SpriteContainerer, publishFunc func() app.PublishResult)
 	// Reset resets current gl context.
 	// All sprites are also cleaned.
 	// This is called at changing of scene, and
@@ -66,14 +66,13 @@ var glPeer = &GLPeer{}
 // GLPeer represents gl context.
 // Singleton.
 type GLPeer struct {
-	glctx           gl.Context
-	startTime       time.Time
-	images          *glutil.Images
-	fps             *debug.FPS
-	eng             sprite.Engine
-	scene           *sprite.Node
-	mu              sync.Mutex
-	spritecontainer SpriteContainerer
+	glctx     gl.Context
+	startTime time.Time
+	images    *glutil.Images
+	fps       *debug.FPS
+	eng       sprite.Engine
+	scene     *sprite.Node
+	mu        sync.Mutex
 }
 
 // GetGLPeer returns a instance of GLPeer.
@@ -99,8 +98,6 @@ func (glpeer *GLPeer) Initialize(glctx gl.Context) {
 	glpeer.images = glutil.NewImages(glctx)
 	glpeer.fps = debug.NewFPS(glpeer.images)
 	glpeer.initEng()
-	glpeer.spritecontainer = GetSpriteContainer()
-	glpeer.spritecontainer.Initialize()
 
 	LogDebug("OUT")
 }
@@ -232,7 +229,6 @@ func (glpeer *GLPeer) Finalize() {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 
-	glpeer.spritecontainer.Initialize()
 	glpeer.eng.Release()
 	glpeer.fps.Release()
 	glpeer.images.Release()
@@ -242,7 +238,7 @@ func (glpeer *GLPeer) Finalize() {
 
 // Update updates screen.
 // This is called 60 times per 1 sec.
-func (glpeer *GLPeer) Update(publishFunc func() app.PublishResult) {
+func (glpeer *GLPeer) Update(sc SpriteContainerer, publishFunc func() app.PublishResult) {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 
@@ -253,7 +249,7 @@ func (glpeer *GLPeer) Update(publishFunc func() app.PublishResult) {
 	glpeer.glctx.Clear(gl.COLOR_BUFFER_BIT)
 	now := clock.Time(time.Since(glpeer.startTime) * 60 / time.Second)
 
-	glpeer.apply()
+	glpeer.apply(sc)
 
 	glpeer.eng.Render(glpeer.scene, now, screensize.sz)
 	if config.DEBUG {
@@ -272,9 +268,7 @@ func (glpeer *GLPeer) Reset() {
 	LogDebug("IN")
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
-	glpeer.spritecontainer.RemoveSprites()
 	glpeer.initEng()
-	glpeer.spritecontainer.Initialize()
 	LogDebug("OUT")
 }
 
@@ -283,10 +277,8 @@ func (glpeer *GLPeer) SetSubTex(n *sprite.Node, subTex *sprite.SubTex) {
 	glpeer.eng.SetSubTex(n, *subTex)
 }
 
-func (glpeer *GLPeer) apply() {
-
-	snpairs := &spriteContainer.spriteNodePairs
-
+func (glpeer *GLPeer) apply(sc SpriteContainerer) {
+	snpairs := sc.GetSpriteNodePairs()
 	snpairs.Range(func(k, v interface{}) bool {
 		sn := v.(*spriteNodePair)
 		if sn.sprite == nil || !sn.inuse {

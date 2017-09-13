@@ -11,13 +11,12 @@ import (
 	"golang.org/x/mobile/event/paint"
 	"golang.org/x/mobile/event/size"
 	"golang.org/x/mobile/event/touch"
-	"golang.org/x/mobile/gl"
 )
 
 // Gomoer represents an interface of gomobile
 type Gomoer interface {
 	// Initialize initializes Gomo.
-	Initialize(onStart, onStop func(), updateCallback func())
+	Initialize(onStart, onStop func(e lifecycle.Event), updateCallback func(interface{}))
 	// Start starts gomobile's main loop.
 	// Most of events handled by peer is fired by this function.
 	Start()
@@ -26,25 +25,23 @@ type Gomoer interface {
 // Gomo represents gomobile instance.
 // Singleton.
 type Gomo struct {
-	gl             GLer
 	screensize     ScreenSizer
 	touch          Toucher
-	onStart        func()
-	onStop         func()
-	updateCallback func()
+	onStart        func(e lifecycle.Event)
+	onStop         func(e lifecycle.Event)
+	updateCallback func(interface{})
 }
 
 // GetGomo returns a Gomo instance.
-func GetGomo(gler GLer) Gomoer {
+func GetGomo() Gomoer {
 	return &Gomo{
-		gl:         gler,
 		screensize: GetScreenSizePeer(),
 		touch:      GetTouchPeer(),
 	}
 }
 
 // Initialize initializes Gomo.
-func (g *Gomo) Initialize(onStart, onStop func(), updateCallback func()) {
+func (g *Gomo) Initialize(onStart, onStop func(e lifecycle.Event), updateCallback func(i interface{})) {
 	LogDebug("IN")
 	g.onStart = onStart
 	g.onStop = onStop
@@ -56,17 +53,12 @@ func (g *Gomo) Initialize(onStart, onStop func(), updateCallback func()) {
 func (g *Gomo) handleLifeCycle(a app.App, e lifecycle.Event) {
 	switch e.Crosses(lifecycle.StageVisible) {
 	case lifecycle.CrossOn:
-		// initialize gl peer
-		glctx, _ := e.DrawContext.(gl.Context)
-		g.gl.Initialize(glctx)
 		// time to set first scene
-		g.onStart()
+		g.onStart(e)
 		a.Send(paint.Event{})
 	case lifecycle.CrossOff:
 		// time to stop application
-		g.onStop()
-		// finalize gl peer
-		g.gl.Finalize()
+		g.onStop(e)
 	}
 
 }
@@ -80,9 +72,8 @@ func (g *Gomo) handlePaint(a app.App, e paint.Event) {
 		return
 	}
 	// update notify for simra
-	g.updateCallback()
+	g.updateCallback(a.Publish)
 	// update notify for gl peer
-	g.gl.Update(a.Publish)
 	a.Send(paint.Event{})
 }
 

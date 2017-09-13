@@ -72,7 +72,9 @@ func (sprite *sprite) ReplaceTexture(texture *Texture) {
 	LogDebug("IN")
 	// retain reference for texture to avoid to be discarded by GC
 	sprite.texture = texture
-	peer.GetSpriteContainer().ReplaceTexture(&sprite.Sprite, texture.texture)
+	// FIXME:
+	sc := GetInstance().(*simra).spritecontainer
+	sc.ReplaceTexture(&sprite.Sprite, texture.texture)
 	LogDebug("OUT")
 }
 

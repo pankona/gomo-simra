@@ -46,22 +46,24 @@ func mapLen(m *sync.Map) int {
 
 func TestAddAndRemoveSprite(t *testing.T) {
 	sc := &SpriteContainer{}
-	sc.gler = &mockGLer{}
+	sc.gl = &mockGLer{}
 
 	s1 := &Sprite{}
 	s2 := &Sprite{}
 	_ = sc.AddSprite(s1, nil, nil)
 	_ = sc.AddSprite(s2, nil, nil)
-	if mapLen(&sc.spriteNodePairs) != 2 {
-		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 2)
+	m := sc.GetSpriteNodePairs()
+	if mapLen(m) != 2 {
+		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(m), 2)
 	}
 
 	// RemoveSprite marks sprites as "not in use",
 	// length of spriteContainer will not be changed
 	sc.RemoveSprite(s1)
 	sc.RemoveSprite(s2)
-	if mapLen(&sc.spriteNodePairs) != 2 {
-		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
+	m = sc.GetSpriteNodePairs()
+	if mapLen(m) != 2 {
+		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(m), 0)
 	}
 
 	// if there're "not in use" sprite in spriteContainer,
@@ -69,30 +71,33 @@ func TestAddAndRemoveSprite(t *testing.T) {
 	// sprites don't reach to its capacity.
 	_ = sc.AddSprite(s1, nil, nil)
 	_ = sc.AddSprite(s2, nil, nil)
-	if mapLen(&sc.spriteNodePairs) != 2 {
-		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 2)
+	m = sc.GetSpriteNodePairs()
+	if mapLen(m) != 2 {
+		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(m), 2)
 	}
 
 	// if there's not "not in use" sprite in spriteContainer,
 	// length of spriteContainer will be extended.
 	s3 := &Sprite{}
 	_ = sc.AddSprite(s3, nil, nil)
-	if mapLen(&sc.spriteNodePairs) != 3 {
-		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 3)
+	m = sc.GetSpriteNodePairs()
+	if mapLen(m) != 3 {
+		t.Fatalf("unexpected result. [got] %d [want] %d", mapLen(m), 3)
 	}
 }
 
 func TestAddSpriteDuplicate(t *testing.T) {
 	sc := &SpriteContainer{}
-	sc.gler = &mockGLer{}
+	sc.gl = &mockGLer{}
 
 	s1 := &Sprite{}
 	err := sc.AddSprite(s1, nil, nil)
 	if err != nil {
 		t.Fatalf("failed add Sprite. err: %s", err.Error())
 	}
-	if mapLen(&sc.spriteNodePairs) != 1 {
-		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
+	m := sc.GetSpriteNodePairs()
+	if mapLen(m) != 1 {
+		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(m), 0)
 	}
 
 	// if specified sprite is already added, it will be ignored.
@@ -100,39 +105,43 @@ func TestAddSpriteDuplicate(t *testing.T) {
 	if err == nil {
 		t.Fatalf("unexpected behaviour. AddSprite should return error for duplicated adding")
 	}
-	if mapLen(&sc.spriteNodePairs) != 1 {
-		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
+	m = sc.GetSpriteNodePairs()
+	if mapLen(m) != 1 {
+		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(m), 0)
 	}
 }
 
 func TestRemoveSpriteDuplicate(t *testing.T) {
 	sc := &SpriteContainer{}
-	sc.gler = &mockGLer{}
+	sc.gl = &mockGLer{}
 
 	s1 := &Sprite{}
 	err := sc.AddSprite(s1, nil, nil)
 	if err != nil {
 		t.Fatalf("failed add Sprite. err: %s", err.Error())
 	}
-	if mapLen(&sc.spriteNodePairs) != 1 {
-		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
+	m := sc.GetSpriteNodePairs()
+	if mapLen(m) != 1 {
+		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(m), 0)
 	}
 
 	sc.RemoveSprite(s1)
-	if mapLen(&sc.spriteNodePairs) != 1 {
-		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
+	m = sc.GetSpriteNodePairs()
+	if mapLen(m) != 1 {
+		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(m), 0)
 	}
 
 	// if specified sprite is already removed, it will be ignored.
 	sc.RemoveSprite(s1)
-	if mapLen(&sc.spriteNodePairs) != 1 {
-		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(&spriteContainer.spriteNodePairs), 0)
+	m = sc.GetSpriteNodePairs()
+	if mapLen(m) != 1 {
+		t.Errorf("unexpected result. [got] %d [want] %d", mapLen(m), 0)
 	}
 }
 
 func TestRemoveSprites(t *testing.T) {
 	sc := &SpriteContainer{}
-	sc.gler = &mockGLer{}
+	sc.gl = &mockGLer{}
 
 	for i := 0; i < 10; i++ {
 		err := sc.AddSprite(&Sprite{}, nil, nil)
@@ -152,7 +161,7 @@ func TestRemoveSprites(t *testing.T) {
 
 func TestReplaceTexture(t *testing.T) {
 	sc := &SpriteContainer{}
-	sc.gler = &mockGLer{}
+	sc.gl = &mockGLer{}
 
 	s := &Sprite{}
 	err := sc.AddSprite(s, nil, nil)
@@ -181,7 +190,7 @@ func (l *listener) OnTouchEnd(x, y float32) {
 
 func TestTouchEvent(t *testing.T) {
 	sc := &SpriteContainer{}
-	sc.gler = &mockGLer{}
+	sc.gl = &mockGLer{}
 
 	s := &Sprite{}
 	err := sc.AddSprite(s, nil, nil)
@@ -221,10 +230,8 @@ func TestTouchEvent(t *testing.T) {
 
 func BenchmarkAddSprite(b *testing.B) {
 	sc := &SpriteContainer{}
-	sc.gler = &mockGLer{}
-	//s := &Sprite{}
+	sc.gl = &mockGLer{}
 	for i := 0; i < b.N; i++ {
-		//err := sc.AddSprite(s, nil, nil)
 		err := sc.AddSprite(&Sprite{}, nil, nil)
 		if err != nil {
 			b.Fatalf(err.Error())

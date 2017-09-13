@@ -3,6 +3,9 @@ package simra
 import (
 	"github.com/pankona/gomo-simra/simra/fps"
 	"github.com/pankona/gomo-simra/simra/peer"
+	"golang.org/x/mobile/app"
+	"golang.org/x/mobile/event/lifecycle"
+	"golang.org/x/mobile/gl"
 )
 
 // Simraer represents an interface of simra instance
@@ -42,8 +45,12 @@ var comap []*collisionMap
 
 // Simra is a struct that provides API interface of simra
 type simra struct {
-	driver Driver
-	comap  []*collisionMap
+	driver          Driver
+	comap           []*collisionMap
+	gl              peer.GLer
+	spritecontainer peer.SpriteContainerer
+	onStart         func()
+	onStop          func()
 }
 
 var sim = &simra{}
@@ -59,12 +66,12 @@ type point struct {
 	x, y int
 }
 
-func (simra *simra) onUpdate() {
+func (simra *simra) onUpdate(i interface{}) {
 	if simra.driver != nil {
 		simra.driver.Drive()
 	}
-
 	simra.collisionCheckAndNotify()
+	simra.gl.Update(simra.spritecontainer, i.(func() app.PublishResult))
 }
 
 func (simra *simra) onStopped() {
@@ -74,13 +81,30 @@ func (simra *simra) onStopped() {
 	peer.LogDebug("OUT")
 }
 
+func (simra *simra) onGomoStart(e lifecycle.Event) {
+	glctx, _ := e.DrawContext.(gl.Context)
+	simra.gl.Initialize(glctx)
+	simra.onStart()
+}
+
+func (simra *simra) onGomoStop(e lifecycle.Event) {
+	simra.spritecontainer.Initialize(simra.gl)
+	simra.gl.Finalize()
+	simra.onStop()
+}
+
 // Start needs to call to enable all function belong to simra package.
 func (simra *simra) Start(onStart, onStop func()) {
 	peer.LogDebug("IN")
-	peer.GetSpriteContainer().Initialize()
 	gl := peer.GetGLPeer()
-	gomo := peer.GetGomo(gl)
-	gomo.Initialize(onStart, onStop, simra.onUpdate)
+	sc := peer.GetSpriteContainer()
+	sc.Initialize(gl)
+	simra.gl = gl
+	simra.spritecontainer = sc
+	simra.onStart = onStart
+	simra.onStop = onStop
+	gomo := peer.GetGomo()
+	gomo.Initialize(simra.onGomoStart, simra.onGomoStop, simra.onUpdate)
 	gomo.Start()
 	peer.LogDebug("OUT")
 }
@@ -89,13 +113,15 @@ func (simra *simra) Start(onStart, onStop func()) {
 // If a driver is already set, it is replaced with new one.
 func (simra *simra) SetScene(driver Driver) {
 	peer.LogDebug("IN")
-	peer.GetGLPeer().Reset()
+	simra.spritecontainer.RemoveSprites()
+	simra.gl.Reset()
+	simra.spritecontainer.Initialize(simra.gl)
 	peer.GetTouchPeer().RemoveAllTouchListeners()
-	peer.GetSpriteContainer().RemoveSprites()
+	simra.spritecontainer.RemoveSprites()
 
 	simra.driver = driver
-	peer.GetSpriteContainer().Initialize()
-	peer.GetSpriteContainer().AddSprite(&peer.Sprite{}, nil, fps.Progress)
+	simra.spritecontainer.Initialize(simra.gl)
+	simra.spritecontainer.AddSprite(&peer.Sprite{}, nil, fps.Progress)
 
 	driver.Initialize()
 	peer.LogDebug("OUT")
@@ -104,7 +130,7 @@ func (simra *simra) SetScene(driver Driver) {
 // AddSprite adds a sprite to current scene with empty texture.
 func (simra *simra) AddSprite(s Spriter) {
 	sp := s.(*sprite)
-	peer.GetSpriteContainer().AddSprite(&sp.Sprite, nil, nil)
+	simra.spritecontainer.AddSprite(&sp.Sprite, nil, nil)
 }
 
 // RemoveSprite removes specified sprite from current scene.
@@ -112,7 +138,7 @@ func (simra *simra) AddSprite(s Spriter) {
 func (simra *simra) RemoveSprite(s Spriter) {
 	sp := s.(*sprite)
 	sp.texture = nil
-	peer.GetSpriteContainer().RemoveSprite(&sp.Sprite)
+	simra.spritecontainer.RemoveSprite(&sp.Sprite)
 }
 
 // SetDesiredScreenSize configures virtual screen size.
