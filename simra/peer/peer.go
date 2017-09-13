@@ -66,13 +66,14 @@ var glPeer = &GLPeer{}
 // GLPeer represents gl context.
 // Singleton.
 type GLPeer struct {
-	glctx     gl.Context
-	startTime time.Time
-	images    *glutil.Images
-	fps       *debug.FPS
-	eng       sprite.Engine
-	scene     *sprite.Node
-	mu        sync.Mutex
+	glctx           gl.Context
+	startTime       time.Time
+	images          *glutil.Images
+	fps             *debug.FPS
+	eng             sprite.Engine
+	scene           *sprite.Node
+	mu              sync.Mutex
+	spritecontainer SpriteContainerer
 }
 
 // GetGLPeer returns a instance of GLPeer.
@@ -98,6 +99,8 @@ func (glpeer *GLPeer) Initialize(glctx gl.Context) {
 	glpeer.images = glutil.NewImages(glctx)
 	glpeer.fps = debug.NewFPS(glpeer.images)
 	glpeer.initEng()
+	glpeer.spritecontainer = GetSpriteContainer()
+	glpeer.spritecontainer.Initialize()
 
 	LogDebug("OUT")
 }
@@ -229,7 +232,7 @@ func (glpeer *GLPeer) Finalize() {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 
-	GetSpriteContainer().RemoveSprites()
+	glpeer.spritecontainer.Initialize()
 	glpeer.eng.Release()
 	glpeer.fps.Release()
 	glpeer.images.Release()
@@ -269,8 +272,9 @@ func (glpeer *GLPeer) Reset() {
 	LogDebug("IN")
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
-	GetSpriteContainer().RemoveSprites()
+	glpeer.spritecontainer.RemoveSprites()
 	glpeer.initEng()
+	glpeer.spritecontainer.Initialize()
 	LogDebug("OUT")
 }
 
