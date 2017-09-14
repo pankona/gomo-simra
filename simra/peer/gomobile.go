@@ -11,12 +11,13 @@ import (
 	"golang.org/x/mobile/event/paint"
 	"golang.org/x/mobile/event/size"
 	"golang.org/x/mobile/event/touch"
+	"golang.org/x/mobile/gl"
 )
 
 // Gomoer represents an interface of gomobile
 type Gomoer interface {
 	// Initialize initializes Gomo.
-	Initialize(onStart func(interface{}), onStop func(), updateCallback func(interface{}))
+	Initialize(onStart func(glc *GLContext), onStop func(), updateCallback func(interface{}))
 	// Start starts gomobile's main loop.
 	// Most of events handled by peer is fired by this function.
 	Start()
@@ -27,7 +28,7 @@ type Gomoer interface {
 type Gomo struct {
 	screensize     ScreenSizer
 	touch          Toucher
-	onStart        func(interface{})
+	onStart        func(glc *GLContext)
 	onStop         func()
 	updateCallback func(interface{})
 }
@@ -41,7 +42,7 @@ func GetGomo() Gomoer {
 }
 
 // Initialize initializes Gomo.
-func (g *Gomo) Initialize(onStart func(i interface{}), onStop func(), updateCallback func(i interface{})) {
+func (g *Gomo) Initialize(onStart func(glc *GLContext), onStop func(), updateCallback func(i interface{})) {
 	LogDebug("IN")
 	g.onStart = onStart
 	g.onStop = onStop
@@ -54,7 +55,9 @@ func (g *Gomo) handleLifeCycle(a app.App, e lifecycle.Event) {
 	switch e.Crosses(lifecycle.StageVisible) {
 	case lifecycle.CrossOn:
 		// time to set first scene
-		g.onStart(e.DrawContext)
+		g.onStart(&GLContext{
+			glcontext: e.DrawContext.(gl.Context),
+		})
 		a.Send(paint.Event{})
 	case lifecycle.CrossOff:
 		// time to stop application

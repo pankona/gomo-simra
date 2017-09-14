@@ -80,8 +80,8 @@ func (simra *simra) onStopped() {
 }
 
 // FIXME:
-func (simra *simra) onGomoStart(i interface{}) {
-	simra.gl.Initialize(i)
+func (simra *simra) onGomoStart(glc *peer.GLContext) {
+	simra.gl.Initialize(glc)
 	simra.onStart()
 }
 

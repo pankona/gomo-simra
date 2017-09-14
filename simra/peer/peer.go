@@ -28,7 +28,7 @@ import (
 type GLer interface {
 	// Initialize initializes GLPeer.
 	// This function must be called inadvance of using GLPeer
-	Initialize(i interface{})
+	Initialize(glctx *GLContext)
 	// LoadTexture return texture that is loaded by the information of arguments.
 	// Loaded texture can assign using AddSprite function.
 	LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex
@@ -78,11 +78,15 @@ func NewGLPeer() GLer {
 	return &GLPeer{}
 }
 
+type GLContext struct {
+	glcontext gl.Context
+}
+
 // Initialize initializes GLPeer.
 // This function must be called inadvance of using GLPeer
 // FIXME:
-func (glpeer *GLPeer) Initialize(i interface{}) {
-	glctx := i.(gl.Context)
+func (glpeer *GLPeer) Initialize(glc *GLContext) {
+	glctx := glc.glcontext
 	LogDebug("IN")
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
