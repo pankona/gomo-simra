@@ -5,7 +5,7 @@ import (
 	"image/color"
 	"runtime"
 
-	"github.com/pankona/gomo-simra/simra/peer"
+	"github.com/pankona/gomo-simra/simra/internal/peer"
 )
 
 // Texture represents a texture.

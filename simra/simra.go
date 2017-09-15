@@ -2,7 +2,7 @@ package simra
 
 import (
 	"github.com/pankona/gomo-simra/simra/fps"
-	"github.com/pankona/gomo-simra/simra/peer"
+	"github.com/pankona/gomo-simra/simra/internal/peer"
 )
 
 // Simraer represents an interface of simra instance

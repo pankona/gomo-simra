@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/pankona/gomo-simra/simra/fps"
-	"github.com/pankona/gomo-simra/simra/peer"
+	"github.com/pankona/gomo-simra/simra/internal/peer"
 )
 
 // Spriter represents an interface of Sprite
