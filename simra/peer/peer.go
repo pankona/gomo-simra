@@ -78,6 +78,7 @@ func NewGLPeer() GLer {
 	return &GLPeer{}
 }
 
+// GLContext is a wrapper of gl.Context
 type GLContext struct {
 	glcontext gl.Context
 }
