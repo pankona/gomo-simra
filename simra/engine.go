@@ -79,7 +79,6 @@ func (simra *simra) onStopped() {
 	peer.LogDebug("OUT")
 }
 
-// FIXME:
 func (simra *simra) onGomoStart(glc *peer.GLContext) {
 	simra.gl.Initialize(glc)
 	simra.onStart()

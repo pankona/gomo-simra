@@ -85,7 +85,6 @@ type GLContext struct {
 
 // Initialize initializes GLPeer.
 // This function must be called inadvance of using GLPeer
-// FIXME:
 func (glpeer *GLPeer) Initialize(glc *GLContext) {
 	glctx := glc.glcontext
 	LogDebug("IN")
