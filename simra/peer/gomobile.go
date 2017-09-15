@@ -17,7 +17,7 @@ import (
 // Gomoer represents an interface of gomobile
 type Gomoer interface {
 	// Initialize initializes Gomo.
-	Initialize(onStart func(glc *GLContext), onStop func(), updateCallback func(interface{}))
+	Initialize(onStart func(glc *GLContext), onStop func(), updateCallback func())
 	// Start starts gomobile's main loop.
 	// Most of events handled by peer is fired by this function.
 	Start()
@@ -26,11 +26,12 @@ type Gomoer interface {
 // Gomo represents gomobile instance.
 // Singleton.
 type Gomo struct {
+	app            app.App
 	screensize     ScreenSizer
 	touch          Toucher
 	onStart        func(glc *GLContext)
 	onStop         func()
-	updateCallback func(interface{})
+	updateCallback func()
 }
 
 // GetGomo returns a Gomo instance.
@@ -42,7 +43,7 @@ func GetGomo() Gomoer {
 }
 
 // Initialize initializes Gomo.
-func (g *Gomo) Initialize(onStart func(glc *GLContext), onStop func(), updateCallback func(i interface{})) {
+func (g *Gomo) Initialize(onStart func(glc *GLContext), onStop func(), updateCallback func()) {
 	LogDebug("IN")
 	g.onStart = onStart
 	g.onStop = onStop
@@ -51,36 +52,35 @@ func (g *Gomo) Initialize(onStart func(glc *GLContext), onStop func(), updateCal
 	LogDebug("OUT")
 }
 
-func (g *Gomo) handleLifeCycle(a app.App, e lifecycle.Event) {
+func (g *Gomo) handleLifeCycle(e lifecycle.Event) {
 	switch e.Crosses(lifecycle.StageVisible) {
 	case lifecycle.CrossOn:
-		// time to set first scene
 		g.onStart(&GLContext{
 			glcontext: e.DrawContext.(gl.Context),
+			publish:   g.app.Publish,
 		})
-		a.Send(paint.Event{})
+		g.app.Send(paint.Event{})
 	case lifecycle.CrossOff:
-		// time to stop application
 		g.onStop()
 	}
 
 }
 
-func (g *Gomo) handleSize(a app.App, e size.Event) {
+func (g *Gomo) handleSize(e size.Event) {
 	g.screensize.SetScreenSize(e)
 }
 
-func (g *Gomo) handlePaint(a app.App, e paint.Event) {
+func (g *Gomo) handlePaint(e paint.Event) {
 	if e.External {
 		return
 	}
 	// update notify for simra
-	g.updateCallback(a.Publish)
+	g.updateCallback()
 	// update notify for gl peer
-	a.Send(paint.Event{})
+	g.app.Send(paint.Event{})
 }
 
-func (g *Gomo) handleTouch(a app.App, e touch.Event) {
+func (g *Gomo) handleTouch(e touch.Event) {
 	switch e.Type {
 	case touch.TypeBegin:
 		g.touch.OnTouchBegin(e.X, e.Y)
@@ -91,16 +91,16 @@ func (g *Gomo) handleTouch(a app.App, e touch.Event) {
 	}
 }
 
-func (g *Gomo) handleEvent(a app.App, e interface{}) {
-	switch e := a.Filter(e).(type) {
+func (g *Gomo) handleEvent(e interface{}) {
+	switch e := g.app.Filter(e).(type) {
 	case lifecycle.Event:
-		g.handleLifeCycle(a, e)
+		g.handleLifeCycle(e)
 	case size.Event:
-		g.handleSize(a, e)
+		g.handleSize(e)
 	case paint.Event:
-		g.handlePaint(a, e)
+		g.handlePaint(e)
 	case touch.Event:
-		g.handleTouch(a, e)
+		g.handleTouch(e)
 	}
 }
 
@@ -109,8 +109,9 @@ func (g *Gomo) handleEvent(a app.App, e interface{}) {
 func (g *Gomo) Start() {
 	LogDebug("IN")
 	app.Main(func(a app.App) {
+		g.app = a
 		for e := range a.Events() {
-			g.handleEvent(a, e)
+			g.handleEvent(e)
 		}
 	})
 	LogDebug("OUT")

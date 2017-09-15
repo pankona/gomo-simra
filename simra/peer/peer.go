@@ -28,7 +28,7 @@ import (
 type GLer interface {
 	// Initialize initializes GLPeer.
 	// This function must be called inadvance of using GLPeer
-	Initialize(glctx *GLContext)
+	Initialize(glc *GLContext)
 	// LoadTexture return texture that is loaded by the information of arguments.
 	// Loaded texture can assign using AddSprite function.
 	LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex
@@ -41,7 +41,7 @@ type GLer interface {
 	Finalize()
 	// Update updates screen.
 	// This is called 60 times per 1 sec.
-	Update(sc SpriteContainerer, i interface{})
+	Update(sc SpriteContainerer)
 	// Reset resets current gl context.
 	// All sprites are also cleaned.
 	// This is called at changing of scene, and
@@ -64,7 +64,7 @@ type GLer interface {
 // GLPeer represents gl context.
 // Singleton.
 type GLPeer struct {
-	glctx     gl.Context
+	glc       *GLContext
 	startTime time.Time
 	images    *glutil.Images
 	fps       *debug.FPS
@@ -81,22 +81,24 @@ func NewGLPeer() GLer {
 // GLContext is a wrapper of gl.Context
 type GLContext struct {
 	glcontext gl.Context
+	publish   func() app.PublishResult
 }
 
 // Initialize initializes GLPeer.
 // This function must be called inadvance of using GLPeer
 func (glpeer *GLPeer) Initialize(glc *GLContext) {
-	glctx := glc.glcontext
 	LogDebug("IN")
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
-	glpeer.glctx = glctx
+	glpeer.glc = glc
 	glpeer.startTime = time.Now()
 
+	glctx := glpeer.glc.glcontext
+
 	// transparency of png
-	glpeer.glctx.Enable(gl.BLEND)
-	glpeer.glctx.BlendEquation(gl.FUNC_ADD)
-	glpeer.glctx.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+	glctx.Enable(gl.BLEND)
+	glctx.BlendEquation(gl.FUNC_ADD)
+	glctx.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 	glpeer.images = glutil.NewImages(glctx)
 	glpeer.fps = debug.NewFPS(glpeer.images)
 	glpeer.initEng()
@@ -234,22 +236,22 @@ func (glpeer *GLPeer) Finalize() {
 	glpeer.eng.Release()
 	glpeer.fps.Release()
 	glpeer.images.Release()
-	glpeer.glctx = nil
+	glpeer.glc.glcontext = nil
 	LogDebug("OUT")
 }
 
 // Update updates screen.
 // This is called 60 times per 1 sec.
-// FIXME:
-func (glpeer *GLPeer) Update(sc SpriteContainerer, i interface{}) {
+func (glpeer *GLPeer) Update(sc SpriteContainerer) {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 
-	if glpeer.glctx == nil {
+	glctx := glpeer.glc.glcontext
+	if glctx == nil {
 		return
 	}
-	glpeer.glctx.ClearColor(0, 0, 0, 1) // black background
-	glpeer.glctx.Clear(gl.COLOR_BUFFER_BIT)
+	glctx.ClearColor(0, 0, 0, 1) // black background
+	glctx.Clear(gl.COLOR_BUFFER_BIT)
 	now := clock.Time(time.Since(glpeer.startTime) * 60 / time.Second)
 
 	glpeer.apply(sc)
@@ -259,8 +261,9 @@ func (glpeer *GLPeer) Update(sc SpriteContainerer, i interface{}) {
 		glpeer.fps.Draw(screensize.sz)
 	}
 
-	// app.Publish() calls glctx.Flush, it should be called within this mutex locking.
-	i.(func() app.PublishResult)()
+	// app.Publish() calls glctx.Flush,
+	// it must be called within this mutex locking.
+	glpeer.glc.publish()
 }
 
 // Reset resets current gl context.

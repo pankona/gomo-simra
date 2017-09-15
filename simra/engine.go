@@ -64,12 +64,12 @@ type point struct {
 }
 
 // FIXME:
-func (simra *simra) onUpdate(i interface{}) {
+func (simra *simra) onUpdate() {
 	if simra.driver != nil {
 		simra.driver.Drive()
 	}
 	simra.collisionCheckAndNotify()
-	simra.gl.Update(simra.spritecontainer, i)
+	simra.gl.Update(simra.spritecontainer)
 }
 
 func (simra *simra) onStopped() {
