@@ -318,14 +318,12 @@ func (glpeer *GLPeer) apply(sc SpriteContainerer) {
 
 // Texture represents a texture object that contains subTex
 type Texture struct {
-	glPeer *GLPeer
 	subTex sprite.SubTex
 }
 
 // NewTexture returns a new Texture instance
 func (glpeer *GLPeer) NewTexture(s sprite.SubTex) *Texture {
 	return &Texture{
-		glPeer: glpeer,
 		subTex: s,
 	}
 }
