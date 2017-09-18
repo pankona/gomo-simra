@@ -93,7 +93,7 @@ func (glpeer *GLPeer) Initialize(glc *GLContext) {
 	glpeer.glc = glc
 	glpeer.startTime = time.Now()
 
-	glctx := glpeer.glc.glcontext
+	glctx := glc.glcontext
 
 	// transparency of png
 	glctx.Enable(gl.BLEND)
