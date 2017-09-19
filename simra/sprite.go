@@ -57,6 +57,7 @@ type Scale struct {
 // Sprite represents a sprite object.
 type sprite struct {
 	peer.Sprite
+	simra           *simra
 	animationSets   map[string]*AnimationSet
 	animationCancel func()
 	texture         *Texture
@@ -64,7 +65,10 @@ type sprite struct {
 
 // NewSprite returns an instance of Sprite
 func NewSprite() Spriter {
-	return &sprite{animationSets: map[string]*AnimationSet{}}
+	return &sprite{
+		simra:         GetInstance().(*simra),
+		animationSets: map[string]*AnimationSet{},
+	}
 }
 
 // ReplaceTexture replaces sprite's texture with specified image resource.
@@ -72,8 +76,7 @@ func (sprite *sprite) ReplaceTexture(texture *Texture) {
 	LogDebug("IN")
 	// retain reference for texture to avoid to be discarded by GC
 	sprite.texture = texture
-	// FIXME:
-	sc := GetInstance().(*simra).spritecontainer
+	sc := sprite.simra.spritecontainer
 	sc.ReplaceTexture(&sprite.Sprite, texture.texture)
 	LogDebug("OUT")
 }
