@@ -38,8 +38,6 @@ type collisionMap struct {
 	listener CollisionListener
 }
 
-var comap []*collisionMap
-
 // Simra is a struct that provides API interface of simra
 type simra struct {
 	driver          Driver
@@ -50,7 +48,9 @@ type simra struct {
 	onStop          func()
 }
 
-var sim = &simra{}
+var sim = &simra{
+	comap: make([]*collisionMap, 0),
+}
 
 // GetInstance returns instance of Simra.
 // It is necessary to call this function to get Simra instance
@@ -161,26 +161,26 @@ func (simra *simra) RemoveTouchListener(listener peer.TouchListener) {
 func (simra *simra) AddCollisionListener(c1, c2 Collider, listener CollisionListener) {
 	// TODO: exclusive controll
 	LogDebug("IN")
-	comap = append(comap, &collisionMap{c1, c2, listener})
+	simra.comap = append(simra.comap, &collisionMap{c1, c2, listener})
 	LogDebug("OUT")
 }
 
 func (simra *simra) removeCollisionMap(c *collisionMap) {
 	result := []*collisionMap{}
 
-	for _, v := range comap {
+	for _, v := range simra.comap {
 		if c.c1 != v.c1 && c.c2 != v.c2 && v != c {
 			result = append(result, v)
 		}
 	}
 
-	comap = result
+	simra.comap = result
 }
 
 // RemoveAllCollisionListener removes all registered listeners
 func (simra *simra) RemoveAllCollisionListener() {
 	LogDebug("IN")
-	comap = nil
+	simra.comap = nil
 	LogDebug("OUT")
 }
 
@@ -188,7 +188,7 @@ func (simra *simra) collisionCheckAndNotify() {
 	//LogDebug("IN")
 
 	// check collision
-	for _, v := range comap {
+	for _, v := range simra.comap {
 		// TODO: refactor around here...
 		x1, y1, w1, h1 := v.c1.GetXYWH()
 		x2, y2, w2, h2 := v.c2.GetXYWH()
@@ -231,7 +231,7 @@ func (simra *simra) RemoveCollisionListener(c1, c2 Collider) {
 }
 
 func (simra *simra) comapLength() int {
-	return len(comap)
+	return len(simra.comap)
 }
 
 // LogDebug prints logs.
