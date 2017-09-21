@@ -48,6 +48,7 @@ type simra struct {
 	onStop          func()
 }
 
+// TODO: don't declare as package global.
 var sim = &simra{
 	comap: make([]*collisionMap, 0),
 }
