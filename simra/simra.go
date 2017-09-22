@@ -64,132 +64,131 @@ type point struct {
 	x, y int
 }
 
-// FIXME:
-func (simra *simra) onUpdate() {
-	if simra.driver != nil {
-		simra.driver.Drive()
+func (sim *simra) onUpdate() {
+	if sim.driver != nil {
+		sim.driver.Drive()
 	}
-	simra.collisionCheckAndNotify()
-	simra.gl.Update(simra.spritecontainer)
+	sim.collisionCheckAndNotify()
+	sim.gl.Update(sim.spritecontainer)
 }
 
-func (simra *simra) onStopped() {
+func (sim *simra) onStopped() {
 	peer.LogDebug("IN")
-	simra.driver = nil
-	simra.gl.Finalize()
+	sim.driver = nil
+	sim.gl.Finalize()
 	peer.LogDebug("OUT")
 }
 
-func (simra *simra) onGomoStart(glc *peer.GLContext) {
-	simra.gl.Initialize(glc)
-	simra.onStart()
+func (sim *simra) onGomoStart(glc *peer.GLContext) {
+	sim.gl.Initialize(glc)
+	sim.onStart()
 }
 
-func (simra *simra) onGomoStop() {
-	simra.spritecontainer.Initialize(simra.gl)
-	simra.gl.Finalize()
-	simra.onStop()
+func (sim *simra) onGomoStop() {
+	sim.spritecontainer.Initialize(sim.gl)
+	sim.gl.Finalize()
+	sim.onStop()
 }
 
 // Start needs to call to enable all function belong to simra package.
-func (simra *simra) Start(onStart, onStop func()) {
+func (sim *simra) Start(onStart, onStop func()) {
 	peer.LogDebug("IN")
 	gl := peer.NewGLPeer()
 	sc := peer.GetSpriteContainer()
 	sc.Initialize(gl)
-	simra.gl = gl
-	simra.spritecontainer = sc
-	simra.onStart = onStart
-	simra.onStop = onStop
+	sim.gl = gl
+	sim.spritecontainer = sc
+	sim.onStart = onStart
+	sim.onStop = onStop
 	gomo := peer.GetGomo()
-	gomo.Initialize(simra.onGomoStart, simra.onGomoStop, simra.onUpdate)
+	gomo.Initialize(sim.onGomoStart, sim.onGomoStop, sim.onUpdate)
 	gomo.Start()
 	peer.LogDebug("OUT")
 }
 
 // SetScene sets a driver as a scene.
 // If a driver is already set, it is replaced with new one.
-func (simra *simra) SetScene(driver Driver) {
+func (sim *simra) SetScene(driver Driver) {
 	peer.LogDebug("IN")
-	simra.spritecontainer.RemoveSprites()
-	simra.gl.Reset()
-	simra.spritecontainer.Initialize(simra.gl)
+	sim.spritecontainer.RemoveSprites()
+	sim.gl.Reset()
+	sim.spritecontainer.Initialize(sim.gl)
 	peer.GetTouchPeer().RemoveAllTouchListeners()
-	simra.spritecontainer.RemoveSprites()
+	sim.spritecontainer.RemoveSprites()
 
-	simra.driver = driver
-	simra.spritecontainer.Initialize(simra.gl)
-	simra.spritecontainer.AddSprite(&peer.Sprite{}, nil, fps.Progress)
+	sim.driver = driver
+	sim.spritecontainer.Initialize(sim.gl)
+	sim.spritecontainer.AddSprite(&peer.Sprite{}, nil, fps.Progress)
 
 	driver.Initialize()
 	peer.LogDebug("OUT")
 }
 
 // AddSprite adds a sprite to current scene with empty texture.
-func (simra *simra) AddSprite(s Spriter) {
+func (sim *simra) AddSprite(s Spriter) {
 	sp := s.(*sprite)
-	simra.spritecontainer.AddSprite(&sp.Sprite, nil, nil)
+	sim.spritecontainer.AddSprite(&sp.Sprite, nil, nil)
 }
 
 // RemoveSprite removes specified sprite from current scene.
 // Removed sprite will be disappeared.
-func (simra *simra) RemoveSprite(s Spriter) {
+func (sim *simra) RemoveSprite(s Spriter) {
 	sp := s.(*sprite)
 	sp.texture = nil
-	simra.spritecontainer.RemoveSprite(&sp.Sprite)
+	sim.spritecontainer.RemoveSprite(&sp.Sprite)
 }
 
 // SetDesiredScreenSize configures virtual screen size.
 // This function must be called at least once before calling Start.
-func (simra *simra) SetDesiredScreenSize(w, h float32) {
+func (sim *simra) SetDesiredScreenSize(w, h float32) {
 	ss := peer.GetScreenSizePeer()
 	ss.SetDesiredScreenSize(w, h)
 }
 
 // AddTouchListener registers a listener for notifying touch event.
 // Event is notified when "screen" is touched.
-func (simra *simra) AddTouchListener(listener peer.TouchListener) {
+func (sim *simra) AddTouchListener(listener peer.TouchListener) {
 	peer.GetTouchPeer().AddTouchListener(listener)
 }
 
 // RemoveTouchListener unregisters a listener for notifying touch event.
-func (simra *simra) RemoveTouchListener(listener peer.TouchListener) {
+func (sim *simra) RemoveTouchListener(listener peer.TouchListener) {
 	peer.GetTouchPeer().RemoveTouchListener(listener)
 }
 
 // AddCollisionListener add a callback function that is called on
 // collision is detected between c1 and c2.
-func (simra *simra) AddCollisionListener(c1, c2 Collider, listener CollisionListener) {
+func (sim *simra) AddCollisionListener(c1, c2 Collider, listener CollisionListener) {
 	// TODO: exclusive controll
 	LogDebug("IN")
-	simra.comap = append(simra.comap, &collisionMap{c1, c2, listener})
+	sim.comap = append(sim.comap, &collisionMap{c1, c2, listener})
 	LogDebug("OUT")
 }
 
-func (simra *simra) removeCollisionMap(c *collisionMap) {
+func (sim *simra) removeCollisionMap(c *collisionMap) {
 	result := []*collisionMap{}
 
-	for _, v := range simra.comap {
+	for _, v := range sim.comap {
 		if c.c1 != v.c1 && c.c2 != v.c2 && v != c {
 			result = append(result, v)
 		}
 	}
 
-	simra.comap = result
+	sim.comap = result
 }
 
 // RemoveAllCollisionListener removes all registered listeners
-func (simra *simra) RemoveAllCollisionListener() {
+func (sim *simra) RemoveAllCollisionListener() {
 	LogDebug("IN")
-	simra.comap = nil
+	sim.comap = nil
 	LogDebug("OUT")
 }
 
-func (simra *simra) collisionCheckAndNotify() {
+func (sim *simra) collisionCheckAndNotify() {
 	//LogDebug("IN")
 
 	// check collision
-	for _, v := range simra.comap {
+	for _, v := range sim.comap {
 		// TODO: refactor around here...
 		x1, y1, w1, h1 := v.c1.GetXYWH()
 		x2, y2, w2, h2 := v.c2.GetXYWH()
@@ -224,15 +223,15 @@ func (simra *simra) collisionCheckAndNotify() {
 }
 
 // RemoveCollisionListener removes a collision map by specified collider instance.
-func (simra *simra) RemoveCollisionListener(c1, c2 Collider) {
+func (sim *simra) RemoveCollisionListener(c1, c2 Collider) {
 	// TODO: exclusive controll
 	LogDebug("IN")
-	simra.removeCollisionMap(&collisionMap{c1, c2, nil})
+	sim.removeCollisionMap(&collisionMap{c1, c2, nil})
 	LogDebug("OUT")
 }
 
-func (simra *simra) comapLength() int {
-	return len(simra.comap)
+func (sim *simra) comapLength() int {
+	return len(sim.comap)
 }
 
 // LogDebug prints logs.
