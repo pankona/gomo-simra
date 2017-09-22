@@ -2,6 +2,7 @@ package simra
 
 import (
 	"github.com/pankona/gomo-simra/simra/internal/peer"
+	"github.com/pankona/gomo-simra/simra/simlog"
 )
 
 // Texture represents a texture.
@@ -11,8 +12,8 @@ type Texture struct {
 }
 
 func (t *Texture) release() {
-	LogDebug("IN")
+	simlog.FuncIn()
 	gl := t.simra.gl
 	gl.ReleaseTexture(t.texture)
-	LogDebug("OUT")
+	simlog.FuncOut()
 }

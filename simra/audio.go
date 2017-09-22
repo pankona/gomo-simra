@@ -6,6 +6,7 @@ import (
 
 	mp3 "github.com/hajimehoshi/go-mp3"
 	"github.com/hajimehoshi/oto"
+	"github.com/pankona/gomo-simra/simra/simlog"
 	"golang.org/x/mobile/asset"
 )
 
@@ -40,15 +41,15 @@ func (a *audio) Play(resource asset.File, loop bool, doneCallback func(err error
 	go func() {
 		err := a.doPlay(player, dec, resource, loop)
 		if err != nil && err != io.EOF {
-			LogError(err.Error())
+			simlog.Error(err)
 		}
 		err = dec.Close()
 		if err != nil {
-			LogError(err.Error())
+			simlog.Error(err)
 		}
 		err = player.Close()
 		if err != nil {
-			LogError(err.Error())
+			simlog.Error(err)
 		}
 		doneCallback(err)
 	}()

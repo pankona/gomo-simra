@@ -5,6 +5,7 @@ import (
 
 	"github.com/pankona/gomo-simra/simra/fps"
 	"github.com/pankona/gomo-simra/simra/internal/peer"
+	"github.com/pankona/gomo-simra/simra/simlog"
 )
 
 // Spriter represents an interface of Sprite
@@ -65,39 +66,39 @@ type sprite struct {
 
 // ReplaceTexture replaces sprite's texture with specified image resource.
 func (sprite *sprite) ReplaceTexture(texture *Texture) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	// retain reference for texture to avoid to be discarded by GC
 	sprite.texture = texture
 	sc := sprite.simra.spritecontainer
 	sc.ReplaceTexture(&sprite.Sprite, texture.texture)
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 // AddTouchListener registers a listener for touch event.
 // Touch event will be notified when "sprite" is touched.
 func (sprite *sprite) AddTouchListener(listener peer.TouchListener) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	sprite.Sprite.AddTouchListener(listener)
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 // RemoveAllTouchListener removes all listeners already registered.
 func (sprite *sprite) RemoveAllTouchListener() {
-	LogDebug("IN")
+	simlog.FuncIn()
 	sprite.Sprite.RemoveAllTouchListener()
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 // AddAnimationSet adds a specified AnimationSet to sprite
 func (sprite *sprite) AddAnimationSet(animationName string, set *AnimationSet) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	sprite.animationSets[animationName] = set
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 // StartAnimation starts animation by specified animation name
 func (sprite *sprite) StartAnimation(animationName string, shouldLoop bool, animationEndCallback func()) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	if sprite.animationCancel != nil {
 		// animation is already in progress. don't start.
 		// TODO: should exlude control
@@ -107,11 +108,11 @@ func (sprite *sprite) StartAnimation(animationName string, shouldLoop bool, anim
 	ctx, cancel := context.WithCancel(ctx)
 	sprite.animationCancel = cancel
 	go sprite.startAnimation(ctx, animationName, shouldLoop, animationEndCallback)
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 func (sprite *sprite) startAnimation(ctx context.Context, animationName string, shouldLoop bool, animationEndCallback func()) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	animationSet := sprite.animationSets[animationName]
 	if animationSet == nil {
 		panic("specified animation is not set. animation name = " + animationName)
@@ -133,12 +134,12 @@ animation:
 	}
 	sprite.animationCancel = nil
 	animationEndCallback()
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 // StopAnimation stops animation
 func (sprite *sprite) StopAnimation() {
-	LogDebug("IN")
+	simlog.FuncIn()
 	if sprite == nil {
 		return
 	}
@@ -146,7 +147,7 @@ func (sprite *sprite) StopAnimation() {
 	if sprite.animationCancel != nil {
 		sprite.animationCancel()
 	}
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 func (sprite *sprite) SetPosition(x, y int) {

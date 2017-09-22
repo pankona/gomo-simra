@@ -1,5 +1,7 @@
 package peer
 
+import "github.com/pankona/gomo-simra/simra/simlog"
+
 // Spriter represents interface of Sprite
 type Spriter interface {
 	// AddTouchListener registers a listener to notify touch event.
@@ -32,14 +34,14 @@ type Sprite struct {
 
 // AddTouchListener registers a listener to notify touch event.
 func (s *Sprite) AddTouchListener(l TouchListener) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	s.touchListeners = append(s.touchListeners, &l)
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 // RemoveAllTouchListener removes all registered listeners from sprite.
 func (s *Sprite) RemoveAllTouchListener() {
-	LogDebug("IN")
+	simlog.FuncIn()
 	s.touchListeners = nil
-	LogDebug("OUT")
+	simlog.FuncOut()
 }

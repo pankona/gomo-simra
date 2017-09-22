@@ -39,7 +39,7 @@ func TestAddCollisionListener(t *testing.T) {
 	var c1, c2 c
 	var l l
 
-	simra := sim
+	simra := &simra{}
 	simra.RemoveAllCollisionListener()
 	if simra.comapLength() != 0 {
 		t.Error("unexpected comap length. comapLength() =", simra.comapLength())
@@ -68,7 +68,7 @@ func TestRemoveCollisionListener(t *testing.T) {
 	var c1, c2 c
 	var l l
 
-	simra := sim
+	simra := &simra{}
 	simra.RemoveAllCollisionListener()
 	if simra.comapLength() != 0 {
 		t.Error("unexpected comap length. comapLength() =", simra.comapLength())

@@ -10,6 +10,7 @@ import (
 
 	"github.com/golang/freetype/truetype"
 	"github.com/pankona/gomo-simra/simra/config"
+	"github.com/pankona/gomo-simra/simra/simlog"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/gofont/goregular"
 	"golang.org/x/image/math/fixed"
@@ -87,7 +88,8 @@ type GLContext struct {
 // Initialize initializes GLPeer.
 // This function must be called inadvance of using GLPeer
 func (glpeer *GLPeer) Initialize(glc *GLContext) {
-	LogDebug("IN")
+	simlog.FuncIn()
+
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 	glpeer.glc = glc
@@ -103,7 +105,7 @@ func (glpeer *GLPeer) Initialize(glc *GLContext) {
 	glpeer.fps = debug.NewFPS(glpeer.images)
 	glpeer.initEng()
 
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 func (glpeer *GLPeer) initEng() {
@@ -150,31 +152,32 @@ func (glpeer *GLPeer) RemoveChild(n *sprite.Node) {
 // LoadTexture return texture that is loaded by the information of arguments.
 // Loaded texture can assign using AddSprite function.
 func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex {
-	LogDebug("IN")
+	simlog.FuncIn()
+
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 
 	a, err := asset.Open(assetName)
 	if err != nil {
-		log.Fatal(err)
+		simlog.Error(err)
 	}
 	defer func() {
 		closeErr := a.Close()
 		if closeErr != nil {
-			log.Println(closeErr)
+			simlog.Error(closeErr)
 		}
 	}()
 
 	img, _, err := image.Decode(a)
 	if err != nil {
-		log.Fatal(err)
+		simlog.Error(err)
 	}
 	t, err := glpeer.eng.LoadTexture(img)
 	if err != nil {
-		log.Fatal(err)
+		simlog.Error(err)
 	}
 
-	LogDebug("OUT")
+	simlog.FuncOut()
 	return sprite.SubTex{T: t, R: rect}
 }
 
@@ -182,7 +185,8 @@ func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite
 // Loaded texture can assign using AddSprite function.
 // TODO: font parameterize
 func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle) sprite.SubTex {
-	LogDebug("IN")
+	simlog.FuncIn()
+
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 
@@ -222,14 +226,15 @@ func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, fontcolor
 		log.Fatal(err)
 	}
 
-	LogDebug("OUT")
+	simlog.FuncOut()
 	return sprite.SubTex{T: t, R: rect}
 }
 
 // Finalize finalizes GLPeer.
 // This is called at termination of application.
 func (glpeer *GLPeer) Finalize() {
-	LogDebug("IN")
+	simlog.FuncIn()
+
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 
@@ -237,7 +242,8 @@ func (glpeer *GLPeer) Finalize() {
 	glpeer.fps.Release()
 	glpeer.images.Release()
 	glpeer.glc.glcontext = nil
-	LogDebug("OUT")
+
+	simlog.FuncOut()
 }
 
 // Update updates screen.
@@ -271,11 +277,13 @@ func (glpeer *GLPeer) Update(sc SpriteContainerer) {
 // This is called at changing of scene, and
 // this function is for clean previous scene.
 func (glpeer *GLPeer) Reset() {
-	LogDebug("IN")
+	simlog.FuncIn()
+
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 	glpeer.initEng()
-	LogDebug("OUT")
+
+	simlog.FuncOut()
 }
 
 // SetSubTex registers subtexture to specified node

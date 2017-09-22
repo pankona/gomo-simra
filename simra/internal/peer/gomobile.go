@@ -6,6 +6,8 @@ import (
 	_ "image/jpeg" // must be imported here to treat jpeg
 	_ "image/png"  // must be imported here to treat transparent of png
 
+	"github.com/pankona/gomo-simra/simra/simlog"
+
 	"golang.org/x/mobile/app"
 	"golang.org/x/mobile/event/lifecycle"
 	"golang.org/x/mobile/event/paint"
@@ -44,12 +46,12 @@ func GetGomo() Gomoer {
 
 // Initialize initializes Gomo.
 func (g *Gomo) Initialize(onStart func(glc *GLContext), onStop func(), updateCallback func()) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	g.onStart = onStart
 	g.onStop = onStop
 	g.updateCallback = updateCallback
 	g.screensize = screensize
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 func (g *Gomo) handleLifeCycle(e lifecycle.Event) {
@@ -107,12 +109,12 @@ func (g *Gomo) handleEvent(e interface{}) {
 // Start starts gomobile's main loop.
 // Most of events handled by peer is fired by this function.
 func (g *Gomo) Start() {
-	LogDebug("IN")
+	simlog.FuncIn()
 	app.Main(func(a app.App) {
 		g.app = a
 		for e := range a.Events() {
 			g.handleEvent(e)
 		}
 	})
-	LogDebug("OUT")
+	simlog.FuncOut()
 }

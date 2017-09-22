@@ -7,6 +7,7 @@ import (
 
 	"github.com/pankona/gomo-simra/simra/fps"
 	"github.com/pankona/gomo-simra/simra/internal/peer"
+	"github.com/pankona/gomo-simra/simra/simlog"
 )
 
 // Simraer represents an interface of simra instance
@@ -74,10 +75,10 @@ func (sim *simra) onUpdate() {
 }
 
 func (sim *simra) onStopped() {
-	peer.LogDebug("IN")
+	simlog.FuncIn()
 	sim.driver = nil
 	sim.gl.Finalize()
-	peer.LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 func (sim *simra) onGomoStart(glc *peer.GLContext) {
@@ -92,7 +93,8 @@ func (sim *simra) onGomoStop() {
 
 // Start starts to run gomobile and set specified scene as first driver
 func (sim *simra) Start(driver Driver) {
-	peer.LogDebug("IN")
+	simlog.FuncIn()
+
 	gl := peer.NewGLPeer()
 	sc := peer.GetSpriteContainer()
 	sc.Initialize(gl)
@@ -102,13 +104,15 @@ func (sim *simra) Start(driver Driver) {
 	gomo := peer.GetGomo()
 	gomo.Initialize(sim.onGomoStart, sim.onGomoStop, sim.onUpdate)
 	gomo.Start()
-	peer.LogDebug("OUT")
+
+	simlog.FuncOut()
 }
 
 // SetScene sets a driver as a scene.
 // If a driver is already set, it is replaced with new one.
 func (sim *simra) SetScene(driver Driver) {
-	peer.LogDebug("IN")
+	simlog.FuncIn()
+
 	sim.spritecontainer.RemoveSprites()
 	sim.gl.Reset()
 	sim.spritecontainer.Initialize(sim.gl)
@@ -118,9 +122,9 @@ func (sim *simra) SetScene(driver Driver) {
 	sim.driver = driver
 	sim.spritecontainer.Initialize(sim.gl)
 	sim.spritecontainer.AddSprite(&peer.Sprite{}, nil, fps.Progress)
-
 	driver.Initialize(sim)
-	peer.LogDebug("OUT")
+
+	simlog.FuncOut()
 }
 
 // NewSprite returns an instance of Sprite
@@ -167,9 +171,9 @@ func (sim *simra) RemoveTouchListener(listener peer.TouchListener) {
 // collision is detected between c1 and c2.
 func (sim *simra) AddCollisionListener(c1, c2 Collider, listener CollisionListener) {
 	// TODO: exclusive controll
-	LogDebug("IN")
+	simlog.FuncIn()
 	sim.comap = append(sim.comap, &collisionMap{c1, c2, listener})
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 func (sim *simra) removeCollisionMap(c *collisionMap) {
@@ -186,28 +190,31 @@ func (sim *simra) removeCollisionMap(c *collisionMap) {
 
 // RemoveAllCollisionListener removes all registered listeners
 func (sim *simra) RemoveAllCollisionListener() {
-	LogDebug("IN")
+	simlog.FuncIn()
 	sim.comap = nil
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 // NewImageTexture allocates a texture from asset image
 func (sim *simra) NewImageTexture(assetName string, rect image.Rectangle) *Texture {
-	LogDebug("IN")
+	simlog.FuncIn()
+
 	gl := sim.gl
 	tex := gl.LoadTexture(assetName, rect)
-	LogDebug("OUT")
 	t := &Texture{
 		simra:   sim,
 		texture: gl.NewTexture(tex),
 	}
 	runtime.SetFinalizer(t, (*Texture).release)
+
+	simlog.FuncOut()
 	return t
 }
 
 // NewTextTexture allocates a texture from specified text
 func (sim *simra) NewTextTexture(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle) *Texture {
-	LogDebug("IN")
+	simlog.FuncIn()
+
 	gl := sim.gl
 	tex := gl.MakeTextureByText(text, fontsize, fontcolor, rect)
 	t := &Texture{
@@ -215,7 +222,8 @@ func (sim *simra) NewTextTexture(text string, fontsize float64, fontcolor color.
 		texture: gl.NewTexture(tex),
 	}
 	runtime.SetFinalizer(t, (*Texture).release)
-	LogDebug("OUT")
+
+	simlog.FuncOut()
 	return t
 }
 
@@ -261,25 +269,11 @@ func (sim *simra) collisionCheckAndNotify() {
 // RemoveCollisionListener removes a collision map by specified collider instance.
 func (sim *simra) RemoveCollisionListener(c1, c2 Collider) {
 	// TODO: exclusive controll
-	LogDebug("IN")
+	simlog.FuncIn()
 	sim.removeCollisionMap(&collisionMap{c1, c2, nil})
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 func (sim *simra) comapLength() int {
 	return len(sim.comap)
-}
-
-// LogDebug prints logs.
-// From simra, just call peer.LogDebug.
-// This is disabled at Release Build.
-func LogDebug(format string, a ...interface{}) {
-	peer.LogDebug(format, a...)
-}
-
-// LogError prints logs.
-// From simra, just call peer.LogError.
-// This is never disabled even for Release build.
-func LogError(format string, a ...interface{}) {
-	peer.LogError(format, a...)
 }

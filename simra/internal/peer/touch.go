@@ -1,5 +1,7 @@
 package peer
 
+import "github.com/pankona/gomo-simra/simra/simlog"
+
 // Toucher reporesents an interface for touch controller
 type Toucher interface {
 	// AddTouchListener registeres a listener to notify touch event.
@@ -45,9 +47,9 @@ func GetTouchPeer() Toucher {
 
 // AddTouchListener registeres a listener to notify touch event.
 func (tp *TouchPeer) AddTouchListener(listener TouchListener) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	tp.touchListeners = append(tp.touchListeners, listener)
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 func remove(listeners []TouchListener, remove TouchListener) []TouchListener {
@@ -62,16 +64,16 @@ func remove(listeners []TouchListener, remove TouchListener) []TouchListener {
 
 // RemoveTouchListener removes specified listener.
 func (tp *TouchPeer) RemoveTouchListener(listener TouchListener) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	tp.touchListeners = remove(tp.touchListeners, listener)
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 // RemoveAllTouchListeners removes all registered listeners.
 func (tp *TouchPeer) RemoveAllTouchListeners() {
-	LogDebug("IN")
+	simlog.FuncIn()
 	tp.touchListeners = nil
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 func (tp *TouchPeer) calcTouchedPosition(pxx, pxy float32) (float32, float32) {
@@ -92,32 +94,32 @@ func (tp *TouchPeer) calcTouchedPosition(pxx, pxy float32) (float32, float32) {
 // OnTouchBegin is called when touch is started.
 // This event is notified to all registered listeners despite of the touched position.
 func (tp *TouchPeer) OnTouchBegin(pxx, pxy float32) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	x, y := tp.calcTouchedPosition(pxx, pxy)
 	for i := range tp.touchListeners {
 		tp.touchListeners[i].OnTouchBegin(x, y)
 	}
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 // OnTouchMove is called when touch is moved (dragged).
 // This event is notified to all registered listeners despite of the touched position.
 func (tp *TouchPeer) OnTouchMove(pxx, pxy float32) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	x, y := tp.calcTouchedPosition(pxx, pxy)
 	for i := range tp.touchListeners {
 		tp.touchListeners[i].OnTouchMove(x, y)
 	}
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 // OnTouchEnd is called when touch is ended (released).
 // This event is notified to all registered listeners despite of the touched position.
 func (tp *TouchPeer) OnTouchEnd(pxx, pxy float32) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	x, y := tp.calcTouchedPosition(pxx, pxy)
 	for i := range tp.touchListeners {
 		tp.touchListeners[i].OnTouchEnd(x, y)
 	}
-	LogDebug("OUT")
+	simlog.FuncOut()
 }

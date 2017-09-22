@@ -1,6 +1,9 @@
 package peer
 
-import "golang.org/x/mobile/event/size"
+import (
+	"github.com/pankona/gomo-simra/simra/simlog"
+	"golang.org/x/mobile/event/size"
+)
 
 // ScreenSizer represents interface for configurating screen size
 type ScreenSizer interface {
@@ -37,21 +40,21 @@ func GetScreenSizePeer() ScreenSizer {
 }
 
 func (ss *screenSize) SetScreenSize(s size.Event) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	ss.sz = s
 	ss.calcScale()
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 // SetDesiredScreenSize sets virtual screen size.
 // Any positive value can be specified to arguments.
 // like, w=1920, h=1080
 func (ss *screenSize) SetDesiredScreenSize(w, h float32) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	ss.height = h
 	ss.width = w
 	ss.calcScale()
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 func (ss *screenSize) calcScale() {

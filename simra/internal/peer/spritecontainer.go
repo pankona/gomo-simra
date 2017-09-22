@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/pankona/gomo-simra/simra/simlog"
+
 	"golang.org/x/mobile/exp/sprite"
 	"golang.org/x/mobile/exp/sprite/clock"
 )
@@ -62,15 +64,15 @@ func GetSpriteContainer() SpriteContainerer {
 // Initialize initializes SpriteContainer object.
 // This must be called to use all SpriteContainer's function in advance.
 func (sc *SpriteContainer) Initialize(gl GLer) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	sc.gl = gl
 	GetTouchPeer().AddTouchListener(sc)
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 // AddSprite adds a sprite to SpriteContainer.
 func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCallback func()) error {
-	LogDebug("IN")
+	simlog.FuncIn()
 	var sn *spriteNodePair
 	i, ok := sc.spriteNodePairs.Load(s)
 	if !ok {
@@ -97,7 +99,7 @@ func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCa
 	if subTex != nil {
 		sc.gl.SetSubTex(sn.node, subTex)
 	}
-	LogDebug("OUT")
+	simlog.FuncOut()
 	return nil
 }
 
@@ -106,26 +108,26 @@ func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCa
 // marks the specified sprite as "not in use".
 // The sprite marked as "not in use" will be reused at AddSprite.
 func (sc *SpriteContainer) RemoveSprite(remove *Sprite) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	i, ok := sc.spriteNodePairs.Load(remove)
 	if !ok {
 		return
 	}
 	sn := i.(*spriteNodePair)
 	if !sn.inuse {
-		LogDebug("already removed.")
+		simlog.Debug("already removed.")
 		return
 	}
 	sn.inuse = false
 	sc.gl.RemoveChild(sn.node)
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 // RemoveSprites removes all registered sprites from SpriteContainer.
 func (sc *SpriteContainer) RemoveSprites() {
-	LogDebug("IN")
+	simlog.FuncIn()
 	sc.spriteNodePairs = sync.Map{}
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 // GetSpriteNodePairs returns map represntation of sprite and node pair
@@ -135,24 +137,25 @@ func (sc *SpriteContainer) GetSpriteNodePairs() *sync.Map {
 
 // ReplaceTexture replaces sprite's texture to specified one.
 func (sc *SpriteContainer) ReplaceTexture(sprite *Sprite, texture *Texture) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	if i, ok := sc.spriteNodePairs.Load(sprite); ok {
 		node := i.(*spriteNodePair).node
 		sc.gl.SetSubTex(node, &texture.subTex)
 	}
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 func isContained(sprite *Sprite, x, y float32) bool {
-	LogDebug("IN")
+	simlog.FuncIn()
 	if x >= (float32)(sprite.X)-(float32)(sprite.W)/2 &&
 		x <= (float32)(sprite.X)+(float32)(sprite.W)/2 &&
 		y >= (float32)(sprite.Y)-(float32)(sprite.H)/2 &&
 		y <= (float32)(sprite.Y)+(float32)(sprite.H)/2 {
-		LogDebug("OUT true")
+		simlog.Debug("true")
 		return true
 	}
-	LogDebug("OUT false")
+	simlog.Debug("false")
+	simlog.FuncOut()
 	return false
 }
 
@@ -165,7 +168,7 @@ const (
 )
 
 func (sc *SpriteContainer) emitTouchEvent(x, y float32, e event) {
-	LogDebug("IN")
+	simlog.FuncIn()
 	sc.spriteNodePairs.Range(func(k, v interface{}) bool {
 		s := v.(*spriteNodePair).sprite
 		listeners := s.touchListeners
@@ -185,7 +188,7 @@ func (sc *SpriteContainer) emitTouchEvent(x, y float32, e event) {
 		}
 		return true
 	})
-	LogDebug("OUT")
+	simlog.FuncOut()
 }
 
 // OnTouchBegin is called when screen is started to touch.
