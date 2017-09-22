@@ -18,17 +18,19 @@ const (
 
 // Title represents a scene object for Title
 type Title struct {
+	simra     simra.Simraer
 	audio     simra.Audioer
 	isPlaying bool
 }
 
 // Initialize initializes title scene
 // This is called from simra.
-// simra.GetInstance().SetDesiredScreenSize should be called to determine
+// simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
-func (title *Title) Initialize() {
+func (title *Title) Initialize(sim simra.Simraer) {
 	simra.LogDebug("[IN]")
-	simra.GetInstance().SetDesiredScreenSize(ScreenWidth, ScreenHeight)
+	title.simra = sim
+	title.simra.SetDesiredScreenSize(ScreenWidth, ScreenHeight)
 	// initialize sprites
 	title.initialize()
 	simra.LogDebug("[OUT]")
@@ -36,14 +38,14 @@ func (title *Title) Initialize() {
 
 func (title *Title) initialize() {
 
-	simra.GetInstance().AddTouchListener(title)
+	title.simra.AddTouchListener(title)
 
-	sprite := simra.GetInstance().NewSprite()
+	sprite := title.simra.NewSprite()
 	sprite.SetScale(ScreenWidth, 80)
 	sprite.SetPosition(ScreenWidth/2, ScreenHeight/2)
-	simra.GetInstance().AddSprite(sprite)
+	title.simra.AddSprite(sprite)
 	s := sprite.GetScale()
-	tex := simra.NewTextTexture("tap to play sound",
+	tex := title.simra.NewTextTexture("tap to play sound",
 		60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, s.W, s.H))
 	sprite.ReplaceTexture(tex)
 

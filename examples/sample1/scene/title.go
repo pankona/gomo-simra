@@ -8,17 +8,19 @@ import (
 
 // Title represents a scene object for Title
 type Title struct {
+	simra      simra.Simraer
 	background simra.Spriter
 }
 
 // Initialize initializes title scene
 // This is called from simra.
-// simra.GetInstance().SetDesiredScreenSize should be called to determine
+// simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
-func (title *Title) Initialize() {
+func (title *Title) Initialize(sim simra.Simraer) {
 	simra.LogDebug("[IN]")
+	title.simra = sim
 
-	simra.GetInstance().SetDesiredScreenSize(1080/2, 1920/2)
+	title.simra.SetDesiredScreenSize(1080/2, 1920/2)
 
 	// initialize sprites
 	title.initialize()
@@ -27,15 +29,15 @@ func (title *Title) Initialize() {
 }
 
 func (title *Title) initialize() {
-	title.background = simra.GetInstance().NewSprite()
+	title.background = title.simra.NewSprite()
 
 	// add background sprite
 	title.background.SetScale(1080/2, 1920/2)
 	// put center of screen
 	title.background.SetPosition(1080/2/2, 1920/2/2)
 
-	simra.GetInstance().AddSprite(title.background)
-	tex := simra.NewImageTexture("title.png",
+	title.simra.AddSprite(title.background)
+	tex := title.simra.NewImageTexture("title.png",
 		image.Rect(0, 0, title.background.GetScale().W, title.background.GetScale().H))
 	title.background.ReplaceTexture(tex)
 
@@ -62,5 +64,5 @@ func (title *Title) OnTouchMove(x, y float32) {
 // It is caused by calling AddtouchListener for title.background sprite.
 func (title *Title) OnTouchEnd(x, y float32) {
 	// scene end. go to next scene
-	simra.GetInstance().SetScene(&Stage1{})
+	title.simra.SetScene(&Stage1{})
 }

@@ -9,7 +9,7 @@ import (
 
 func main() {
 	simra.LogDebug("[IN]")
-	engine := simra.GetInstance()
-	engine.Start(&scene.Title{})
+	sim := simra.NewSimra()
+	sim.Start(&scene.Title{})
 	simra.LogDebug("[OUT]")
 }

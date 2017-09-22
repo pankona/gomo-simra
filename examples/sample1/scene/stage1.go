@@ -9,18 +9,20 @@ import (
 
 // Stage1 represents a scene of Stage1
 type Stage1 struct {
+	simra  simra.Simraer
 	gopher simra.Spriter
 }
 
 // Initialize initializes Stage1 scene.
 // This is called from simra.
-// simra.GetInstance().SetDesiredScreenSize should be called to determine
+// simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
 // If SetDesiredScreenSize is already called in previous scene, this scene may not call the function.
-func (stage1 *Stage1) Initialize() {
+func (stage1 *Stage1) Initialize(sim simra.Simraer) {
 	simra.LogDebug("[IN]")
+	stage1.simra = sim
 
-	simra.GetInstance().SetDesiredScreenSize(1080/2, 1920/2)
+	stage1.simra.SetDesiredScreenSize(1080/2, 1920/2)
 
 	// initialize sprites
 	stage1.initSprite()
@@ -33,15 +35,15 @@ func (stage1 *Stage1) initSprite() {
 }
 
 func (stage1 *Stage1) initGopher() {
-	stage1.gopher = simra.GetInstance().NewSprite()
+	stage1.gopher = stage1.simra.NewSprite()
 	// add gopher sprite
 	stage1.gopher.SetScale(140, 90)
 
 	// put center of screen at start
 	stage1.gopher.SetPosition(1080/2/2, 1920/2/2)
 
-	simra.GetInstance().AddSprite(stage1.gopher)
-	tex := simra.NewImageTexture("waza-gophers.jpeg",
+	stage1.simra.AddSprite(stage1.gopher)
+	tex := stage1.simra.NewImageTexture("waza-gophers.jpeg",
 		image.Rect(152, 10, 152+int(stage1.gopher.GetScale().W), 10+int(stage1.gopher.GetScale().H)))
 	stage1.gopher.ReplaceTexture(tex)
 

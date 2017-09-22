@@ -10,6 +10,7 @@ import (
 
 // CtrlTrial represents a scene object for CtrlTrial
 type CtrlTrial struct {
+	simra    simra.Simraer
 	ball     simra.Spriter
 	ctrlup   simra.Spriter
 	ctrldown simra.Spriter
@@ -29,18 +30,19 @@ const (
 
 // Initialize initializes CtrlTrial scene
 // This is called from simra.
-// simra.GetInstance().SetDesiredScreenSize should be called to determine
+// simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
-func (ctrltrial *CtrlTrial) Initialize() {
+func (ctrltrial *CtrlTrial) Initialize(sim simra.Simraer) {
 	simra.LogDebug("[IN]")
+	ctrltrial.simra = sim
 
-	simra.GetInstance().SetDesiredScreenSize(config.ScreenWidth, config.ScreenHeight)
+	ctrltrial.simra.SetDesiredScreenSize(config.ScreenWidth, config.ScreenHeight)
 
 	// add global touch listener to catch touch end event
-	simra.GetInstance().AddTouchListener(ctrltrial)
+	ctrltrial.simra.AddTouchListener(ctrltrial)
 
 	// TODO: when goes to next scene, remove global touch listener
-	// simra.GetInstance().RemoveTouchListener(ctrltrial)
+	// ctrltrial.simra.RemoveTouchListener(ctrltrial)
 
 	// initialize sprites
 	ctrltrial.initSprites()
@@ -73,14 +75,14 @@ func (ctrltrial *CtrlTrial) initSprites() {
 }
 
 func (ctrltrial *CtrlTrial) initBall() {
-	ctrltrial.ball = simra.GetInstance().NewSprite()
+	ctrltrial.ball = ctrltrial.simra.NewSprite()
 	// set size of ball
 	ctrltrial.ball.SetScale(48, 48)
 	// put center of screen at start
 	ctrltrial.ball.SetPosition(config.ScreenWidth/2, config.ScreenHeight/2)
 
-	simra.GetInstance().AddSprite(ctrltrial.ball)
-	tex := simra.NewImageTexture("ball.png",
+	ctrltrial.simra.AddSprite(ctrltrial.ball)
+	tex := ctrltrial.simra.NewImageTexture("ball.png",
 		image.Rect(0, 0, int(ctrltrial.ball.GetScale().W), int(ctrltrial.ball.GetScale().H)))
 	ctrltrial.ball.ReplaceTexture(tex)
 
@@ -129,7 +131,7 @@ func (ctrltrial *ctrlUpTouchListener) OnTouchEnd(x, y float32) {
 
 func (ctrltrial *CtrlTrial) initctrlUp() {
 
-	ctrltrial.ctrlup = simra.GetInstance().NewSprite()
+	ctrltrial.ctrlup = ctrltrial.simra.NewSprite()
 	// set size of ctrlUp
 	ctrltrial.ctrlup.SetScale(120, 120)
 	// put ctrlUp on left bottom
@@ -138,8 +140,8 @@ func (ctrltrial *CtrlTrial) initctrlUp() {
 		ctrlMarginBottom+ctrltrial.ctrldown.GetScale().H+ctrlMarginBetween+ctrltrial.ctrlup.GetScale().H/2)
 
 	// add sprite to glpeer
-	simra.GetInstance().AddSprite(ctrltrial.ctrlup)
-	tex := simra.NewImageTexture("arrow.png",
+	ctrltrial.simra.AddSprite(ctrltrial.ctrlup)
+	tex := ctrltrial.simra.NewImageTexture("arrow.png",
 		image.Rect(0, 0, int(ctrltrial.ctrlup.GetScale().W), int(ctrltrial.ctrlup.GetScale().H)))
 	ctrltrial.ctrlup.ReplaceTexture(tex)
 
@@ -182,7 +184,7 @@ func (ctrltrial *ctrlDownTouchListener) OnTouchEnd(x, y float32) {
 }
 
 func (ctrltrial *CtrlTrial) initctrlDown() {
-	ctrltrial.ctrldown = simra.GetInstance().NewSprite()
+	ctrltrial.ctrldown = ctrltrial.simra.NewSprite()
 	// set size of ctrlDown
 	ctrltrial.ctrldown.SetScale(120, 120)
 	// put ctrlDown on left bottom
@@ -194,8 +196,8 @@ func (ctrltrial *CtrlTrial) initctrlDown() {
 	ctrltrial.ctrldown.SetRotate(math.Pi)
 
 	// add sprite to glpeer
-	simra.GetInstance().AddSprite(ctrltrial.ctrldown)
-	tex := simra.NewImageTexture("arrow.png",
+	ctrltrial.simra.AddSprite(ctrltrial.ctrldown)
+	tex := ctrltrial.simra.NewImageTexture("arrow.png",
 		image.Rect(0, 0, int(ctrltrial.ctrldown.GetScale().W), int(ctrltrial.ctrldown.GetScale().H)))
 	ctrltrial.ctrldown.ReplaceTexture(tex)
 
@@ -210,12 +212,12 @@ func (ctrltrial *CtrlTrial) replaceButtonColor() {
 	var tex *simra.Texture
 
 	// red changes to blue
-	tex = simra.NewImageTexture("blue_circle.png",
+	tex = ctrltrial.simra.NewImageTexture("blue_circle.png",
 		image.Rect(0, 0, int(ctrltrial.buttonBlue.GetScale().W), int(ctrltrial.buttonBlue.GetScale().H)))
 	ctrltrial.buttonRed.ReplaceTexture(tex)
 
 	// blue changes to red
-	tex = simra.NewImageTexture("red_circle.png",
+	tex = ctrltrial.simra.NewImageTexture("red_circle.png",
 		image.Rect(0, 0, int(ctrltrial.buttonRed.GetScale().W), int(ctrltrial.buttonRed.GetScale().H)))
 	ctrltrial.buttonBlue.ReplaceTexture(tex)
 
@@ -228,12 +230,12 @@ func (ctrltrial *CtrlTrial) originalButtonColor() {
 	var tex *simra.Texture
 
 	// set red button to buttonRed
-	tex = simra.NewImageTexture("red_circle.png",
+	tex = ctrltrial.simra.NewImageTexture("red_circle.png",
 		image.Rect(0, 0, int(ctrltrial.buttonBlue.GetScale().W), int(ctrltrial.buttonBlue.GetScale().H)))
 	ctrltrial.buttonRed.ReplaceTexture(tex)
 
 	// set blue button to buttonBlue
-	tex = simra.NewImageTexture("blue_circle.png",
+	tex = ctrltrial.simra.NewImageTexture("blue_circle.png",
 		image.Rect(0, 0, int(ctrltrial.buttonRed.GetScale().W), int(ctrltrial.buttonRed.GetScale().H)))
 	ctrltrial.buttonBlue.ReplaceTexture(tex)
 
@@ -256,7 +258,7 @@ func (ctrltrial *ButtonBlueTouchListener) OnTouchBegin(x, y float32) {
 		ctrltrial.parent.replaceButtonColor()
 	}
 
-	simra.GetInstance().RemoveSprite(ctrltrial.parent.ball)
+	ctrltrial.parent.simra.RemoveSprite(ctrltrial.parent.ball)
 	simra.LogDebug("OUT")
 }
 
@@ -271,7 +273,7 @@ func (ctrltrial *ButtonBlueTouchListener) OnTouchEnd(x, y float32) {
 }
 
 func (ctrltrial *CtrlTrial) initButtonBlue() {
-	ctrltrial.buttonBlue = simra.GetInstance().NewSprite()
+	ctrltrial.buttonBlue = ctrltrial.simra.NewSprite()
 	// set size of button blue
 	ctrltrial.buttonBlue.SetScale(80, 80)
 
@@ -281,8 +283,8 @@ func (ctrltrial *CtrlTrial) initButtonBlue() {
 		buttonMarginBottom+(80)+buttonMarginBetween+ctrltrial.buttonBlue.GetScale().W/2)
 
 	// add sprite to glpeer
-	simra.GetInstance().AddSprite(ctrltrial.buttonBlue)
-	tex := simra.NewImageTexture("blue_circle.png",
+	ctrltrial.simra.AddSprite(ctrltrial.buttonBlue)
+	tex := ctrltrial.simra.NewImageTexture("blue_circle.png",
 		image.Rect(0, 0, int(ctrltrial.buttonBlue.GetScale().W), int(ctrltrial.buttonBlue.GetScale().H)))
 	ctrltrial.buttonBlue.ReplaceTexture(tex)
 
@@ -306,8 +308,8 @@ func (ctrltrial *ButtonRedTouchListener) OnTouchBegin(x, y float32) {
 	} else {
 		ctrltrial.parent.replaceButtonColor()
 	}
-	simra.GetInstance().AddSprite(ctrltrial.parent.ball)
-	tex := simra.NewImageTexture("ball.png",
+	ctrltrial.parent.simra.AddSprite(ctrltrial.parent.ball)
+	tex := ctrltrial.parent.simra.NewImageTexture("ball.png",
 		image.Rect(0, 0, int(ctrltrial.parent.ball.GetScale().W), int(ctrltrial.parent.ball.GetScale().H)))
 	ctrltrial.parent.ball.ReplaceTexture(tex)
 	simra.LogDebug("OUT")
@@ -324,7 +326,7 @@ func (ctrltrial *ButtonRedTouchListener) OnTouchEnd(x, y float32) {
 }
 
 func (ctrltrial *CtrlTrial) initButtonRed() {
-	ctrltrial.buttonRed = simra.GetInstance().NewSprite()
+	ctrltrial.buttonRed = ctrltrial.simra.NewSprite()
 	// set size of button red
 	ctrltrial.buttonRed.SetScale(80, 80)
 	// put button red on right bottom
@@ -333,8 +335,8 @@ func (ctrltrial *CtrlTrial) initButtonRed() {
 		buttonMarginBottom+(ctrltrial.buttonRed.GetScale().H/2))
 
 	// add sprite to glpeer
-	simra.GetInstance().AddSprite(ctrltrial.buttonRed)
-	tex := simra.NewImageTexture("red_circle.png",
+	ctrltrial.simra.AddSprite(ctrltrial.buttonRed)
+	tex := ctrltrial.simra.NewImageTexture("red_circle.png",
 		image.Rect(0, 0, int(ctrltrial.buttonRed.GetScale().W), int(ctrltrial.buttonRed.GetScale().H)))
 	ctrltrial.buttonRed.ReplaceTexture(tex)
 

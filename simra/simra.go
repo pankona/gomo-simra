@@ -1,6 +1,10 @@
 package simra
 
 import (
+	"image"
+	"image/color"
+	"runtime"
+
 	"github.com/pankona/gomo-simra/simra/fps"
 	"github.com/pankona/gomo-simra/simra/internal/peer"
 )
@@ -32,6 +36,10 @@ type Simraer interface {
 	AddCollisionListener(c1, c2 Collider, listener CollisionListener)
 	// RemoveAllCollisionListener removes all registered listeners
 	RemoveAllCollisionListener()
+	// NewImageTexture returns a texture instance of image
+	NewImageTexture(assetName string, rect image.Rectangle) *Texture
+	// NewImageTexture returns a texture instance of text
+	NewTextTexture(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle) *Texture
 }
 
 type collisionMap struct {
@@ -48,18 +56,6 @@ type simra struct {
 	spritecontainer peer.SpriteContainerer
 	onStart         func()
 	onStop          func()
-}
-
-// TODO: don't declare as package global.
-var sim = &simra{
-	comap: make([]*collisionMap, 0),
-}
-
-// GetInstance returns instance of Simra.
-// It is necessary to call this function to get Simra instance
-// since Simra is single instance.
-func GetInstance() Simraer {
-	return sim
 }
 
 // NewSimra returns an instance of Simraer
@@ -127,7 +123,7 @@ func (sim *simra) SetScene(driver Driver) {
 	sim.spritecontainer.Initialize(sim.gl)
 	sim.spritecontainer.AddSprite(&peer.Sprite{}, nil, fps.Progress)
 
-	driver.Initialize()
+	driver.Initialize(sim)
 	peer.LogDebug("OUT")
 }
 
@@ -197,6 +193,34 @@ func (sim *simra) RemoveAllCollisionListener() {
 	LogDebug("IN")
 	sim.comap = nil
 	LogDebug("OUT")
+}
+
+// NewImageTexture allocates a texture from asset image
+func (sim *simra) NewImageTexture(assetName string, rect image.Rectangle) *Texture {
+	LogDebug("IN")
+	gl := sim.gl
+	tex := gl.LoadTexture(assetName, rect)
+	LogDebug("OUT")
+	t := &Texture{
+		simra:   sim,
+		texture: gl.NewTexture(tex),
+	}
+	runtime.SetFinalizer(t, (*Texture).release)
+	return t
+}
+
+// NewTextTexture allocates a texture from specified text
+func (sim *simra) NewTextTexture(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle) *Texture {
+	LogDebug("IN")
+	gl := sim.gl
+	tex := gl.MakeTextureByText(text, fontsize, fontcolor, rect)
+	t := &Texture{
+		simra:   sim,
+		texture: gl.NewTexture(tex),
+	}
+	runtime.SetFinalizer(t, (*Texture).release)
+	LogDebug("OUT")
+	return t
 }
 
 func (sim *simra) collisionCheckAndNotify() {

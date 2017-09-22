@@ -18,6 +18,7 @@ const (
 
 // Stage1 represents scene of Stage1.
 type Stage1 struct {
+	simra         simra.Simraer
 	models        models
 	views         views
 	ball          Ball
@@ -37,29 +38,26 @@ const (
 
 // Initialize initializes Stage1 scene
 // This is called from simra.
-// simra.GetInstance().SetDesiredScreenSize should be called to determine
+// simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
-func (scene *Stage1) Initialize() {
+func (scene *Stage1) Initialize(sim simra.Simraer) {
 	simra.LogDebug("[IN]")
+	scene.simra = sim
 
-	simra.GetInstance().SetDesiredScreenSize(config.ScreenWidth, config.ScreenHeight)
+	scene.simra.SetDesiredScreenSize(config.ScreenWidth, config.ScreenHeight)
 
 	// add global touch listener to catch touch end event
-	simra.GetInstance().AddTouchListener(scene)
-
-	// TODO: when goes to next scene, remove global touch listener
-	// simra.GetInstance().RemoveTouchListener(Stage1)
+	scene.simra.AddTouchListener(scene)
 
 	scene.initialize()
-
 	scene.resetPosition()
 	scene.setupSprites()
 	scene.registerViews()
 	scene.registerModels()
 	scene.remainingLife = remainingLifeAtStart
 
-	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle[0], &scene.models)
-	simra.GetInstance().AddCollisionListener(&scene.ball, &scene.obstacle[1], &scene.models)
+	scene.simra.AddCollisionListener(&scene.ball, &scene.obstacle[0], &scene.models)
+	scene.simra.AddCollisionListener(&scene.ball, &scene.obstacle[1], &scene.models)
 
 	scene.showReadyText()
 	scene.gamestate = readyToStart
@@ -68,18 +66,18 @@ func (scene *Stage1) Initialize() {
 }
 
 func (scene *Stage1) initialize() {
-	scene.readytext[0] = simra.GetInstance().NewSprite()
-	scene.readytext[1] = simra.GetInstance().NewSprite()
-	scene.background[0].Spriter = simra.GetInstance().NewSprite()
-	scene.background[1].Spriter = simra.GetInstance().NewSprite()
-	scene.ball.Spriter = simra.GetInstance().NewSprite()
-	scene.obstacle[0].Spriter = simra.GetInstance().NewSprite()
-	scene.obstacle[1].Spriter = simra.GetInstance().NewSprite()
-	scene.life[0].Spriter = simra.GetInstance().NewSprite()
-	scene.life[1].Spriter = simra.GetInstance().NewSprite()
-	scene.life[2].Spriter = simra.GetInstance().NewSprite()
-	scene.gameovertext[0] = simra.GetInstance().NewSprite()
-	scene.gameovertext[1] = simra.GetInstance().NewSprite()
+	scene.readytext[0] = scene.simra.NewSprite()
+	scene.readytext[1] = scene.simra.NewSprite()
+	scene.background[0].Spriter = scene.simra.NewSprite()
+	scene.background[1].Spriter = scene.simra.NewSprite()
+	scene.ball.Spriter = scene.simra.NewSprite()
+	scene.obstacle[0].Spriter = scene.simra.NewSprite()
+	scene.obstacle[1].Spriter = scene.simra.NewSprite()
+	scene.life[0].Spriter = scene.simra.NewSprite()
+	scene.life[1].Spriter = scene.simra.NewSprite()
+	scene.life[2].Spriter = scene.simra.NewSprite()
+	scene.gameovertext[0] = scene.simra.NewSprite()
+	scene.gameovertext[1] = scene.simra.NewSprite()
 }
 
 // OnTouchBegin is called when Stage1 scene is Touched.
@@ -106,15 +104,15 @@ func (scene *Stage1) OnTouchEnd(x, y float32) {
 		scene.views.restart()
 		scene.models.restart()
 
-		tex := simra.NewImageTexture("heart.png", image.Rect(0, 0, 384, 384))
+		tex := scene.simra.NewImageTexture("heart.png", image.Rect(0, 0, 384, 384))
 
 		for i := 0; i < 3; i++ {
-			simra.GetInstance().AddSprite(scene.life[i].Spriter)
+			scene.simra.AddSprite(scene.life[i].Spriter)
 			scene.life[i].ReplaceTexture(tex)
 		}
 
-		simra.GetInstance().RemoveSprite(scene.gameovertext[0])
-		simra.GetInstance().RemoveSprite(scene.gameovertext[1])
+		scene.simra.RemoveSprite(scene.gameovertext[0])
+		scene.simra.RemoveSprite(scene.gameovertext[1])
 
 		scene.remainingLife = remainingLifeAtStart
 
@@ -127,23 +125,23 @@ func (scene *Stage1) showReadyText() {
 	// ready text. will be removed after game start
 	scene.readytext[0].SetPosition(config.ScreenWidth/2, config.ScreenHeight/6*4-65/2)
 	scene.readytext[0].SetScale(config.ScreenWidth, 65)
-	simra.GetInstance().AddSprite(scene.readytext[0])
+	scene.simra.AddSprite(scene.readytext[0])
 
 	scene.readytext[1].SetPosition(config.ScreenWidth/2, config.ScreenHeight/6*3-65/2)
 	scene.readytext[1].SetScale(config.ScreenWidth, 65)
-	simra.GetInstance().AddSprite(scene.readytext[1])
+	scene.simra.AddSprite(scene.readytext[1])
 
 	var tex *simra.Texture
-	tex = simra.NewTextTexture("GET READY", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
+	tex = scene.simra.NewTextTexture("GET READY", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
 	scene.readytext[0].ReplaceTexture(tex)
-	tex = simra.NewTextTexture("TAP TO GO", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
+	tex = scene.simra.NewTextTexture("TAP TO GO", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
 	scene.readytext[1].ReplaceTexture(tex)
 
 }
 
 func (scene *Stage1) removeReadyText() {
-	simra.GetInstance().RemoveSprite(scene.readytext[0])
-	simra.GetInstance().RemoveSprite(scene.readytext[1])
+	scene.simra.RemoveSprite(scene.readytext[0])
+	scene.simra.RemoveSprite(scene.readytext[1])
 }
 
 func (scene *Stage1) resetPosition() {
@@ -172,32 +170,32 @@ func (scene *Stage1) resetPosition() {
 }
 
 func (scene *Stage1) setupSprites() {
-	simra.GetInstance().AddSprite(scene.background[0].Spriter)
-	simra.GetInstance().AddSprite(scene.background[1].Spriter)
-	simra.GetInstance().AddSprite(scene.ball.Spriter)
-	simra.GetInstance().AddSprite(scene.obstacle[0].Spriter)
-	simra.GetInstance().AddSprite(scene.obstacle[1].Spriter)
-	simra.GetInstance().AddSprite(scene.life[0].Spriter)
-	simra.GetInstance().AddSprite(scene.life[1].Spriter)
-	simra.GetInstance().AddSprite(scene.life[2].Spriter)
+	scene.simra.AddSprite(scene.background[0].Spriter)
+	scene.simra.AddSprite(scene.background[1].Spriter)
+	scene.simra.AddSprite(scene.ball.Spriter)
+	scene.simra.AddSprite(scene.obstacle[0].Spriter)
+	scene.simra.AddSprite(scene.obstacle[1].Spriter)
+	scene.simra.AddSprite(scene.life[0].Spriter)
+	scene.simra.AddSprite(scene.life[1].Spriter)
+	scene.simra.AddSprite(scene.life[2].Spriter)
 
 	var tex *simra.Texture
 
-	tex = simra.NewImageTexture("bg.png", image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight))
+	tex = scene.simra.NewImageTexture("bg.png", image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight))
 	scene.background[0].ReplaceTexture(tex)
 
-	tex = simra.NewImageTexture("bg.png", image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight))
+	tex = scene.simra.NewImageTexture("bg.png", image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight))
 	scene.background[1].ReplaceTexture(tex)
 
 	s := scene.ball.GetScale()
-	tex = simra.NewImageTexture("ball.png", image.Rect(0, 0, s.W, s.H))
+	tex = scene.simra.NewImageTexture("ball.png", image.Rect(0, 0, s.W, s.H))
 	scene.ball.ReplaceTexture(tex)
 
-	tex = simra.NewImageTexture("obstacle.png", image.Rect(0, 0, 100, 100))
+	tex = scene.simra.NewImageTexture("obstacle.png", image.Rect(0, 0, 100, 100))
 	scene.obstacle[0].ReplaceTexture(tex)
 	scene.obstacle[1].ReplaceTexture(tex)
 
-	tex = simra.NewImageTexture("heart.png", image.Rect(0, 0, 384, 384))
+	tex = scene.simra.NewImageTexture("heart.png", image.Rect(0, 0, 384, 384))
 	scene.life[0].ReplaceTexture(tex)
 	scene.life[1].ReplaceTexture(tex)
 	scene.life[2].ReplaceTexture(tex)
@@ -211,16 +209,16 @@ func (scene *Stage1) registerViews() {
 func (scene *Stage1) showGameover() {
 	scene.gameovertext[0].SetPosition(config.ScreenWidth/2, config.ScreenHeight/6*4-65/2)
 	scene.gameovertext[0].SetScale(config.ScreenWidth, 65)
-	simra.GetInstance().AddSprite(scene.gameovertext[0])
+	scene.simra.AddSprite(scene.gameovertext[0])
 
 	scene.gameovertext[1].SetPosition(config.ScreenWidth/2, config.ScreenHeight/6*3-65/2)
 	scene.gameovertext[1].SetScale(config.ScreenWidth, 65)
-	simra.GetInstance().AddSprite(scene.gameovertext[1])
+	scene.simra.AddSprite(scene.gameovertext[1])
 
 	var tex *simra.Texture
-	tex = simra.NewTextTexture("GAME OVER", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
+	tex = scene.simra.NewTextTexture("GAME OVER", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
 	scene.gameovertext[0].ReplaceTexture(tex)
-	tex = simra.NewTextTexture("RESTART!!", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
+	tex = scene.simra.NewTextTexture("RESTART!!", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
 	scene.gameovertext[1].ReplaceTexture(tex)
 }
 
@@ -237,7 +235,7 @@ func (scene *Stage1) onFinishDead() {
 	scene.views.restart()
 	scene.models.restart()
 
-	simra.GetInstance().RemoveSprite(scene.life[scene.remainingLife-1].Spriter)
+	scene.simra.RemoveSprite(scene.life[scene.remainingLife-1].Spriter)
 	scene.remainingLife--
 	simra.LogDebug("OUT")
 }

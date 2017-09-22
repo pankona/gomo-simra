@@ -13,6 +13,7 @@ import (
 
 // Title represents a scene object for Title
 type Title struct {
+	simra        simra.Simraer
 	screenWidth  int
 	screenHeight int
 	sprites      []simra.Spriter
@@ -25,39 +26,40 @@ type Title struct {
 
 // Initialize initializes title scene
 // This is called from simra.
-// simra.GetInstance().SetDesiredScreenSize should be called to determine
+// simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
-func (title *Title) Initialize() {
+func (title *Title) Initialize(sim simra.Simraer) {
 	simra.LogDebug("[IN]")
+	title.simra = sim
 
 	title.screenHeight = 1080 / 2
 	title.screenWidth = 1920 / 2
-	simra.GetInstance().SetDesiredScreenSize((float32)(title.screenHeight), (float32)(title.screenWidth))
+	title.simra.SetDesiredScreenSize((float32)(title.screenHeight), (float32)(title.screenWidth))
 
 	// initialize sprites
 	title.initialize()
 
-	title.numOfSprite = simra.GetInstance().NewSprite()
+	title.numOfSprite = title.simra.NewSprite()
 	title.numOfSprite.SetPosition(title.screenWidth/2, 100)
 	title.numOfSprite.SetScale(title.screenWidth, 80)
-	simra.GetInstance().AddSprite(title.numOfSprite)
+	title.simra.AddSprite(title.numOfSprite)
 
-	tex := simra.NewTextTexture("0",
+	tex := title.simra.NewTextTexture("0",
 		60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, title.screenWidth, 80))
 	title.numOfSprite.ReplaceTexture(tex)
 
-	title.fpsText = simra.GetInstance().NewSprite()
+	title.fpsText = title.simra.NewSprite()
 	title.fpsText.SetPosition(title.screenWidth/4, 100)
 	title.fpsText.SetScale(title.screenWidth, 80)
-	simra.GetInstance().AddSprite(title.fpsText)
+	title.simra.AddSprite(title.fpsText)
 
-	tex = simra.NewTextTexture("0",
+	tex = title.simra.NewTextTexture("0",
 		60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, title.screenWidth, 80))
 	title.fpsText.ReplaceTexture(tex)
 	go func() {
 		for {
 			<-time.After(1 * time.Second)
-			tex = simra.NewTextTexture(strconv.Itoa(title.fps),
+			tex = title.simra.NewTextTexture(strconv.Itoa(title.fps),
 				60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, title.screenWidth, 80))
 			title.fpsText.ReplaceTexture(tex)
 			title.mu.Lock()
@@ -66,13 +68,13 @@ func (title *Title) Initialize() {
 		}
 	}()
 
-	title.kokeshiTex = simra.NewImageTexture("sample2.png", image.Rect(0, 0, 64, 64))
+	title.kokeshiTex = title.simra.NewImageTexture("sample2.png", image.Rect(0, 0, 64, 64))
 
 	simra.LogDebug("[OUT]")
 }
 
 func (title *Title) initialize() {
-	simra.GetInstance().AddTouchListener(title)
+	title.simra.AddTouchListener(title)
 }
 
 var degree int
@@ -112,14 +114,14 @@ func (title *Title) OnTouchEnd(x, y float32) {
 
 func (title *Title) spawnKokeshi(x, y float32) {
 	// scene end. go to next scene
-	sprite := simra.GetInstance().NewSprite()
+	sprite := title.simra.NewSprite()
 	sprite.SetPosition((int)(x), (int)(y))
 	sprite.SetScale(128, 128)
-	simra.GetInstance().AddSprite(sprite)
+	title.simra.AddSprite(sprite)
 	title.sprites = append(title.sprites, sprite)
 	sprite.ReplaceTexture(title.kokeshiTex)
 
-	tex := simra.NewTextTexture(strconv.Itoa(len(title.sprites)),
+	tex := title.simra.NewTextTexture(strconv.Itoa(len(title.sprites)),
 		60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, title.screenWidth, 80))
 	title.numOfSprite.ReplaceTexture(tex)
 
