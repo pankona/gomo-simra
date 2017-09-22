@@ -62,6 +62,13 @@ func GetInstance() Simraer {
 	return sim
 }
 
+// NewSimra returns an instance of Simraer
+func NewSimra() Simraer {
+	return &simra{
+		comap: make([]*collisionMap, 0),
+	}
+}
+
 type point struct {
 	x, y int
 }
