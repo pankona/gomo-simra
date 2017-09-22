@@ -65,10 +65,6 @@ func NewSimra() Simraer {
 	}
 }
 
-type point struct {
-	x, y int
-}
-
 func (sim *simra) onUpdate() {
 	if sim.driver != nil {
 		sim.driver.Drive()
@@ -223,9 +219,11 @@ func (sim *simra) NewTextTexture(text string, fontsize float64, fontcolor color.
 	return t
 }
 
-func (sim *simra) collisionCheckAndNotify() {
-	//LogDebug("IN")
+type point struct {
+	x, y int
+}
 
+func (sim *simra) collisionCheckAndNotify() {
 	// check collision
 	for _, v := range sim.comap {
 		// TODO: refactor around here...
@@ -258,7 +256,6 @@ func (sim *simra) collisionCheckAndNotify() {
 			return
 		}
 	}
-	//LogDebug("OUT")
 }
 
 // RemoveCollisionListener removes a collision map by specified collider instance.
