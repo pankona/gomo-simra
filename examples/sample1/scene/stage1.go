@@ -33,7 +33,7 @@ func (stage1 *Stage1) initSprite() {
 }
 
 func (stage1 *Stage1) initGopher() {
-	stage1.gopher = simra.NewSprite()
+	stage1.gopher = simra.GetInstance().NewSprite()
 	// add gopher sprite
 	stage1.gopher.SetScale(140, 90)
 

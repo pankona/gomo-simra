@@ -38,7 +38,7 @@ func (title *Title) initialize() {
 
 	simra.GetInstance().AddTouchListener(title)
 
-	sprite := simra.NewSprite()
+	sprite := simra.GetInstance().NewSprite()
 	sprite.SetScale(ScreenWidth, 80)
 	sprite.SetPosition(ScreenWidth/2, ScreenHeight/2)
 	simra.GetInstance().AddSprite(sprite)

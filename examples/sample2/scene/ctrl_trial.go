@@ -73,7 +73,7 @@ func (ctrltrial *CtrlTrial) initSprites() {
 }
 
 func (ctrltrial *CtrlTrial) initBall() {
-	ctrltrial.ball = simra.NewSprite()
+	ctrltrial.ball = simra.GetInstance().NewSprite()
 	// set size of ball
 	ctrltrial.ball.SetScale(48, 48)
 	// put center of screen at start
@@ -129,7 +129,7 @@ func (ctrltrial *ctrlUpTouchListener) OnTouchEnd(x, y float32) {
 
 func (ctrltrial *CtrlTrial) initctrlUp() {
 
-	ctrltrial.ctrlup = simra.NewSprite()
+	ctrltrial.ctrlup = simra.GetInstance().NewSprite()
 	// set size of ctrlUp
 	ctrltrial.ctrlup.SetScale(120, 120)
 	// put ctrlUp on left bottom
@@ -182,7 +182,7 @@ func (ctrltrial *ctrlDownTouchListener) OnTouchEnd(x, y float32) {
 }
 
 func (ctrltrial *CtrlTrial) initctrlDown() {
-	ctrltrial.ctrldown = simra.NewSprite()
+	ctrltrial.ctrldown = simra.GetInstance().NewSprite()
 	// set size of ctrlDown
 	ctrltrial.ctrldown.SetScale(120, 120)
 	// put ctrlDown on left bottom
@@ -271,7 +271,7 @@ func (ctrltrial *ButtonBlueTouchListener) OnTouchEnd(x, y float32) {
 }
 
 func (ctrltrial *CtrlTrial) initButtonBlue() {
-	ctrltrial.buttonBlue = simra.NewSprite()
+	ctrltrial.buttonBlue = simra.GetInstance().NewSprite()
 	// set size of button blue
 	ctrltrial.buttonBlue.SetScale(80, 80)
 
@@ -324,7 +324,7 @@ func (ctrltrial *ButtonRedTouchListener) OnTouchEnd(x, y float32) {
 }
 
 func (ctrltrial *CtrlTrial) initButtonRed() {
-	ctrltrial.buttonRed = simra.NewSprite()
+	ctrltrial.buttonRed = simra.GetInstance().NewSprite()
 	// set size of button red
 	ctrltrial.buttonRed.SetScale(80, 80)
 	// put button red on right bottom

@@ -33,7 +33,7 @@ func (title *Title) Initialize() {
 }
 
 func (title *Title) initialize() {
-	sprite := simra.NewSprite()
+	sprite := simra.GetInstance().NewSprite()
 	sprite.SetScale(ScreenWidth, 80)
 	sprite.SetPosition(ScreenWidth/2, ScreenHeight/2)
 

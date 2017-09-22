@@ -63,14 +63,6 @@ type sprite struct {
 	texture         *Texture
 }
 
-// NewSprite returns an instance of Sprite
-func NewSprite() Spriter {
-	return &sprite{
-		simra:         GetInstance().(*simra),
-		animationSets: map[string]*AnimationSet{},
-	}
-}
-
 // ReplaceTexture replaces sprite's texture with specified image resource.
 func (sprite *sprite) ReplaceTexture(texture *Texture) {
 	LogDebug("IN")

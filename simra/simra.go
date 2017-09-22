@@ -12,6 +12,8 @@ type Simraer interface {
 	// SetScene sets a driver as a scene.
 	// If a driver is already set, it is replaced with new one.
 	SetScene(driver Driver)
+	// NewSprite returns an instance of Spriter
+	NewSprite() Spriter
 	// AddSprite adds a sprite to current scene with empty texture.
 	AddSprite(s Spriter)
 	// RemoveSprite removes specified sprite from current scene.
@@ -122,6 +124,14 @@ func (sim *simra) SetScene(driver Driver) {
 
 	driver.Initialize()
 	peer.LogDebug("OUT")
+}
+
+// NewSprite returns an instance of Sprite
+func (sim *simra) NewSprite() Spriter {
+	return &sprite{
+		simra:         sim,
+		animationSets: map[string]*AnimationSet{},
+	}
 }
 
 // AddSprite adds a sprite to current scene with empty texture.

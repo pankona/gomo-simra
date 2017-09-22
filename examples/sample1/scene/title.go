@@ -27,7 +27,7 @@ func (title *Title) Initialize() {
 }
 
 func (title *Title) initialize() {
-	title.background = simra.NewSprite()
+	title.background = simra.GetInstance().NewSprite()
 
 	// add background sprite
 	title.background.SetScale(1080/2, 1920/2)

@@ -37,7 +37,7 @@ func (title *Title) Initialize() {
 	// initialize sprites
 	title.initialize()
 
-	title.numOfSprite = simra.NewSprite()
+	title.numOfSprite = simra.GetInstance().NewSprite()
 	title.numOfSprite.SetPosition(title.screenWidth/2, 100)
 	title.numOfSprite.SetScale(title.screenWidth, 80)
 	simra.GetInstance().AddSprite(title.numOfSprite)
@@ -46,7 +46,7 @@ func (title *Title) Initialize() {
 		60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, title.screenWidth, 80))
 	title.numOfSprite.ReplaceTexture(tex)
 
-	title.fpsText = simra.NewSprite()
+	title.fpsText = simra.GetInstance().NewSprite()
 	title.fpsText.SetPosition(title.screenWidth/4, 100)
 	title.fpsText.SetScale(title.screenWidth, 80)
 	simra.GetInstance().AddSprite(title.fpsText)
@@ -112,7 +112,7 @@ func (title *Title) OnTouchEnd(x, y float32) {
 
 func (title *Title) spawnKokeshi(x, y float32) {
 	// scene end. go to next scene
-	sprite := simra.NewSprite()
+	sprite := simra.GetInstance().NewSprite()
 	sprite.SetPosition((int)(x), (int)(y))
 	sprite.SetScale(128, 128)
 	simra.GetInstance().AddSprite(sprite)

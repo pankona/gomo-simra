@@ -30,12 +30,12 @@ func (title *Title) Initialize() {
 }
 
 func (title *Title) initialize() {
-	title.background = simra.NewSprite()
+	title.background = simra.GetInstance().NewSprite()
 	title.background.SetScale(config.ScreenWidth, config.ScreenHeight)
 	title.background.SetPosition(config.ScreenWidth/2, config.ScreenHeight/2)
 	simra.GetInstance().AddSprite(title.background)
 
-	title.text = simra.NewSprite()
+	title.text = simra.GetInstance().NewSprite()
 	title.text.SetScale(320, 80)
 	title.text.SetPosition(title.text.GetScale().W/2, title.text.GetScale().H/2)
 	simra.GetInstance().AddSprite(title.text)

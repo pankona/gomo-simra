@@ -68,18 +68,18 @@ func (scene *Stage1) Initialize() {
 }
 
 func (scene *Stage1) initialize() {
-	scene.readytext[0] = simra.NewSprite()
-	scene.readytext[1] = simra.NewSprite()
-	scene.background[0].Spriter = simra.NewSprite()
-	scene.background[1].Spriter = simra.NewSprite()
-	scene.ball.Spriter = simra.NewSprite()
-	scene.obstacle[0].Spriter = simra.NewSprite()
-	scene.obstacle[1].Spriter = simra.NewSprite()
-	scene.life[0].Spriter = simra.NewSprite()
-	scene.life[1].Spriter = simra.NewSprite()
-	scene.life[2].Spriter = simra.NewSprite()
-	scene.gameovertext[0] = simra.NewSprite()
-	scene.gameovertext[1] = simra.NewSprite()
+	scene.readytext[0] = simra.GetInstance().NewSprite()
+	scene.readytext[1] = simra.GetInstance().NewSprite()
+	scene.background[0].Spriter = simra.GetInstance().NewSprite()
+	scene.background[1].Spriter = simra.GetInstance().NewSprite()
+	scene.ball.Spriter = simra.GetInstance().NewSprite()
+	scene.obstacle[0].Spriter = simra.GetInstance().NewSprite()
+	scene.obstacle[1].Spriter = simra.GetInstance().NewSprite()
+	scene.life[0].Spriter = simra.GetInstance().NewSprite()
+	scene.life[1].Spriter = simra.GetInstance().NewSprite()
+	scene.life[2].Spriter = simra.GetInstance().NewSprite()
+	scene.gameovertext[0] = simra.GetInstance().NewSprite()
+	scene.gameovertext[1] = simra.GetInstance().NewSprite()
 }
 
 // OnTouchBegin is called when Stage1 scene is Touched.
