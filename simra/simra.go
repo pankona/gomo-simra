@@ -8,7 +8,7 @@ import (
 // Simraer represents an interface of simra instance
 type Simraer interface {
 	// Start needs to call to enable all function belong to simra package.
-	Start(onStart, onStop func())
+	Start(driver Driver)
 	// SetScene sets a driver as a scene.
 	// If a driver is already set, it is replaced with new one.
 	SetScene(driver Driver)
@@ -90,25 +90,23 @@ func (sim *simra) onStopped() {
 
 func (sim *simra) onGomoStart(glc *peer.GLContext) {
 	sim.gl.Initialize(glc)
-	sim.onStart()
+	sim.SetScene(sim.driver)
 }
 
 func (sim *simra) onGomoStop() {
 	sim.spritecontainer.Initialize(sim.gl)
 	sim.gl.Finalize()
-	sim.onStop()
 }
 
-// Start needs to call to enable all function belong to simra package.
-func (sim *simra) Start(onStart, onStop func()) {
+// Start starts to run gomobile and set specified scene as first driver
+func (sim *simra) Start(driver Driver) {
 	peer.LogDebug("IN")
 	gl := peer.NewGLPeer()
 	sc := peer.GetSpriteContainer()
 	sc.Initialize(gl)
 	sim.gl = gl
 	sim.spritecontainer = sc
-	sim.onStart = onStart
-	sim.onStop = onStop
+	sim.driver = driver
 	gomo := peer.GetGomo()
 	gomo.Initialize(sim.onGomoStart, sim.onGomoStop, sim.onUpdate)
 	gomo.Start()
