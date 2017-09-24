@@ -5,34 +5,37 @@ import (
 	"runtime"
 )
 
+// Logger represents log interface for simra
 type Logger interface {
-	FuncIn()
-	FuncOut()
-	Debug(format string, a ...interface{})
-	Error(format string, a ...interface{})
+	printLog(tag string, format string, a ...interface{})
 }
 
 type logger struct {
 }
 
-var simlog = &logger{}
+var simlog Logger = &logger{}
 
+// FuncIn shows log for function in
 func FuncIn() {
 	simlog.printLog("[DEBUG]", "%s", "IN")
 }
 
+// FuncOut shows log for function out
 func FuncOut() {
 	simlog.printLog("[DEBUG]", "%s", "OUT")
 }
 
+// Debugf shows debug log with specified format and arguments
 func Debugf(format string, a ...interface{}) {
 	simlog.printLog("[DEBUG]", format, a...)
 }
 
+// Errorf shows error log with specified format and arguments
 func Errorf(format string, a ...interface{}) {
 	simlog.printLog("[ERROR]", format, a...)
 }
 
+// Debug shows debug log with specified object
 func Debug(i interface{}) {
 	switch v := i.(type) {
 	case error:
@@ -46,6 +49,7 @@ func Debug(i interface{}) {
 	}
 }
 
+// Error shows error log with specified object
 func Error(i interface{}) {
 	switch v := i.(type) {
 	case error:
