@@ -28,12 +28,10 @@ type Title struct {
 // simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
 func (title *Title) Initialize(sim simra.Simraer) {
-	simra.LogDebug("[IN]")
 	title.simra = sim
 	title.simra.SetDesiredScreenSize(ScreenWidth, ScreenHeight)
 	// initialize sprites
 	title.initialize()
-	simra.LogDebug("[OUT]")
 }
 
 func (title *Title) initialize() {
@@ -82,7 +80,6 @@ func (title *Title) OnTouchEnd(x, y float32) {
 		}
 
 		err = title.audio.Play(resource, true, func(err error) {
-			simra.LogDebug("playback complete callback. %s\n", err)
 			title.isPlaying = false
 		})
 		if err != nil {

@@ -19,15 +19,9 @@ type Stage1 struct {
 // screen size of this scene.
 // If SetDesiredScreenSize is already called in previous scene, this scene may not call the function.
 func (stage1 *Stage1) Initialize(sim simra.Simraer) {
-	simra.LogDebug("[IN]")
 	stage1.simra = sim
-
 	stage1.simra.SetDesiredScreenSize(1080/2, 1920/2)
-
-	// initialize sprites
 	stage1.initSprite()
-
-	simra.LogDebug("[OUT]")
 }
 
 func (stage1 *Stage1) initSprite() {

@@ -26,13 +26,9 @@ type Title struct {
 // simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
 func (title *Title) Initialize(sim simra.Simraer) {
-	simra.LogDebug("[IN]")
 	title.simra = sim
-
 	title.simra.SetDesiredScreenSize(ScreenWidth, ScreenHeight)
-	// initialize sprites
 	title.initialize()
-	simra.LogDebug("[OUT]")
 }
 
 func (title *Title) initialize() {
@@ -84,11 +80,9 @@ func (title *Title) OnTouchMove(x, y float32) {
 // OnTouchEnd is called when Title scene is Touched and it is released.
 func (title *Title) OnTouchEnd(x, y float32) {
 	if title.isAnimating {
-		simra.LogDebug("stop animation")
 		title.text.StopAnimation()
 		title.isAnimating = false
 	} else {
-		simra.LogDebug("start animation")
 		title.text.StartAnimation("animation test", true, func() {})
 		title.isAnimating = true
 	}

@@ -32,9 +32,7 @@ type models struct {
 }
 
 func (models *models) restart() {
-	simra.LogDebug("IN")
 	models.isDead = false
-	simra.LogDebug("OUT")
 }
 
 func (models *models) registerBall(ball modeler) {

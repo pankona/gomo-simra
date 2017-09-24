@@ -41,9 +41,7 @@ const (
 // simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
 func (scene *Stage1) Initialize(sim simra.Simraer) {
-	simra.LogDebug("[IN]")
 	scene.simra = sim
-
 	scene.simra.SetDesiredScreenSize(config.ScreenWidth, config.ScreenHeight)
 
 	// add global touch listener to catch touch end event
@@ -61,8 +59,6 @@ func (scene *Stage1) Initialize(sim simra.Simraer) {
 
 	scene.showReadyText()
 	scene.gamestate = readyToStart
-
-	simra.LogDebug("[OUT]")
 }
 
 func (scene *Stage1) initialize() {
@@ -145,7 +141,6 @@ func (scene *Stage1) removeReadyText() {
 }
 
 func (scene *Stage1) resetPosition() {
-	simra.LogDebug("IN")
 	scene.background[0].SetScale(config.ScreenWidth+1, config.ScreenHeight)
 	scene.background[0].SetPosition(config.ScreenWidth/2, config.ScreenHeight/2)
 
@@ -166,7 +161,6 @@ func (scene *Stage1) resetPosition() {
 	scene.life[1].SetScale(48, 48)
 	scene.life[2].SetPosition(48*3, 30)
 	scene.life[2].SetScale(48, 48)
-	simra.LogDebug("OUT")
 }
 
 func (scene *Stage1) setupSprites() {
@@ -223,7 +217,6 @@ func (scene *Stage1) showGameover() {
 }
 
 func (scene *Stage1) onFinishDead() {
-	simra.LogDebug("IN")
 	if scene.remainingLife == 0 {
 		scene.showGameover()
 		scene.gamestate = readyToRestart
@@ -237,7 +230,6 @@ func (scene *Stage1) onFinishDead() {
 
 	scene.simra.RemoveSprite(scene.life[scene.remainingLife-1].Spriter)
 	scene.remainingLife--
-	simra.LogDebug("OUT")
 }
 
 func (scene *Stage1) registerModels() {

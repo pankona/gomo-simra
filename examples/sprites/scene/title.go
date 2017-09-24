@@ -29,7 +29,6 @@ type Title struct {
 // simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
 func (title *Title) Initialize(sim simra.Simraer) {
-	simra.LogDebug("[IN]")
 	title.simra = sim
 
 	title.screenHeight = 1080 / 2
@@ -69,8 +68,6 @@ func (title *Title) Initialize(sim simra.Simraer) {
 	}()
 
 	title.kokeshiTex = title.simra.NewImageTexture("sample2.png", image.Rect(0, 0, 64, 64))
-
-	simra.LogDebug("[OUT]")
 }
 
 func (title *Title) initialize() {

@@ -2,8 +2,6 @@ package scene
 
 import (
 	"math"
-
-	"github.com/pankona/gomo-simra/simra"
 )
 
 // Viewer represents a view
@@ -30,9 +28,7 @@ const (
 )
 
 func (views *views) restart() {
-	simra.LogDebug("IN")
 	views.isDead = false
-	simra.LogDebug("OUT")
 }
 
 type viewEventListener interface {
@@ -76,7 +72,6 @@ func (views *views) move() {
 
 // event notification from view
 func (views *views) onDead() {
-	simra.LogDebug("onDead!!")
 	views.isDead = true
 
 	ball := views.ball

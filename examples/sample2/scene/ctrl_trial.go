@@ -33,7 +33,6 @@ const (
 // simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
 func (ctrltrial *CtrlTrial) Initialize(sim simra.Simraer) {
-	simra.LogDebug("[IN]")
 	ctrltrial.simra = sim
 
 	ctrltrial.simra.SetDesiredScreenSize(config.ScreenWidth, config.ScreenHeight)
@@ -47,8 +46,6 @@ func (ctrltrial *CtrlTrial) Initialize(sim simra.Simraer) {
 	// initialize sprites
 	ctrltrial.initSprites()
 	ctrltrial.buttonReplaced = false
-
-	simra.LogDebug("[OUT]")
 }
 
 // OnTouchBegin is called when CtrlTrial scene is Touched.
@@ -103,30 +100,18 @@ type ctrlUpTouchListener struct {
 }
 
 func (ctrltrial *ctrlUpTouchListener) OnTouchBegin(x, y float32) {
-	simra.LogDebug("[IN] ctrlUp Begin!")
-
 	ctrl := ctrltrial.parent
 	ctrl.buttonState = ctrlUp
-
-	simra.LogDebug("[OUT]")
 }
 
 func (ctrltrial *ctrlUpTouchListener) OnTouchMove(x, y float32) {
-	simra.LogDebug("[IN] ctrlUp Move!")
-
 	ctrl := ctrltrial.parent
 	ctrl.buttonState = ctrlUp
-
-	simra.LogDebug("[OUT]")
 }
 
 func (ctrltrial *ctrlUpTouchListener) OnTouchEnd(x, y float32) {
-	simra.LogDebug("[IN] ctrlUp End")
-
 	ctrl := ctrltrial.parent
 	ctrl.buttonState = ctrlNop
-
-	simra.LogDebug("[OUT]")
 }
 
 func (ctrltrial *CtrlTrial) initctrlUp() {
@@ -157,30 +142,18 @@ type ctrlDownTouchListener struct {
 }
 
 func (ctrltrial *ctrlDownTouchListener) OnTouchBegin(x, y float32) {
-	simra.LogDebug("[IN] ctrlDown Begin!")
-
 	ctrl := ctrltrial.parent
 	ctrl.buttonState = ctrlDown
-
-	simra.LogDebug("[OUT]")
 }
 
 func (ctrltrial *ctrlDownTouchListener) OnTouchMove(x, y float32) {
-	simra.LogDebug("[IN] ctrlDown Move!")
-
 	ctrl := ctrltrial.parent
 	ctrl.buttonState = ctrlDown
-
-	simra.LogDebug("[OUT]")
 }
 
 func (ctrltrial *ctrlDownTouchListener) OnTouchEnd(x, y float32) {
-	simra.LogDebug("[IN] ctrlDown End")
-
 	ctrl := ctrltrial.parent
 	ctrl.buttonState = ctrlNop
-
-	simra.LogDebug("[OUT]")
 }
 
 func (ctrltrial *CtrlTrial) initctrlDown() {
@@ -208,7 +181,6 @@ func (ctrltrial *CtrlTrial) initctrlDown() {
 }
 
 func (ctrltrial *CtrlTrial) replaceButtonColor() {
-	simra.LogDebug("IN")
 	var tex *simra.Texture
 
 	// red changes to blue
@@ -222,11 +194,9 @@ func (ctrltrial *CtrlTrial) replaceButtonColor() {
 	ctrltrial.buttonBlue.ReplaceTexture(tex)
 
 	ctrltrial.buttonReplaced = true
-	simra.LogDebug("OUT")
 }
 
 func (ctrltrial *CtrlTrial) originalButtonColor() {
-	simra.LogDebug("IN")
 	var tex *simra.Texture
 
 	// set red button to buttonRed
@@ -240,7 +210,6 @@ func (ctrltrial *CtrlTrial) originalButtonColor() {
 	ctrltrial.buttonBlue.ReplaceTexture(tex)
 
 	ctrltrial.buttonReplaced = false
-	simra.LogDebug("OUT")
 }
 
 // ButtonBlueTouchListener represents a listener object
@@ -251,7 +220,6 @@ type ButtonBlueTouchListener struct {
 
 // OnTouchBegin is called when Blue Button is Touched.
 func (ctrltrial *ButtonBlueTouchListener) OnTouchBegin(x, y float32) {
-	simra.LogDebug("IN")
 	if ctrltrial.parent.buttonReplaced {
 		ctrltrial.parent.originalButtonColor()
 	} else {
@@ -259,7 +227,6 @@ func (ctrltrial *ButtonBlueTouchListener) OnTouchBegin(x, y float32) {
 	}
 
 	ctrltrial.parent.simra.RemoveSprite(ctrltrial.parent.ball)
-	simra.LogDebug("OUT")
 }
 
 // OnTouchMove is called when Blue Button is Touched and moved.
@@ -302,7 +269,6 @@ type ButtonRedTouchListener struct {
 
 // OnTouchBegin is called when Red Button is Touched.
 func (ctrltrial *ButtonRedTouchListener) OnTouchBegin(x, y float32) {
-	simra.LogDebug("IN")
 	if ctrltrial.parent.buttonReplaced {
 		ctrltrial.parent.originalButtonColor()
 	} else {
@@ -312,7 +278,6 @@ func (ctrltrial *ButtonRedTouchListener) OnTouchBegin(x, y float32) {
 	tex := ctrltrial.parent.simra.NewImageTexture("ball.png",
 		image.Rect(0, 0, int(ctrltrial.parent.ball.GetScale().W), int(ctrltrial.parent.ball.GetScale().H)))
 	ctrltrial.parent.ball.ReplaceTexture(tex)
-	simra.LogDebug("OUT")
 }
 
 // OnTouchMove is called when Red Button is Touched and moved.

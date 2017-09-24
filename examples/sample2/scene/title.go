@@ -18,15 +18,9 @@ type Title struct {
 // simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
 func (title *Title) Initialize(sim simra.Simraer) {
-	simra.LogDebug("[IN]")
 	title.simra = sim
-
 	title.simra.SetDesiredScreenSize(config.ScreenWidth, config.ScreenHeight)
-
-	// initialize sprites
 	title.initialize()
-
-	simra.LogDebug("[OUT]")
 }
 
 func (title *Title) initialize() {
