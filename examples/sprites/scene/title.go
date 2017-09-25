@@ -78,7 +78,7 @@ var degree int
 
 // Drive is called from simra.
 // This is used to update sprites position.
-// Thsi will be called 60 times per sec.
+// This will be called 60 times per sec.
 func (t *Title) Drive() {
 	degree = (degree - 1) % 360
 	for i := range t.sprites {

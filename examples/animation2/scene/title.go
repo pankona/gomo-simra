@@ -53,7 +53,7 @@ func (t *Title) initialize() {
 
 // Drive is called from simra.
 // This is used to update sprites position.
-// Thsi will be called 60 times per sec.
+// This will be called 60 times per sec.
 func (t *Title) Drive() {
 }
 
