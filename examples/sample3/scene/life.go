@@ -7,27 +7,21 @@ type Life struct {
 	simra.Spriter
 }
 
-func (life *Life) getPosition() (float32, float32) {
-	p := life.GetPosition()
+func (l *Life) getPosition() (float32, float32) {
+	p := l.GetPosition()
 	return (float32)(p.X), (float32)(p.Y)
 }
 
-func (life *Life) setPosition(x float32, y float32) {
-	life.SetPosition((int)(x), (int)(y))
+func (l *Life) setPosition(x float32, y float32) {
+	l.SetPosition((int)(x), (int)(y))
 }
 
-func (life *Life) setSpeed(s float64) {
-}
+func (l *Life) setSpeed(s float64) {}
 
-func (life *Life) getSpeed() float64 {
-	return 0
-}
+func (l *Life) getSpeed() float64 { return 0 }
 
-func (life *Life) setDirection(radian float64) {
-}
-func (life *Life) getDirection() float64 {
-	return 0
-}
+func (l *Life) setDirection(radian float64) {}
 
-func (life *Life) move() {
-}
+func (l *Life) getDirection() float64 { return 0 }
+
+func (l *Life) move() {}

@@ -16,60 +16,55 @@ type Obstacle struct {
 }
 
 // GetXYWH returns x, y w, h of receiver
-func (obstacle *Obstacle) GetXYWH() (x, y, w, h int) {
-	p := obstacle.GetPosition()
-	s := obstacle.GetScale()
+func (o *Obstacle) GetXYWH() (x, y, w, h int) {
+	p := o.GetPosition()
+	s := o.GetScale()
 	return p.X, p.Y, s.W, s.H
 }
 
 /**
  * Obstacle implementation for Model interface
  */
-func (obstacle *Obstacle) setPosition(x, y float32) {
-	obstacle.SetPosition((int)(x), (int)(y))
+func (o *Obstacle) setPosition(x, y float32) {
+	o.SetPosition((int)(x), (int)(y))
 }
 
-func (obstacle *Obstacle) getPosition() (float32, float32) {
-	p := obstacle.GetPosition()
+func (o *Obstacle) getPosition() (float32, float32) {
+	p := o.GetPosition()
 	return (float32)(p.X), (float32)(p.Y)
 }
 
-func (obstacle *Obstacle) setRotate(r float32) {
+func (o *Obstacle) setRotate(r float32) {}
+
+func (o *Obstacle) getRotate() float32 { return 0 }
+
+func (o *Obstacle) setDirection(d float64) {
+	o.direction = d
 }
 
-func (obstacle *Obstacle) getRotate() float32 {
-	return 0
+func (o *Obstacle) getDirection() float64 { return 0 }
+
+func (o *Obstacle) setSpeed(s float64) {
+	o.speed = s
 }
 
-func (obstacle *Obstacle) setDirection(d float64) {
-	obstacle.direction = d
+func (o *Obstacle) getSpeed() float64 {
+	return o.speed
 }
 
-func (obstacle *Obstacle) getDirection() float64 {
-	return 0
-}
+func (o *Obstacle) move() {
+	dx := o.speed * math.Cos(o.direction*math.Pi/180)
+	dy := o.speed * math.Sin(o.direction*math.Pi/180)
+	o.speed = math.Sqrt(dx*dx + dy*dy)
+	o.direction = math.Atan2(dy, dx) * 180 / math.Pi
 
-func (obstacle *Obstacle) setSpeed(s float64) {
-	obstacle.speed = s
-}
+	p := o.GetPosition()
+	o.SetPositionX(p.X + int(dx))
+	o.SetPositionY(p.Y + int(dy))
 
-func (obstacle *Obstacle) getSpeed() float64 {
-	return obstacle.speed
-}
-
-func (obstacle *Obstacle) move() {
-	dx := obstacle.speed * math.Cos(obstacle.direction*math.Pi/180)
-	dy := obstacle.speed * math.Sin(obstacle.direction*math.Pi/180)
-	obstacle.speed = math.Sqrt(dx*dx + dy*dy)
-	obstacle.direction = math.Atan2(dy, dx) * 180 / math.Pi
-
-	p := obstacle.GetPosition()
-	obstacle.SetPositionX(p.X + int(dx))
-	obstacle.SetPositionY(p.Y + int(dy))
-
-	p = obstacle.GetPosition()
-	s := obstacle.GetScale()
+	p = o.GetPosition()
+	s := o.GetScale()
 	if p.X < -1*s.W/2 {
-		obstacle.SetPositionX(config.ScreenWidth + config.ScreenWidth/2)
+		o.SetPositionX(config.ScreenWidth + config.ScreenWidth/2)
 	}
 }

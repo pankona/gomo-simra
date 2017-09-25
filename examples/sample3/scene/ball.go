@@ -18,66 +18,66 @@ type Ball struct {
 /**
  * Ball implementation for Model interface
  */
-func (ball *Ball) setPosition(x, y float32) {
-	ball.SetPositionX((int)(x))
-	ball.SetPositionY((int)(y))
+func (b *Ball) setPosition(x, y float32) {
+	b.SetPositionX((int)(x))
+	b.SetPositionY((int)(y))
 }
 
-func (ball *Ball) getPosition() (x, y float32) {
-	p := ball.GetPosition()
+func (b *Ball) getPosition() (x, y float32) {
+	p := b.GetPosition()
 	return (float32)(p.X), (float32)(p.Y)
 }
 
-func (ball *Ball) setRotate(r float32) {
-	ball.SetRotate(r)
+func (b *Ball) setRotate(r float32) {
+	b.SetRotate(r)
 }
 
-func (ball *Ball) getRotate() float32 {
-	return (float32)(ball.GetRotate())
+func (b *Ball) getRotate() float32 {
+	return (float32)(b.GetRotate())
 }
 
-func (ball *Ball) setDirection(d float64) {
-	ball.direction = d
+func (b *Ball) setDirection(d float64) {
+	b.direction = d
 }
 
-func (ball *Ball) getDirection() float64 {
-	return ball.direction
+func (b *Ball) getDirection() float64 {
+	return b.direction
 }
 
-func (ball *Ball) setSpeed(s float64) {
-	ball.speed = s
+func (b *Ball) setSpeed(s float64) {
+	b.speed = s
 }
 
-func (ball *Ball) getSpeed() float64 {
-	return ball.speed
+func (b *Ball) getSpeed() float64 {
+	return b.speed
 }
 
-func (ball *Ball) move() {
-	dx := ball.speed * math.Cos(ball.direction*math.Pi/180)
-	dy := ball.speed * math.Sin(ball.direction*math.Pi/180)
+func (b *Ball) move() {
+	dx := b.speed * math.Cos(b.direction*math.Pi/180)
+	dy := b.speed * math.Sin(b.direction*math.Pi/180)
 	dy -= 9.8 / 60
-	ball.speed = math.Sqrt(dx*dx + dy*dy)
-	ball.direction = math.Atan2(dy, dx) * 180 / math.Pi
+	b.speed = math.Sqrt(dx*dx + dy*dy)
+	b.direction = math.Atan2(dy, dx) * 180 / math.Pi
 
-	p := ball.GetPosition()
-	ball.SetPositionX(p.X + int(dx))
-	ball.SetPositionY(p.Y + int(dy))
+	p := b.GetPosition()
+	b.SetPositionX(p.X + int(dx))
+	b.SetPositionY(p.Y + int(dy))
 
-	p = ball.GetPosition()
+	p = b.GetPosition()
 	if p.Y < 0 {
-		ball.SetPositionY(0)
-		ball.speed = 0
+		b.SetPositionY(0)
+		b.speed = 0
 	}
 
 	if p.Y > config.ScreenHeight {
-		ball.SetPositionY(config.ScreenHeight)
-		ball.speed = 0
+		b.SetPositionY(config.ScreenHeight)
+		b.speed = 0
 	}
 }
 
 // GetXYWH returns x, y w, h of receiver
-func (ball *Ball) GetXYWH() (x, y, w, h int) {
-	p := ball.GetPosition()
-	s := ball.GetScale()
+func (b *Ball) GetXYWH() (x, y, w, h int) {
+	p := b.GetPosition()
+	s := b.GetScale()
 	return p.X, p.Y, s.W, s.H
 }

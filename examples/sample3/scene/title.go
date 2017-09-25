@@ -4,7 +4,7 @@ import (
 	"image"
 	"image/color"
 
-	"github.com/pankona/gomo-simra/examples/sample2/scene/config"
+	"github.com/pankona/gomo-simra/examples/sample3/scene/config"
 	"github.com/pankona/gomo-simra/simra"
 )
 
@@ -19,55 +19,55 @@ type Title struct {
 // This is called from simra.
 // simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
-func (title *Title) Initialize(sim simra.Simraer) {
-	title.simra = sim
-	title.simra.SetDesiredScreenSize(config.ScreenWidth, config.ScreenHeight)
-	title.initialize()
+func (t *Title) Initialize(sim simra.Simraer) {
+	t.simra = sim
+	t.simra.SetDesiredScreenSize(config.ScreenWidth, config.ScreenHeight)
+	t.initialize()
 }
 
-func (title *Title) initialize() {
-	title.background = title.simra.NewSprite()
-	title.background.SetScale(config.ScreenWidth, config.ScreenHeight)
-	title.background.SetPosition(config.ScreenWidth/2, config.ScreenHeight/2)
-	title.simra.AddSprite(title.background)
+func (t *Title) initialize() {
+	t.background = t.simra.NewSprite()
+	t.background.SetScale(config.ScreenWidth, config.ScreenHeight)
+	t.background.SetPosition(config.ScreenWidth/2, config.ScreenHeight/2)
+	t.simra.AddSprite(t.background)
 
-	title.text = title.simra.NewSprite()
-	title.text.SetScale(320, 80)
-	title.text.SetPosition(title.text.GetScale().W/2, title.text.GetScale().H/2)
-	title.simra.AddSprite(title.text)
+	t.text = t.simra.NewSprite()
+	t.text.SetScale(320, 80)
+	t.text.SetPosition(t.text.GetScale().W/2, t.text.GetScale().H/2)
+	t.simra.AddSprite(t.text)
 
-	p := title.background.GetScale()
+	p := t.background.GetScale()
 	var tex *simra.Texture
-	tex = title.simra.NewImageTexture("title.png", image.Rect(0, 0, p.W, p.H))
-	title.background.ReplaceTexture(tex)
+	tex = t.simra.NewImageTexture("t.png", image.Rect(0, 0, p.W, p.H))
+	t.background.ReplaceTexture(tex)
 
-	p = title.text.GetScale()
-	tex = title.simra.NewTextTexture("text sample",
+	p = t.text.GetScale()
+	tex = t.simra.NewTextTexture("text sample",
 		60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, p.W, p.H))
-	title.text.ReplaceTexture(tex)
+	t.text.ReplaceTexture(tex)
 
-	title.background.AddTouchListener(title)
+	t.background.AddTouchListener(t)
 }
 
 // Drive is called from simra.
 // This is used to update sprites position.
 // This will be called 60 times per sec.
-func (title *Title) Drive() {
+func (t *Title) Drive() {
 }
 
 // OnTouchBegin is called when Title scene is Touched.
 // It is caused by calling AddtouchListener for title.background sprite.
-func (title *Title) OnTouchBegin(x, y float32) {
+func (t *Title) OnTouchBegin(x, y float32) {
 }
 
 // OnTouchMove is called when Title scene is Touched and moved.
 // It is caused by calling AddtouchListener for title.background sprite.
-func (title *Title) OnTouchMove(x, y float32) {
+func (t *Title) OnTouchMove(x, y float32) {
 }
 
 // OnTouchEnd is called when Title scene is Touched and it is released.
 // It is caused by calling AddtouchListener for title.background sprite.
-func (title *Title) OnTouchEnd(x, y float32) {
+func (t *Title) OnTouchEnd(x, y float32) {
 	// scene end. go to next scene
-	title.simra.SetScene(&Stage1{})
+	t.simra.SetScene(&sample{})
 }

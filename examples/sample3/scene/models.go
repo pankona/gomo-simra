@@ -31,76 +31,73 @@ type models struct {
 	isDead      bool
 }
 
-func (models *models) restart() {
-	models.isDead = false
+func (m *models) restart() {
+	m.isDead = false
 }
 
-func (models *models) registerBall(ball modeler) {
+func (m *models) registerBall(ball modeler) {
 	ball.setSpeed(1)
 	ball.setDirection(90)
-	models.ball = ball
+	m.ball = ball
 }
 
-func (models *models) registerObstacle(obstacle modeler, index int) {
+func (m *models) registerObstacle(obstacle modeler, index int) {
 	obstacle.setSpeed(3)
 	obstacle.setDirection(180)
-	models.obstacles[index] = obstacle
+	m.obstacles[index] = obstacle
 }
 
-func (models *models) registerBackground(bg modeler, index int) {
+func (m *models) registerBackground(bg modeler, index int) {
 	bg.setSpeed(3)
-	models.backgrounds[index] = bg
+	m.backgrounds[index] = bg
 }
 
-func (models *models) addEventListener(listener modelEventListener) {
-	models.listeners = append(models.listeners, listener)
+func (m *models) addEventListener(listener modelEventListener) {
+	m.listeners = append(m.listeners, listener)
 }
 
 var degree float32
 
 // Progress progresses the time of models 1 frame
-func (models *models) Progress(isKeyTouching bool) {
-	ball := models.ball
+func (m *models) Progress(isKeyTouching bool) {
+	b := m.ball
 
-	if !models.isDead {
+	if !m.isDead {
 		degree++
 		if degree >= 360 {
 			degree = 0
 		}
 
-		ball.setRotate(float32(degree) * math.Pi / 180)
+		b.setRotate(float32(degree) * math.Pi / 180)
 
 		if isKeyTouching {
-			dx := ball.getSpeed() * math.Cos(ball.getDirection()*math.Pi/180)
-			dy := ball.getSpeed() * math.Sin(ball.getDirection()*math.Pi/180)
+			dx := b.getSpeed() * math.Cos(b.getDirection()*math.Pi/180)
+			dy := b.getSpeed() * math.Sin(b.getDirection()*math.Pi/180)
 			dy += 9.8 / 60 * 2
-			ball.setSpeed(math.Sqrt(dx*dx + dy*dy))
-			ball.setDirection(math.Atan2(dy, dx) * 180 / math.Pi)
+			b.setSpeed(math.Sqrt(dx*dx + dy*dy))
+			b.setDirection(math.Atan2(dy, dx) * 180 / math.Pi)
 		}
-		models.move()
+		m.move()
 	}
 }
 
-func (models *models) move() {
-	ball := models.ball
-	ball.move()
-	obstacles := models.obstacles
-	obstacles[0].move()
-	obstacles[1].move()
-	backgrounds := models.backgrounds
-	backgrounds[0].move()
-	backgrounds[1].move()
+func (m *models) move() {
+	m.ball.move()
+	m.obstacles[0].move()
+	m.obstacles[1].move()
+	m.backgrounds[0].move()
+	m.backgrounds[1].move()
 }
 
 // OnCollision is called at collision detected
-func (models *models) OnCollision(c1, c2 simra.Collider) {
+func (m *models) OnCollision(c1, c2 simra.Collider) {
 	if _, ok := c1.(*Ball); ok {
 		if _, ok := c2.(*Obstacle); ok {
 			// collision indicates a miss. this will be decrease a life.
-			if !models.isDead {
-				models.isDead = true
-				for _, v := range models.listeners {
-					models.isDead = true
+			if !m.isDead {
+				m.isDead = true
+				for _, v := range m.listeners {
+					m.isDead = true
 					v.onDead()
 				}
 			}
