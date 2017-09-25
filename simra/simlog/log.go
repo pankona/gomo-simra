@@ -3,59 +3,100 @@ package simlog
 import (
 	"fmt"
 	"runtime"
+
+	"github.com/pankona/gomo-simra/simra/config"
 )
 
-// Logger represents log interface for simra
-type Logger interface {
-	printLog(tag string, format string, a ...interface{})
+// SimLogger represents log interface for simra
+type SimLogger interface {
+	FuncIn()
+	FuncOut()
+	Debugf(format string, a ...interface{})
+	Errorf(format string, a ...interface{})
+	Debug(i interface{})
+	Error(i interface{})
 }
 
 type logger struct {
+	isDebug bool
 }
 
-var simlog Logger = &logger{}
+var simlog SimLogger = &logger{
+	isDebug: config.DEBUG,
+}
+
+func FuncIn() {
+	simlog.FuncIn()
+}
+func FuncOut() {
+	simlog.FuncOut()
+}
+func Debugf(format string, a ...interface{}) {
+	simlog.Debugf(format, a...)
+}
+func Errorf(format string, a ...interface{}) {
+	simlog.Errorf(format, a...)
+}
+func Debug(i interface{}) {
+	simlog.Debug(i)
+}
+func Error(i interface{}) {
+	simlog.Error(i)
+}
 
 // FuncIn shows log for function in
-func FuncIn() {
-	simlog.printLog("[DEBUG]", "%s", "IN")
+func (l *logger) FuncIn() {
+	if !l.isDebug {
+		return
+	}
+	l.printLog("[DEBUG]", "%s", "IN")
 }
 
 // FuncOut shows log for function out
-func FuncOut() {
-	simlog.printLog("[DEBUG]", "%s", "OUT")
+func (l *logger) FuncOut() {
+	if !l.isDebug {
+		return
+	}
+	l.printLog("[DEBUG]", "%s", "OUT")
 }
 
 // Debugf shows debug log with specified format and arguments
-func Debugf(format string, a ...interface{}) {
-	simlog.printLog("[DEBUG]", format, a...)
+func (l *logger) Debugf(format string, a ...interface{}) {
+	if !l.isDebug {
+		return
+	}
+	l.printLog("[DEBUG]", format, a...)
 }
 
 // Errorf shows error log with specified format and arguments
-func Errorf(format string, a ...interface{}) {
-	simlog.printLog("[ERROR]", format, a...)
+func (l *logger) Errorf(format string, a ...interface{}) {
+	l.printLog("[ERROR]", format, a...)
 }
 
 // Debug shows debug log with specified object
-func Debug(i interface{}) {
+func (l *logger) Debug(i interface{}) {
+	if !l.isDebug {
+		return
+	}
 	switch v := i.(type) {
 	case error:
-		simlog.printLog("[DEBUG]", v.Error())
+		l.printLog("[DEBUG]", v.Error())
 	case fmt.Stringer:
-		simlog.printLog("[DEBUG]", v.String())
+		l.printLog("[DEBUG]", v.String())
 	case string:
-		simlog.printLog("[DEBUG]", v)
+		l.printLog("[DEBUG]", v)
 	default:
 		panic("can't print input!")
 	}
 }
 
 // Error shows error log with specified object
-func Error(i interface{}) {
+func (l *logger) Error(i interface{}) {
 	switch v := i.(type) {
 	case error:
-		simlog.printLog("[ERROR]", v.Error())
+		l.printLog("[ERROR]", v.Error())
 	case fmt.Stringer:
-		simlog.printLog("[ERROR]", v.String())
+		l.printLog("[ERROR]", v.String())
 	default:
 		panic("can't print input!")
 	}
@@ -63,7 +104,7 @@ func Error(i interface{}) {
 
 func (l *logger) printLog(tag string, format string, a ...interface{}) {
 	pc := make([]uintptr, 10)
-	runtime.Callers(3, pc)
+	runtime.Callers(4, pc)
 	f := runtime.FuncForPC(pc[0])
 	_, line := f.FileLine(pc[0])
 	var buf string
