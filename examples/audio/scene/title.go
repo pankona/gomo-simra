@@ -27,23 +27,23 @@ type Title struct {
 // This is called from simra.
 // simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
-func (title *Title) Initialize(sim simra.Simraer) {
-	title.simra = sim
-	title.simra.SetDesiredScreenSize(ScreenWidth, ScreenHeight)
+func (t *Title) Initialize(sim simra.Simraer) {
+	t.simra = sim
+	t.simra.SetDesiredScreenSize(ScreenWidth, ScreenHeight)
 	// initialize sprites
-	title.initialize()
+	t.initialize()
 }
 
-func (title *Title) initialize() {
+func (t *Title) initialize() {
 
-	title.simra.AddTouchListener(title)
+	t.simra.AddTouchListener(t)
 
-	sprite := title.simra.NewSprite()
+	sprite := t.simra.NewSprite()
 	sprite.SetScale(ScreenWidth, 80)
 	sprite.SetPosition(ScreenWidth/2, ScreenHeight/2)
-	title.simra.AddSprite(sprite)
+	t.simra.AddSprite(sprite)
 	s := sprite.GetScale()
-	tex := title.simra.NewTextTexture("tap to play sound",
+	tex := t.simra.NewTextTexture("tap to play sound",
 		60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, s.W, s.H))
 	sprite.ReplaceTexture(tex)
 
@@ -52,39 +52,39 @@ func (title *Title) initialize() {
 // Drive is called from simra.
 // This is used to update sprites position.
 // Thsi will be called 60 times per sec.
-func (title *Title) Drive() {
+func (t *Title) Drive() {
 }
 
 // OnTouchBegin is called when Title scene is Touched.
-func (title *Title) OnTouchBegin(x, y float32) {
+func (t *Title) OnTouchBegin(x, y float32) {
 }
 
 // OnTouchMove is called when Title scene is Touched and moved.
-func (title *Title) OnTouchMove(x, y float32) {
+func (t *Title) OnTouchMove(x, y float32) {
 }
 
 // OnTouchEnd is called when Title scene is Touched and it is released.
-func (title *Title) OnTouchEnd(x, y float32) {
-	if title.isPlaying {
-		err := title.audio.Stop()
+func (t *Title) OnTouchEnd(x, y float32) {
+	if t.isPlaying {
+		err := t.audio.Stop()
 		if err != nil {
 			panic(err.Error())
 		}
-		title.isPlaying = false
+		t.isPlaying = false
 
 	} else {
-		title.audio = simra.NewAudio()
+		t.audio = simra.NewAudio()
 		resource, err := asset.Open("test_se.mp3")
 		if err != nil {
 			panic(err.Error())
 		}
 
-		err = title.audio.Play(resource, true, func(err error) {
-			title.isPlaying = false
+		err = t.audio.Play(resource, true, func(err error) {
+			t.isPlaying = false
 		})
 		if err != nil {
 			panic(err)
 		}
-		title.isPlaying = true
+		t.isPlaying = true
 	}
 }
