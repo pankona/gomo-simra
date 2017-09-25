@@ -25,21 +25,32 @@ var simlog SimLogger = &logger{
 	isDebug: config.DEBUG,
 }
 
+// FuncIn shows log for function in
 func FuncIn() {
 	simlog.FuncIn()
 }
+
+// FuncOut shows log for function out
 func FuncOut() {
 	simlog.FuncOut()
 }
+
+// Debugf shows debug log with specified format and arguments
 func Debugf(format string, a ...interface{}) {
 	simlog.Debugf(format, a...)
 }
+
+// Errorf shows error log with specified format and arguments
 func Errorf(format string, a ...interface{}) {
 	simlog.Errorf(format, a...)
 }
+
+// Debug shows debug log with specified object
 func Debug(i interface{}) {
 	simlog.Debug(i)
 }
+
+// Error shows error log with specified object
 func Error(i interface{}) {
 	simlog.Error(i)
 }
