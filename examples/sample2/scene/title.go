@@ -17,47 +17,46 @@ type Title struct {
 // This is called from simra.
 // simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
-func (title *Title) Initialize(sim simra.Simraer) {
-	title.simra = sim
-	title.simra.SetDesiredScreenSize(config.ScreenWidth, config.ScreenHeight)
-	title.initialize()
+func (t *Title) Initialize(sim simra.Simraer) {
+	t.simra = sim
+	t.simra.SetDesiredScreenSize(config.ScreenWidth, config.ScreenHeight)
+	t.initialize()
 }
 
-func (title *Title) initialize() {
-	title.background = title.simra.NewSprite()
-	// add background sprite
-	title.background.SetScale(config.ScreenWidth, config.ScreenHeight)
+func (t *Title) initialize() {
+	t.background = t.simra.NewSprite()
+	t.background.SetScale(config.ScreenWidth, config.ScreenHeight)
 	// put center of screen
-	title.background.SetPosition(config.ScreenWidth/2, config.ScreenHeight/2)
+	t.background.SetPosition(config.ScreenWidth/2, config.ScreenHeight/2)
+	// add background sprite
+	t.simra.AddSprite(t.background)
 
-	title.simra.AddSprite(title.background)
-
-	title.background.AddTouchListener(title)
-	tex := title.simra.NewImageTexture("title.png",
-		image.Rect(0, 0, int(title.background.GetScale().W), int(title.background.GetScale().H)))
-	title.background.ReplaceTexture(tex)
+	t.background.AddTouchListener(t)
+	tex := t.simra.NewImageTexture("title.png",
+		image.Rect(0, 0, int(t.background.GetScale().W), int(t.background.GetScale().H)))
+	t.background.ReplaceTexture(tex)
 
 }
 
 // Drive is called from simra.
 // This is used to update sprites position.
 // This will be called 60 times per sec.
-func (title *Title) Drive() {
+func (t *Title) Drive() {
 }
 
 // OnTouchBegin is called when Title scene is Touched.
 // It is caused by calling AddtouchListener for title.background sprite.
-func (title *Title) OnTouchBegin(x, y float32) {
+func (t *Title) OnTouchBegin(x, y float32) {
 }
 
 // OnTouchMove is called when Title scene is Touched and moved.
 // It is caused by calling AddtouchListener for title.background sprite.
-func (title *Title) OnTouchMove(x, y float32) {
+func (t *Title) OnTouchMove(x, y float32) {
 }
 
 // OnTouchEnd is called when Title scene is Touched and it is released.
 // It is caused by calling AddtouchListener for title.background sprite.
-func (title *Title) OnTouchEnd(x, y float32) {
+func (t *Title) OnTouchEnd(x, y float32) {
 	// scene end. go to next scene
-	title.simra.SetScene(&CtrlTrial{})
+	t.simra.SetScene(&sample{})
 }
