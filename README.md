@@ -17,13 +17,15 @@ GOMObile SIMple wRApper
     * wraps usage of f32.affine.
     * calculates scale to fit to any device's screen automatically.
     * provides easy scene transition
-* everything is under construction.
-* see `example` directory to know how to use.
+
+* see `example` directory to check sample applications.
 
 # Build
 
-* For Release build, `go build -tags=release` or `gomobile build -tags=release`
-  * This efforts that logging for debug is disabled.
+* in each example directory, do `go build` or `gomobile build`.
+  * `go build` generates an executable for PC (linux or mac)
+  * `gomobile build` generates a package for android (APK).
+  * for iPhone is also available (maybe. I've never confirmed)
 
 # License
 
