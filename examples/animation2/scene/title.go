@@ -25,56 +25,56 @@ type Title struct {
 // This is called from simra.
 // simra.SetDesiredScreenSize should be called to determine
 // screen size of this scene.
-func (title *Title) Initialize(sim simra.Simraer) {
-	title.simra = sim
-	title.simra.SetDesiredScreenSize(ScreenWidth, ScreenHeight)
-	title.initialize()
+func (t *Title) Initialize(sim simra.Simraer) {
+	t.simra = sim
+	t.simra.SetDesiredScreenSize(ScreenWidth, ScreenHeight)
+	t.initialize()
 }
 
-func (title *Title) initialize() {
-	sprite := title.simra.NewSprite()
+func (t *Title) initialize() {
+	sprite := t.simra.NewSprite()
 	sprite.SetPosition(ScreenWidth/2, ScreenHeight/2)
 	sprite.SetScale(240, 240)
 
 	animationSet := simra.NewAnimationSet()
-	title.initialSprite = title.simra.NewImageTexture("effect.png", image.Rect(0, 0, 239, sprite.GetScale().H))
+	t.initialSprite = t.simra.NewImageTexture("effect.png", image.Rect(0, 0, 239, sprite.GetScale().H))
 	for i := 0; i < 13; i++ {
-		animationSet.AddTexture(title.simra.NewImageTexture("effect.png",
+		animationSet.AddTexture(t.simra.NewImageTexture("effect.png",
 			image.Rect(sprite.GetScale().W*i, 0, (sprite.GetScale().W*(i+1))-1, sprite.GetScale().H)))
 	}
 	animationSet.SetInterval(6)
 	sprite.AddAnimationSet("animation test", animationSet)
 
-	title.simra.AddSprite(sprite)
-	sprite.ReplaceTexture(title.initialSprite)
-	title.simra.AddTouchListener(title)
-	title.effect = sprite
+	t.simra.AddSprite(sprite)
+	sprite.ReplaceTexture(t.initialSprite)
+	t.simra.AddTouchListener(t)
+	t.effect = sprite
 }
 
 // Drive is called from simra.
 // This is used to update sprites position.
 // Thsi will be called 60 times per sec.
-func (title *Title) Drive() {
+func (t *Title) Drive() {
 }
 
 // OnTouchBegin is called when Title scene is Touched.
-func (title *Title) OnTouchBegin(x, y float32) {
+func (t *Title) OnTouchBegin(x, y float32) {
 }
 
 // OnTouchMove is called when Title scene is Touched and moved.
-func (title *Title) OnTouchMove(x, y float32) {
+func (t *Title) OnTouchMove(x, y float32) {
 }
 
 // OnTouchEnd is called when Title scene is Touched and it is released.
-func (title *Title) OnTouchEnd(x, y float32) {
-	if title.isAnimating {
-		title.effect.StopAnimation()
-		title.isAnimating = false
+func (t *Title) OnTouchEnd(x, y float32) {
+	if t.isAnimating {
+		t.effect.StopAnimation()
+		t.isAnimating = false
 	} else {
 		shouldLoop := true
-		title.effect.StartAnimation("animation test", shouldLoop, func() {
-			title.effect.ReplaceTexture(title.initialSprite)
+		t.effect.StartAnimation("animation test", shouldLoop, func() {
+			t.effect.ReplaceTexture(t.initialSprite)
 		})
-		title.isAnimating = true
+		t.isAnimating = true
 	}
 }
