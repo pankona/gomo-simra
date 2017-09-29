@@ -123,7 +123,7 @@ func (l *logger) printLog(tag string, format string, a ...interface{}) {
 	if len(a) == 0 {
 		buf += format
 	} else {
-		buf += fmt.Sprintf(format, a)
+		buf += fmt.Sprintf(format, a...)
 	}
 	fmt.Println(buf)
 }
