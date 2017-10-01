@@ -1,5 +1,6 @@
 
 all:
+	@golint -set_exit_status ./...
 	@make --no-print-directory graph
 	@make --no-print-directory -C $(CURDIR)/internal/peer
 	
