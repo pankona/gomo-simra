@@ -147,10 +147,10 @@ func (sc *SpriteContainer) ReplaceTexture(sprite *Sprite, texture *Texture) {
 
 func isContained(sprite *Sprite, x, y float32) bool {
 	simlog.FuncIn()
-	if x >= (float32)(sprite.X)-(float32)(sprite.W)/2 &&
-		x <= (float32)(sprite.X)+(float32)(sprite.W)/2 &&
-		y >= (float32)(sprite.Y)-(float32)(sprite.H)/2 &&
-		y <= (float32)(sprite.Y)+(float32)(sprite.H)/2 {
+	if x >= sprite.X-sprite.W/2 &&
+		x <= sprite.X+sprite.W/2 &&
+		y >= sprite.Y-sprite.H/2 &&
+		y <= sprite.Y+sprite.H/2 {
 		simlog.Debug("true")
 		return true
 	}

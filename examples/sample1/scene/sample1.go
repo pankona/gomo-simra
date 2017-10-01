@@ -60,17 +60,17 @@ func (s *sample) Drive() {
 // OnTouchBegin is called when Title scene is Touched.
 // It is caused by calling AddtouchListener for e.gopher sprite.
 func (s *sample) OnTouchBegin(x, y float32) {
-	s.gopher.SetPosition((int)(x), (int)(y))
+	s.gopher.SetPosition(x, y)
 }
 
 // OnTouchMove is called when Title scene is Touched and moved.
 // It is caused by calling AddtouchListener for e.gopher sprite.
 func (s *sample) OnTouchMove(x, y float32) {
-	s.gopher.SetPosition((int)(x), (int)(y))
+	s.gopher.SetPosition(x, y)
 }
 
 // OnTouchEnd is called when Title scene is Touched and it is released.
 // It is caused by calling AddtouchListener for e.gopher sprite.
 func (s *sample) OnTouchEnd(x, y float32) {
-	s.gopher.SetPosition((int)(x), (int)(y))
+	s.gopher.SetPosition(x, y)
 }

@@ -13,7 +13,7 @@ func (l *Life) getPosition() (float32, float32) {
 }
 
 func (l *Life) setPosition(x float32, y float32) {
-	l.SetPosition((int)(x), (int)(y))
+	l.SetPosition(x, y)
 }
 
 func (l *Life) setSpeed(s float64) {}

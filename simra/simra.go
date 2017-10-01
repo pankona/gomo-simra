@@ -228,7 +228,7 @@ func (sim *simra) NewTextTexture(text string, fontsize float64, fontcolor color.
 }
 
 type point struct {
-	x, y int
+	x, y float32
 }
 
 func (sim *simra) collisionCheckAndNotify() {

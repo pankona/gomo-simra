@@ -2,7 +2,7 @@ package simra
 
 // Collider represents an interface of collidables
 type Collider interface {
-	GetXYWH() (x, y, w, h int)
+	GetXYWH() (x, y, w, h float32)
 }
 
 // CollisionListener represents a interface of listener of collision

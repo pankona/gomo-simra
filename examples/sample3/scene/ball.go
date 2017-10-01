@@ -19,8 +19,7 @@ type Ball struct {
  * Ball implementation for Model interface
  */
 func (b *Ball) setPosition(x, y float32) {
-	b.SetPositionX((int)(x))
-	b.SetPositionY((int)(y))
+	b.SetPosition(x, y)
 }
 
 func (b *Ball) getPosition() (x, y float32) {
@@ -60,8 +59,7 @@ func (b *Ball) move() {
 	b.direction = math.Atan2(dy, dx) * 180 / math.Pi
 
 	p := b.GetPosition()
-	b.SetPositionX(p.X + int(dx))
-	b.SetPositionY(p.Y + int(dy))
+	b.SetPosition(p.X+float32(dx), p.Y+float32(dy))
 
 	p = b.GetPosition()
 	if p.Y < 0 {
@@ -76,7 +74,7 @@ func (b *Ball) move() {
 }
 
 // GetXYWH returns x, y w, h of receiver
-func (b *Ball) GetXYWH() (x, y, w, h int) {
+func (b *Ball) GetXYWH() (x, y, w, h float32) {
 	p := b.GetPosition()
 	s := b.GetScale()
 	return p.X, p.Y, s.W, s.H

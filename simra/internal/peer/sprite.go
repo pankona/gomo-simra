@@ -19,13 +19,13 @@ func NewSprite() Spriter {
 // Deprecated. this will be unexposed.
 type Sprite struct {
 	// W = width of sprite
-	W int
+	W float32
 	// H = height of sprite
-	H int
+	H float32
 	// X = x position of sprite
-	X int
+	X float32
 	// Y = y position of sprite
-	Y int
+	Y float32
 	// R = radius of sprite (use for rotation)
 	R float32
 	// touchListeners is listeners to notify touch event

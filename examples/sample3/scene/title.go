@@ -38,12 +38,12 @@ func (t *Title) initialize() {
 
 	p := t.background.GetScale()
 	var tex *simra.Texture
-	tex = t.simra.NewImageTexture("t.png", image.Rect(0, 0, p.W, p.H))
+	tex = t.simra.NewImageTexture("t.png", image.Rect(0, 0, int(p.W), int(p.H)))
 	t.background.ReplaceTexture(tex)
 
 	p = t.text.GetScale()
 	tex = t.simra.NewTextTexture("text sample",
-		60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, p.W, p.H))
+		60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(p.W), int(p.H)))
 	t.text.ReplaceTexture(tex)
 
 	t.background.AddTouchListener(t)

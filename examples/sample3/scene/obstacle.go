@@ -16,7 +16,7 @@ type Obstacle struct {
 }
 
 // GetXYWH returns x, y w, h of receiver
-func (o *Obstacle) GetXYWH() (x, y, w, h int) {
+func (o *Obstacle) GetXYWH() (x, y, w, h float32) {
 	p := o.GetPosition()
 	s := o.GetScale()
 	return p.X, p.Y, s.W, s.H
@@ -26,7 +26,7 @@ func (o *Obstacle) GetXYWH() (x, y, w, h int) {
  * Obstacle implementation for Model interface
  */
 func (o *Obstacle) setPosition(x, y float32) {
-	o.SetPosition((int)(x), (int)(y))
+	o.SetPosition(x, y)
 }
 
 func (o *Obstacle) getPosition() (float32, float32) {
@@ -59,8 +59,8 @@ func (o *Obstacle) move() {
 	o.direction = math.Atan2(dy, dx) * 180 / math.Pi
 
 	p := o.GetPosition()
-	o.SetPositionX(p.X + int(dx))
-	o.SetPositionY(p.Y + int(dy))
+	o.SetPositionX(p.X + float32(dx))
+	o.SetPositionY(p.Y + float32(dy))
 
 	p = o.GetPosition()
 	s := o.GetScale()

@@ -39,8 +39,8 @@ func (t *Title) Initialize(sim simra.Simraer) {
 	t.initialize()
 
 	t.numOfSprite = t.simra.NewSprite()
-	t.numOfSprite.SetPosition(t.screenWidth/2, 100)
-	t.numOfSprite.SetScale(t.screenWidth, 80)
+	t.numOfSprite.SetPosition(float32(t.screenWidth/2), 100)
+	t.numOfSprite.SetScale(float32(t.screenWidth), 80)
 	t.simra.AddSprite(t.numOfSprite)
 
 	tex := t.simra.NewTextTexture("0",
@@ -48,8 +48,8 @@ func (t *Title) Initialize(sim simra.Simraer) {
 	t.numOfSprite.ReplaceTexture(tex)
 
 	t.fpsText = t.simra.NewSprite()
-	t.fpsText.SetPosition(t.screenWidth/4, 100)
-	t.fpsText.SetScale(t.screenWidth, 80)
+	t.fpsText.SetPosition(float32(t.screenWidth/4), 100)
+	t.fpsText.SetScale(float32(t.screenWidth), 80)
 	t.simra.AddSprite(t.fpsText)
 
 	tex = t.simra.NewTextTexture("0",
@@ -112,7 +112,7 @@ func (t *Title) OnTouchEnd(x, y float32) {
 func (t *Title) spawnKokeshi(x, y float32) {
 	// scene end. go to next scene
 	sprite := t.simra.NewSprite()
-	sprite.SetPosition((int)(x), (int)(y))
+	sprite.SetPosition(x, y)
 	sprite.SetScale(128, 128)
 	t.simra.AddSprite(sprite)
 	t.sprites = append(t.sprites, sprite)

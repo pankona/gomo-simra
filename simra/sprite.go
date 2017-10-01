@@ -24,17 +24,17 @@ type Spriter interface {
 	// StopAnimation stops animation
 	StopAnimation()
 	// SetPosition sets sprite's position
-	SetPosition(x, y int)
+	SetPosition(x, y float32)
 	// SetPositionX sets sprite's position X
-	SetPositionX(x int)
+	SetPositionX(x float32)
 	// SetPositionY sets sprite's position Y
-	SetPositionY(y int)
+	SetPositionY(y float32)
 	// SetScale sets sprite's size
-	SetScale(w, h int)
+	SetScale(w, h float32)
 	// SetScaleW sets sprite's size W
-	SetScaleW(w int)
+	SetScaleW(w float32)
 	// SetScaleH sets sprite's size H
-	SetScaleH(h int)
+	SetScaleH(h float32)
 	// GetPosition gets sprites position
 	GetPosition() Position
 	// GetScale gets sprites size
@@ -47,12 +47,12 @@ type Spriter interface {
 
 // Position represents position of sprite
 type Position struct {
-	X, Y int
+	X, Y float32
 }
 
 // Scale represents size of sprite
 type Scale struct {
-	W, H int
+	W, H float32
 }
 
 // Sprite represents a sprite object.
@@ -150,27 +150,27 @@ func (sprite *sprite) StopAnimation() {
 	simlog.FuncOut()
 }
 
-func (sprite *sprite) SetPosition(x, y int) {
+func (sprite *sprite) SetPosition(x, y float32) {
 	sprite.X, sprite.Y = x, y
 }
 
-func (sprite *sprite) SetPositionX(x int) {
+func (sprite *sprite) SetPositionX(x float32) {
 	sprite.X = x
 }
 
-func (sprite *sprite) SetPositionY(y int) {
+func (sprite *sprite) SetPositionY(y float32) {
 	sprite.Y = y
 }
 
-func (sprite *sprite) SetScale(w, h int) {
+func (sprite *sprite) SetScale(w, h float32) {
 	sprite.W, sprite.H = w, h
 }
 
-func (sprite *sprite) SetScaleW(w int) {
+func (sprite *sprite) SetScaleW(w float32) {
 	sprite.W = w
 }
 
-func (sprite *sprite) SetScaleH(h int) {
+func (sprite *sprite) SetScaleH(h float32) {
 	sprite.H = h
 }
 

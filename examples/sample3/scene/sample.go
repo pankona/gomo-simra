@@ -182,7 +182,7 @@ func (s *sample) setupSprites() {
 	s.background[1].ReplaceTexture(tex)
 
 	scale := s.ball.GetScale()
-	tex = s.simra.NewImageTexture("ball.png", image.Rect(0, 0, scale.W, scale.H))
+	tex = s.simra.NewImageTexture("ball.png", image.Rect(0, 0, int(scale.W), int(scale.H)))
 	s.ball.ReplaceTexture(tex)
 
 	tex = s.simra.NewImageTexture("obstacle.png", image.Rect(0, 0, 100, 100))
