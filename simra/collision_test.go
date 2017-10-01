@@ -10,7 +10,7 @@ type l struct{}
 
 var onCollision = make(chan bool)
 
-func (c *c) GetXYWH() (x, y, w, h int) {
+func (c *c) GetXYWH() (x, y, w, h float32) {
 	x, y, w, h = 0, 0, 0, 0
 	return
 }
