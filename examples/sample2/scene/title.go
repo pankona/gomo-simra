@@ -1,10 +1,9 @@
 package scene
 
 import (
-	"image"
-
 	"github.com/pankona/gomo-simra/examples/sample2/scene/config"
 	"github.com/pankona/gomo-simra/simra"
+	"github.com/pankona/gomo-simra/simra/image"
 )
 
 // Title represents a scene object for Title
@@ -33,7 +32,7 @@ func (t *Title) initialize() {
 
 	t.background.AddTouchListener(t)
 	tex := t.simra.NewImageTexture("title.png",
-		image.Rect(0, 0, int(t.background.GetScale().W), int(t.background.GetScale().H)))
+		image.Rect(0, 0, t.background.GetScale().W, t.background.GetScale().H))
 	t.background.ReplaceTexture(tex)
 
 }

@@ -1,11 +1,11 @@
 package simra
 
 import (
-	"image"
 	"image/color"
 	"runtime"
 
 	"github.com/pankona/gomo-simra/simra/fps"
+	"github.com/pankona/gomo-simra/simra/image"
 	"github.com/pankona/gomo-simra/simra/internal/peer"
 	"github.com/pankona/gomo-simra/simra/simlog"
 )
@@ -200,7 +200,7 @@ func (sim *simra) NewImageTexture(assetName string, rect image.Rectangle) *Textu
 	simlog.FuncIn()
 
 	gl := sim.gl
-	tex := gl.LoadTexture(assetName, rect)
+	tex := gl.LoadTexture(assetName, rect.Rectangle)
 	t := &Texture{
 		simra:   sim,
 		texture: gl.NewTexture(tex),
@@ -216,7 +216,7 @@ func (sim *simra) NewTextTexture(text string, fontsize float64, fontcolor color.
 	simlog.FuncIn()
 
 	gl := sim.gl
-	tex := gl.MakeTextureByText(text, fontsize, fontcolor, rect)
+	tex := gl.MakeTextureByText(text, fontsize, fontcolor, rect.Rectangle)
 	t := &Texture{
 		simra:   sim,
 		texture: gl.NewTexture(tex),

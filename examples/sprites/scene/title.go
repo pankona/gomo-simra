@@ -1,7 +1,6 @@
 package scene
 
 import (
-	"image"
 	"image/color"
 	"math"
 	"strconv"
@@ -9,6 +8,7 @@ import (
 	"time"
 
 	"github.com/pankona/gomo-simra/simra"
+	"github.com/pankona/gomo-simra/simra/image"
 )
 
 // Title represents a scene object for Title
@@ -44,7 +44,7 @@ func (t *Title) Initialize(sim simra.Simraer) {
 	t.simra.AddSprite(t.numOfSprite)
 
 	tex := t.simra.NewTextTexture("0",
-		60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, t.screenWidth, 80))
+		60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, float32(t.screenWidth), 80))
 	t.numOfSprite.ReplaceTexture(tex)
 
 	t.fpsText = t.simra.NewSprite()
@@ -53,13 +53,13 @@ func (t *Title) Initialize(sim simra.Simraer) {
 	t.simra.AddSprite(t.fpsText)
 
 	tex = t.simra.NewTextTexture("0",
-		60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, t.screenWidth, 80))
+		60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, float32(t.screenWidth), 80))
 	t.fpsText.ReplaceTexture(tex)
 	go func() {
 		for {
 			<-time.After(1 * time.Second)
 			tex = t.simra.NewTextTexture(strconv.Itoa(t.fps),
-				60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, t.screenWidth, 80))
+				60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, float32(t.screenWidth), 80))
 			t.fpsText.ReplaceTexture(tex)
 			t.mu.Lock()
 			t.fps = 0
@@ -119,6 +119,6 @@ func (t *Title) spawnKokeshi(x, y float32) {
 	sprite.ReplaceTexture(t.kokeshiTex)
 
 	tex := t.simra.NewTextTexture(strconv.Itoa(len(t.sprites)),
-		60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, t.screenWidth, 80))
+		60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, float32(t.screenWidth), 80))
 	t.numOfSprite.ReplaceTexture(tex)
 }

@@ -1,9 +1,8 @@
 package scene
 
 import (
-	"image"
-
 	"github.com/pankona/gomo-simra/simra"
+	"github.com/pankona/gomo-simra/simra/image"
 )
 
 const (
@@ -37,10 +36,10 @@ func (t *Title) initialize() {
 	sprite.SetScale(240, 240)
 
 	animationSet := simra.NewAnimationSet()
-	t.initialSprite = t.simra.NewImageTexture("effect.png", image.Rect(0, 0, 239, int(sprite.GetScale().H)))
+	t.initialSprite = t.simra.NewImageTexture("effect.png", image.Rect(0, 0, 239, sprite.GetScale().H))
 	for i := 0; i < 13; i++ {
 		animationSet.AddTexture(t.simra.NewImageTexture("effect.png",
-			image.Rect(int(sprite.GetScale().W)*i, 0, (int(sprite.GetScale().W)*(i+1))-1, int(sprite.GetScale().H))))
+			image.Rect(sprite.GetScale().W*float32(i), 0, (sprite.GetScale().W*float32(i+1))-1, sprite.GetScale().H)))
 	}
 	animationSet.SetInterval(6)
 	sprite.AddAnimationSet("animation test", animationSet)

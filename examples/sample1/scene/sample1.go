@@ -1,10 +1,10 @@
 package scene
 
 import (
-	"image"
 	"math"
 
 	"github.com/pankona/gomo-simra/simra"
+	"github.com/pankona/gomo-simra/simra/image"
 )
 
 // sample represents a scene of sample
@@ -38,7 +38,7 @@ func (s *sample) initGopher() {
 
 	s.simra.AddSprite(s.gopher)
 	tex := s.simra.NewImageTexture("waza-gophers.jpeg",
-		image.Rect(152, 10, 152+int(s.gopher.GetScale().W), 10+int(s.gopher.GetScale().H)))
+		image.Rect(152, 10, 152+s.gopher.GetScale().W, 10+s.gopher.GetScale().H))
 	s.gopher.ReplaceTexture(tex)
 
 	s.gopher.AddTouchListener(s)

@@ -1,12 +1,12 @@
 package scene
 
 import (
-	"image"
 	"image/color"
 
 	"golang.org/x/mobile/asset"
 
 	"github.com/pankona/gomo-simra/simra"
+	"github.com/pankona/gomo-simra/simra/image"
 )
 
 const (
@@ -44,7 +44,7 @@ func (t *Title) initialize() {
 	t.simra.AddSprite(sprite)
 	s := sprite.GetScale()
 	tex := t.simra.NewTextTexture("tap to play sound",
-		60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, int(s.W), int(s.H)))
+		60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, s.W, s.H))
 	sprite.ReplaceTexture(tex)
 
 }

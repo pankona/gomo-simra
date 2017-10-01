@@ -1,11 +1,11 @@
 package scene
 
 import (
-	"image"
 	"math"
 
 	"github.com/pankona/gomo-simra/examples/sample2/scene/config"
 	"github.com/pankona/gomo-simra/simra"
+	"github.com/pankona/gomo-simra/simra/image"
 )
 
 // sample represents a scene object for this sample
@@ -77,7 +77,7 @@ func (s *sample) initBall() {
 
 	s.simra.AddSprite(s.ball)
 	tex := s.simra.NewImageTexture("ball.png",
-		image.Rect(0, 0, int(s.ball.GetScale().W), int(s.ball.GetScale().H)))
+		image.Rect(0, 0, s.ball.GetScale().W, s.ball.GetScale().H))
 	s.ball.ReplaceTexture(tex)
 
 }
@@ -103,7 +103,7 @@ func (s *sample) initctrlUp() {
 	// add sprite to glpeer
 	s.simra.AddSprite(s.ctrlup)
 	tex := s.simra.NewImageTexture("arrow.png",
-		image.Rect(0, 0, int(s.ctrlup.GetScale().W), int(s.ctrlup.GetScale().H)))
+		image.Rect(0, 0, s.ctrlup.GetScale().W, s.ctrlup.GetScale().H))
 	s.ctrlup.ReplaceTexture(tex)
 
 	// add touch listener for sprite
@@ -127,7 +127,7 @@ func (s *sample) initctrlDown() {
 	// add sprite to glpeer
 	s.simra.AddSprite(s.ctrldown)
 	tex := s.simra.NewImageTexture("arrow.png",
-		image.Rect(0, 0, int(s.ctrldown.GetScale().W), int(s.ctrldown.GetScale().H)))
+		image.Rect(0, 0, s.ctrldown.GetScale().W, s.ctrldown.GetScale().H))
 	s.ctrldown.ReplaceTexture(tex)
 
 	// add touch listener for sprite
@@ -141,12 +141,12 @@ func (s *sample) replaceButtonColor() {
 
 	// red changes to blue
 	tex = s.simra.NewImageTexture("blue_circle.png",
-		image.Rect(0, 0, int(s.buttonBlue.GetScale().W), int(s.buttonBlue.GetScale().H)))
+		image.Rect(0, 0, s.buttonBlue.GetScale().W, s.buttonBlue.GetScale().H))
 	s.buttonRed.ReplaceTexture(tex)
 
 	// blue changes to red
 	tex = s.simra.NewImageTexture("red_circle.png",
-		image.Rect(0, 0, int(s.buttonRed.GetScale().W), int(s.buttonRed.GetScale().H)))
+		image.Rect(0, 0, s.buttonRed.GetScale().W, s.buttonRed.GetScale().H))
 	s.buttonBlue.ReplaceTexture(tex)
 
 	s.buttonReplaced = true
@@ -157,12 +157,12 @@ func (s *sample) originalButtonColor() {
 
 	// set red button to buttonRed
 	tex = s.simra.NewImageTexture("red_circle.png",
-		image.Rect(0, 0, int(s.buttonBlue.GetScale().W), int(s.buttonBlue.GetScale().H)))
+		image.Rect(0, 0, s.buttonBlue.GetScale().W, s.buttonBlue.GetScale().H))
 	s.buttonRed.ReplaceTexture(tex)
 
 	// set blue button to buttonBlue
 	tex = s.simra.NewImageTexture("blue_circle.png",
-		image.Rect(0, 0, int(s.buttonRed.GetScale().W), int(s.buttonRed.GetScale().H)))
+		image.Rect(0, 0, s.buttonRed.GetScale().W, s.buttonRed.GetScale().H))
 	s.buttonBlue.ReplaceTexture(tex)
 
 	s.buttonReplaced = false
@@ -181,7 +181,7 @@ func (s *sample) initButtonBlue() {
 	// add sprite to glpeer
 	s.simra.AddSprite(s.buttonBlue)
 	tex := s.simra.NewImageTexture("blue_circle.png",
-		image.Rect(0, 0, int(s.buttonBlue.GetScale().W), int(s.buttonBlue.GetScale().H)))
+		image.Rect(0, 0, s.buttonBlue.GetScale().W, s.buttonBlue.GetScale().H))
 	s.buttonBlue.ReplaceTexture(tex)
 
 	// add touch listener for sprite
@@ -202,7 +202,7 @@ func (s *sample) initButtonRed() {
 	// add sprite to glpeer
 	s.simra.AddSprite(s.buttonRed)
 	tex := s.simra.NewImageTexture("red_circle.png",
-		image.Rect(0, 0, int(s.buttonRed.GetScale().W), int(s.buttonRed.GetScale().H)))
+		image.Rect(0, 0, s.buttonRed.GetScale().W, s.buttonRed.GetScale().H))
 	s.buttonRed.ReplaceTexture(tex)
 
 	// add touch listener for sprite

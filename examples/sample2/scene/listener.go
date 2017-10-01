@@ -1,6 +1,6 @@
 package scene
 
-import "image"
+import "github.com/pankona/gomo-simra/simra/image"
 
 // ctrlUp
 type ctrlUpTouchListener struct {
@@ -77,7 +77,7 @@ func (c *ButtonRedTouchListener) OnTouchBegin(x, y float32) {
 	}
 	c.simra.AddSprite(c.ball)
 	tex := c.simra.NewImageTexture("ball.png",
-		image.Rect(0, 0, int(c.ball.GetScale().W), int(c.ball.GetScale().H)))
+		image.Rect(0, 0, c.ball.GetScale().W, c.ball.GetScale().H))
 	c.ball.ReplaceTexture(tex)
 }
 
