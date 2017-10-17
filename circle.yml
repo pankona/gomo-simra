@@ -3,7 +3,8 @@ machine:
         IMPORT_PATH: "github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
         GOROOT: "$HOME/goroot/go"
         GOPATH: "$HOME/go"
-        NDK_ROOT: "$HOME/android-ndk-r13b"
+        NDK: "android-ndk-r15c"
+        NDK_ROOT: "$HOME/$NDK"
         PATH: "$GOROOT/bin:$GOPATH/bin:$PATH"
 
 dependencies:
@@ -26,9 +27,9 @@ dependencies:
                 cp -r ./go -T $GOROOT
             fi
             if [ ! -e $NDK_ROOT ]; then
-                wget https://dl.google.com/android/repository/android-ndk-r15c-linux-x86_64.zip
-                unzip -q ./android-ndk-r13b-linux-x86_64.zip
-                mv ./android-ndk-r13b $HOME/.
+                wget https://dl.google.com/android/repository/$NDK-linux-x86_64.zip
+                unzip -q ./$NDK-linux-x86_64.zip
+                mv ./$NDK $HOME/.
                 ls $HOME
             fi
         - go get golang.org/x/mobile/cmd/gomobile
