@@ -4,7 +4,7 @@ import "github.com/pankona/gomo-simra/simra/simlog"
 
 // Toucher reporesents an interface for touch controller
 type Toucher interface {
-	// AddTouchListener registeres a listener to notify touch event.
+	// AddTouchListener registers a listener to notify touch event.
 	AddTouchListener(listener TouchListener)
 	// RemoveTouchListener removes specified listener.
 	RemoveTouchListener(listener TouchListener)
@@ -45,7 +45,7 @@ func GetTouchPeer() Toucher {
 	return touchPeer
 }
 
-// AddTouchListener registeres a listener to notify touch event.
+// AddTouchListener registers a listener to notify touch event.
 func (tp *TouchPeer) AddTouchListener(listener TouchListener) {
 	simlog.FuncIn()
 	tp.touchListeners = append(tp.touchListeners, listener)
