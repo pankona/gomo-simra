@@ -8,12 +8,14 @@ import (
 	"github.com/boltdb/bolt"
 )
 
-// boltdb takes a role for interfaces of data store.
+// Boltdb takes a role for interfaces of data store.
 // implements simra.Databaser.
 type Boltdb struct {
 	db *bolt.DB
 }
 
+// Open opens new DB connection.
+// Open will create a DB file under dirpath if not exist.
 func (database *Boltdb) Open(dirpath string) error {
 	db, err := bolt.Open(filepath.Join(dirpath, "db"), 0600, nil)
 	if err != nil {
