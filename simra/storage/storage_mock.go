@@ -7,8 +7,7 @@ package storage
 
 import "path/filepath"
 
-type storageMock struct {
-}
+type storageMock struct{}
 
 func NewStorage() Storager {
 	return &storageMock{}

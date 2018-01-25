@@ -4,7 +4,7 @@ import "fmt"
 
 // Databaser represents interface of database
 type Databaser interface {
-	Open() error
+	Open(dirpath string) error
 	Close()
 	Put(key string, value interface{})
 	Get(key string) interface{}
@@ -16,8 +16,8 @@ type Database struct {
 }
 
 // OpenDB opens database connection
-func OpenDB(databaser Databaser) *Database {
-	err := databaser.Open()
+func OpenDB(databaser Databaser, dirpath string) *Database {
+	err := databaser.Open(dirpath)
 	if err != nil {
 		_ = fmt.Errorf("failed to open database. err = %s", err)
 		return nil

@@ -1,6 +1,4 @@
-// +build linux
-// +build darwin
-// +build windows
+// +build !android
 
 package storage
 

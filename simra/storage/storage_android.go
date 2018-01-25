@@ -15,5 +15,5 @@ func NewStorage() Storager {
 }
 
 func (s *storageAndroid) DirectoryPath() string {
-	s.dirpath
+	return s.dirpath
 }
