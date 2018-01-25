@@ -170,7 +170,7 @@ func (sim *simra) RemoveTouchListener(listener peer.TouchListener) {
 // AddCollisionListener add a callback function that is called on
 // collision is detected between c1 and c2.
 func (sim *simra) AddCollisionListener(c1, c2 Collider, listener CollisionListener) {
-	// TODO: exclusive controll
+	// TODO: exclusiveee controll
 	simlog.FuncIn()
 	sim.comap = append(sim.comap, &collisionMap{c1, c2, listener})
 	simlog.FuncOut()
