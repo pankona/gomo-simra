@@ -1,0 +1,5 @@
+linter:
+  gometalinter:
+    import_path: github.com/pankona/gomo-simra
+    options:
+      skip: vendor/

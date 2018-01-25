@@ -1,30 +1,41 @@
-package simra
+package database
 
 import (
 	"fmt"
 	"log"
+	"path/filepath"
 
 	"github.com/boltdb/bolt"
 )
 
-// boltdb takes a role for interfaces of data store.
+// Boltdb takes a role for interfaces of data store.
 // implements simra.Databaser.
-type boltdb struct {
+type Boltdb struct {
 	db *bolt.DB
 }
 
-func (database *boltdb) Open() error {
-	db, err := bolt.Open("db", 0600, nil)
+// Open opens new DB connection.
+// Open will create a DB file under dirpath if not exist.
+func (database *Boltdb) Open(dirpath string) error {
+	db, err := bolt.Open(filepath.Join(dirpath, "db"), 0600, nil)
 	if err != nil {
 		return fmt.Errorf("failed to open database. error is: %s", err)
 	}
 	database.db = db
-	return nil
+	err = db.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists([]byte("my_bucket"))
+		if err != nil {
+			log.Fatal(err)
+			return nil
+		}
+		return nil
+	})
+	return err
 }
 
 // Close closes database.
 // it is necessary to call this function after using database functions.
-func (database *boltdb) Close() {
+func (database *Boltdb) Close() {
 	err := database.db.Close()
 	if err != nil {
 		log.Println(err)
@@ -33,8 +44,8 @@ func (database *boltdb) Close() {
 }
 
 // Put puts a data to database.
-// input must have ability to be cated into byte array.
-func (database *boltdb) Put(key string, value interface{}) {
+// input must have ability to be casted into byte array.
+func (database *Boltdb) Put(key string, value interface{}) {
 	db := database.db
 	if db == nil {
 		log.Fatal("database is not opened yet.")
@@ -64,7 +75,7 @@ func (database *boltdb) Put(key string, value interface{}) {
 }
 
 // Get returns put data.
-func (database *boltdb) Get(key string) interface{} {
+func (database *Boltdb) Get(key string) interface{} {
 	db := database.db
 	if db == nil {
 		log.Fatal("database is not opened yet.")

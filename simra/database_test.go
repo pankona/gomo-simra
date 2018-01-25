@@ -1,15 +1,20 @@
 package simra
 
 import (
+	"io/ioutil"
 	"log"
+	"os"
+	"path/filepath"
 	"testing"
+
+	"github.com/pankona/gomo-simra/simra/database"
 )
 
 type mock struct {
 	m map[string]interface{}
 }
 
-func (db *mock) Open() error {
+func (db *mock) Open(dirpath string) error {
 	if db.m == nil {
 		db.m = map[string]interface{}{}
 	}
@@ -37,7 +42,7 @@ func (db *mock) Get(key string) interface{} {
 }
 
 func TestMock(t *testing.T) {
-	db := OpenDB(&mock{})
+	db := OpenDB(&mock{}, filepath.Join("."))
 	if db == nil {
 		t.Error("failed to open database")
 	}
@@ -51,7 +56,15 @@ func TestMock(t *testing.T) {
 }
 
 func TestBolt(t *testing.T) {
-	db := OpenDB(&boltdb{})
+	tmpdir, err := ioutil.TempDir(filepath.Join("."), "simradb_")
+	if err != nil {
+		t.Fatalf("failed to create temporary working directory. err: %s", err.Error())
+	}
+	defer func() {
+		_ = os.RemoveAll(tmpdir)
+	}()
+
+	db := OpenDB(&database.Boltdb{}, filepath.Join(tmpdir))
 	if db == nil {
 		t.Error("failed to open database")
 	}
