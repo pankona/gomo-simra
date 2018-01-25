@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/pankona/gomo-simra/simra/database"
 )
 
 type mock struct {
@@ -62,7 +64,7 @@ func TestBolt(t *testing.T) {
 		_ = os.RemoveAll(tmpdir)
 	}()
 
-	db := OpenDB(&Boltdb{}, filepath.Join(tmpdir))
+	db := OpenDB(&database.Boltdb{}, filepath.Join(tmpdir))
 	if db == nil {
 		t.Error("failed to open database")
 	}
