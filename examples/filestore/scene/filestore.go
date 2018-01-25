@@ -5,6 +5,7 @@ import (
 	"math"
 
 	"github.com/pankona/gomo-simra/simra"
+	"github.com/pankona/gomo-simra/simra/database"
 	"github.com/pankona/gomo-simra/simra/fps"
 	"github.com/pankona/gomo-simra/simra/image"
 	"github.com/pankona/gomo-simra/simra/simlog"
@@ -26,7 +27,7 @@ type filestore struct {
 func (f *filestore) Initialize(sim simra.Simraer) {
 	f.simra = sim
 	f.simra.SetDesiredScreenSize(1080/2, 1920/2)
-	f.db = simra.OpenDB(&simra.Boltdb{}, storage.NewStorage().DirectoryPath()) // TODO: when to call Close...?
+	f.db = simra.OpenDB(&database.Boltdb{}, storage.NewStorage().DirectoryPath()) // TODO: when to call Close...?
 	f.db.Close()
 	f.initSprite()
 	go func() {
@@ -38,7 +39,7 @@ func (f *filestore) Initialize(sim simra.Simraer) {
 }
 
 func (f *filestore) storeCurrentPosition() {
-	f.db = simra.OpenDB(&simra.Boltdb{}, storage.NewStorage().DirectoryPath()) // TODO: when to call Close...?
+	f.db = simra.OpenDB(&database.Boltdb{}, storage.NewStorage().DirectoryPath()) // TODO: when to call Close...?
 	defer f.db.Close()
 
 	p := f.gopher.GetPosition()
@@ -48,7 +49,7 @@ func (f *filestore) storeCurrentPosition() {
 }
 
 func (f *filestore) fetchCurrentPosition() {
-	f.db = simra.OpenDB(&simra.Boltdb{}, storage.NewStorage().DirectoryPath()) // TODO: when to call Close...?
+	f.db = simra.OpenDB(&database.Boltdb{}, storage.NewStorage().DirectoryPath()) // TODO: when to call Close...?
 	defer f.db.Close()
 
 	pstr := (string)(f.db.Get("position").([]uint8))

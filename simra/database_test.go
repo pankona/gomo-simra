@@ -1,4 +1,4 @@
-package database
+package simra
 
 import (
 	"io/ioutil"
