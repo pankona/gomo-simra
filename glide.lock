@@ -1,5 +1,5 @@
 hash: 70988ff3dada2f15f7e350747c13fdd771cf0870c79306d5ec3aa560f6ee1500
-updated: 2017-08-29T09:37:41.727446898+09:00
+updated: 2018-01-25T15:18:09.998427974+09:00
 imports:
 - name: github.com/boltdb/bolt
   version: 2f1ce7a837dcb8da3ec595b1dac9d0632f0f99e8
@@ -9,20 +9,26 @@ imports:
   - raster
   - truetype
 - name: github.com/gopherjs/gopherjs
-  version: f7c56533adfac99e12ccdccfec04a466d2a778da
+  version: 178c176a91fe05e3e6c58fa5c989bad19e6cdcb3
   subpackages:
   - js
 - name: github.com/hajimehoshi/go-mp3
-  version: c2f85e8c3ff60d72b4ad80e86ebc96566be7bbf4
+  version: a843108de7dee367a459b0f5e9989edef201daf5
   subpackages:
   - internal/bits
+  - internal/consts
+  - internal/frame
+  - internal/frameheader
+  - internal/huffman
   - internal/imdct
+  - internal/maindata
+  - internal/sideinfo
 - name: github.com/hajimehoshi/oto
-  version: 58b076ceb5dde593df27749cd918caf6273ee84a
+  version: 3680d211ad669453474fc5622a8cc4d346accedb
   subpackages:
   - internal/jni
 - name: golang.org/x/exp
-  version: be79676510e5ce293c77bb087cdab4796a461bdb
+  version: 072991165226c11c888c881218850e8318c2b32e
   subpackages:
   - shiny/driver/gldriver
   - shiny/driver/internal/drawer
@@ -33,14 +39,14 @@ imports:
   - shiny/driver/internal/x11key
   - shiny/screen
 - name: golang.org/x/image
-  version: 426cfd8eeb6e08ab1932954e09e3c2cb2bc6e36d
+  version: 12117c17ca67ffa1ce22e9409f3b0b0a93ac08c7
   subpackages:
   - font
   - font/gofont/goregular
   - math/f64
   - math/fixed
 - name: golang.org/x/mobile
-  version: 05f1abc543eeb2d5459b390011389bb8ed93eaf0
+  version: 5704e182c7003d4b7e94c23373f3fad4e5ceb25a
   subpackages:
   - app
   - app/internal/callfn
@@ -52,7 +58,6 @@ imports:
   - event/size
   - event/touch
   - exp/app/debug
-  - exp/audio/al
   - exp/f32
   - exp/gl/glutil
   - exp/sprite
@@ -62,7 +67,7 @@ imports:
   - gl
   - internal/mobileinit
 - name: golang.org/x/sys
-  version: 35ef4487ce0a1ea5d4b616ffe71e34febe723695
+  version: af9a21289d0040306ecc55fa668c95246f1f8425
   subpackages:
   - unix
   - windows

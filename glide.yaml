@@ -1,10 +1,12 @@
 package: github.com/pankona/gomo-simra
 import:
 - package: github.com/boltdb/bolt
-  version: ^1.3.0
+  version: ^1.3.1
 - package: github.com/golang/freetype
   subpackages:
   - truetype
+- package: github.com/hajimehoshi/go-mp3
+- package: github.com/hajimehoshi/oto
 - package: golang.org/x/image
   subpackages:
   - font
@@ -24,5 +26,4 @@ import:
   - exp/sprite
   - exp/sprite/clock
   - exp/sprite/glsprite
-  - geom
   - gl
