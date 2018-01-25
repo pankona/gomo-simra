@@ -81,7 +81,7 @@ loop:
 			// If player.Close() is called immediately,
 			// last part of audio will not be playbacked.
 			// Wait until the playback is finished (about 1 sec?).
-			// This problem seems to be occured only on Android.
+			// This problem seems to be occurrred only on Android.
 			<-time.After(1 * time.Second)
 			break loop
 		}
