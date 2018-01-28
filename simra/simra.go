@@ -55,8 +55,6 @@ type simra struct {
 	comap           []*collisionMap
 	gl              peer.GLer
 	spritecontainer peer.SpriteContainerer
-	onStart         func()
-	onStop          func()
 }
 
 // NewSimra returns an instance of Simraer
@@ -72,13 +70,6 @@ func (sim *simra) onUpdate() {
 	}
 	sim.collisionCheckAndNotify()
 	sim.gl.Update(sim.spritecontainer)
-}
-
-func (sim *simra) onStopped() {
-	simlog.FuncIn()
-	sim.driver = nil
-	sim.gl.Finalize()
-	simlog.FuncOut()
 }
 
 func (sim *simra) onGomoStart(glc *peer.GLContext) {

@@ -4,7 +4,6 @@ import "sync"
 
 var (
 	fpsTimerContainer sync.Map
-	opQueue           = make(chan op)
 	timerID           int
 )
 
@@ -16,7 +15,6 @@ type fps struct {
 }
 
 type op struct {
-	op    string
 	value interface{}
 }
 
