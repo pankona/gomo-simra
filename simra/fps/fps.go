@@ -14,10 +14,6 @@ type fps struct {
 	c          chan struct{}
 }
 
-type op struct {
-	value interface{}
-}
-
 // After waits for the duration (fps based) to elapse
 // and then sends the empty channel
 func After(timeToFire int64) <-chan struct{} {
