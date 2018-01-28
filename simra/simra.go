@@ -121,7 +121,12 @@ func (sim *simra) SetScene(driver Driver) {
 
 	sim.driver = driver
 	sim.spritecontainer.Initialize(sim.gl)
-	sim.spritecontainer.AddSprite(&peer.Sprite{}, nil, fps.Progress)
+	err := sim.spritecontainer.AddSprite(&peer.Sprite{}, nil, fps.Progress)
+	if err != nil {
+		simlog.Errorf("failed to add sprite. err: %s", err.Error())
+		return
+	}
+
 	driver.Initialize(sim)
 
 	simlog.FuncOut()
@@ -138,7 +143,11 @@ func (sim *simra) NewSprite() Spriter {
 // AddSprite adds a sprite to current scene with empty texture.
 func (sim *simra) AddSprite(s Spriter) {
 	sp := s.(*sprite)
-	sim.spritecontainer.AddSprite(&sp.Sprite, nil, nil)
+	err := sim.spritecontainer.AddSprite(&sp.Sprite, nil, nil)
+	if err != nil {
+		simlog.Errorf("failed to add sprite. err: %s", err.Error())
+	}
+
 }
 
 // RemoveSprite removes specified sprite from current scene.

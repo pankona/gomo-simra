@@ -23,9 +23,8 @@ func TestPubSub(t *testing.T) {
 		},
 	}
 
-	var err error
-	// discards duplicated registerations
-	err = p.Subscribe("subscriber1", s)
+	// discards duplicated registrations
+	err := p.Subscribe("subscriber1", s)
 	err = p.Subscribe("subscriber1", s)
 	wg.Add(1)
 	err = p.Subscribe("subscriber2", s)

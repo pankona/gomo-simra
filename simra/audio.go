@@ -85,7 +85,11 @@ loop:
 			<-time.After(1 * time.Second)
 			break loop
 		}
-		f.Seek(0, io.SeekStart)
+		_, err := f.Seek(0, io.SeekStart)
+		if err != nil {
+			return err
+		}
+
 	}
 	return err
 }
