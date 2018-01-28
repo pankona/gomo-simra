@@ -23,9 +23,9 @@ func (database *Boltdb) Open(dirpath string) error {
 	}
 	database.db = db
 	err = db.Update(func(tx *bolt.Tx) error {
-		_, err := tx.CreateBucketIfNotExists([]byte("my_bucket"))
-		if err != nil {
-			log.Fatal(err)
+		_, e := tx.CreateBucketIfNotExists([]byte("my_bucket"))
+		if e != nil {
+			log.Fatal(e)
 			return nil
 		}
 		return nil
