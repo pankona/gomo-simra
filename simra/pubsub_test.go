@@ -13,9 +13,23 @@ func (s *sub) OnEvent(i interface{}) {
 	s.f()
 }
 
-func TestPubSub(t *testing.T) {
-	p := NewPubSub()
+type errPubSub struct {
+	pubsub *PubSub
+	err    error
+}
 
+func (e *errPubSub) Subscribe(id string, s Subscriber) {
+	if e.err != nil {
+		return
+	}
+	e.err = e.pubsub.Subscribe(id, s)
+}
+
+func (e *errPubSub) Publish(i interface{}) {
+	e.pubsub.Publish(i)
+}
+
+func TestPubSub(t *testing.T) {
 	var wg sync.WaitGroup
 	s := &sub{
 		f: func() {
@@ -23,19 +37,20 @@ func TestPubSub(t *testing.T) {
 		},
 	}
 
+	p := &errPubSub{pubsub: NewPubSub()}
 	// discards duplicated registrations
-	err := p.Subscribe("subscriber1", s)
-	err = p.Subscribe("subscriber1", s)
+	p.Subscribe("subscriber1", s)
+	p.Subscribe("subscriber1", s)
 	wg.Add(1)
-	err = p.Subscribe("subscriber2", s)
-	err = p.Subscribe("subscriber2", s)
+	p.Subscribe("subscriber2", s)
+	p.Subscribe("subscriber2", s)
 	wg.Add(1)
-	err = p.Subscribe("subscriber3", s)
-	err = p.Subscribe("subscriber3", s)
+	p.Subscribe("subscriber3", s)
+	p.Subscribe("subscriber3", s)
 	wg.Add(1)
 
-	if err != nil {
-		t.Errorf("unexpected error. err = %s", err)
+	if p.err != nil {
+		t.Errorf("unexpected error. err = %s", p.err)
 	}
 
 	p.Publish(nil)
