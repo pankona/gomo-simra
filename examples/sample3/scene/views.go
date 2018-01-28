@@ -77,8 +77,7 @@ func (views *views) onDead() {
 	ball := views.ball
 
 	dx := ball.getSpeed() * math.Cos(ball.getDirection()*math.Pi/180)
-	dy := ball.getSpeed() * math.Sin(ball.getDirection()*math.Pi/180)
-	dy = 0
+	dy := float64(0)
 	dx -= 3
 	ball.setSpeed(math.Sqrt(dx*dx + dy*dy))
 	ball.setDirection(math.Atan2(dy, dx) * 180 / math.Pi)
