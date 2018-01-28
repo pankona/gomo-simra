@@ -39,6 +39,7 @@ dependencies:
         - go get -u github.com/hajimehoshi/go-mp3
         - go get -u github.com/golang/lint/golint
         - go get -u gopkg.in/alecthomas/gometalinter.v2
+        - gometalinter.v2 --install --update
         - gomobile init --ndk $NDK_ROOT
 
     override:
