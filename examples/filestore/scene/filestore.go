@@ -43,7 +43,7 @@ func (f *filestore) storeCurrentPosition() {
 	defer f.db.Close()
 
 	p := f.gopher.GetPosition()
-	pstr := fmt.Sprintf("%f,%f", p.X, p.Y)
+	pstr := fmt.Sprintf("%d,%d", p.X, p.Y)
 	simlog.Debugf("store: %s", pstr)
 	f.db.Put("position", pstr)
 }
@@ -54,7 +54,10 @@ func (f *filestore) fetchCurrentPosition() {
 
 	pstr := (string)(f.db.Get("position").([]uint8))
 	p := simra.Position{}
-	fmt.Sscanf(pstr, "%f,%f", &p.X, &p.Y)
+	_, err := fmt.Sscanf(pstr, "%f,%f", &p.X, &p.Y)
+	if err != nil {
+		simlog.Errorf("failed to fetch current position. %s", err.Error())
+	}
 
 	// restore last position from db
 	simlog.Debugf("set: %s", pstr)
