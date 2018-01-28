@@ -31,7 +31,7 @@ func (o *Obstacle) setPosition(x, y float32) {
 
 func (o *Obstacle) getPosition() (float32, float32) {
 	p := o.GetPosition()
-	return (float32)(p.X), (float32)(p.Y)
+	return p.X, p.Y
 }
 
 func (o *Obstacle) setRotate(r float32) {}

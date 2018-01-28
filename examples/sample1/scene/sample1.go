@@ -54,7 +54,7 @@ func (s *sample) Drive() {
 	if degree >= 360 {
 		degree = 0
 	}
-	s.gopher.SetRotate(float32(degree) * math.Pi / 180)
+	s.gopher.SetRotate(degree * math.Pi / 180)
 }
 
 // OnTouchBegin is called when Title scene is Touched.

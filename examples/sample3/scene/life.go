@@ -9,7 +9,7 @@ type Life struct {
 
 func (l *Life) getPosition() (float32, float32) {
 	p := l.GetPosition()
-	return (float32)(p.X), (float32)(p.Y)
+	return p.X, p.Y
 }
 
 func (l *Life) setPosition(x float32, y float32) {

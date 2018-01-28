@@ -92,7 +92,7 @@ func (f *filestore) Drive() {
 	if degree >= 360 {
 		degree = 0
 	}
-	f.gopher.SetRotate(float32(degree) * math.Pi / 180)
+	f.gopher.SetRotate(degree * math.Pi / 180)
 }
 
 // OnTouchBegin is called when Title scene is Touched.

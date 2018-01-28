@@ -230,5 +230,5 @@ func (s *sample) Drive() {
 		s.ball.SetPositionY(p.Y - 1)
 	}
 
-	s.ball.SetRotate(float32(degree) * math.Pi / 180)
+	s.ball.SetRotate(degree * math.Pi / 180)
 }
