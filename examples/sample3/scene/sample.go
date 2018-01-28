@@ -127,8 +127,7 @@ func (s *sample) showReadyText() {
 	s.readytext[1].SetScale(config.ScreenWidth, 65)
 	s.simra.AddSprite(s.readytext[1])
 
-	var tex *simra.Texture
-	tex = s.simra.NewTextTexture("GET READY", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
+	tex := s.simra.NewTextTexture("GET READY", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
 	s.readytext[0].ReplaceTexture(tex)
 	tex = s.simra.NewTextTexture("TAP TO GO", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
 	s.readytext[1].ReplaceTexture(tex)
@@ -173,9 +172,7 @@ func (s *sample) setupSprites() {
 	s.simra.AddSprite(s.life[1].Spriter)
 	s.simra.AddSprite(s.life[2].Spriter)
 
-	var tex *simra.Texture
-
-	tex = s.simra.NewImageTexture("bg.png", image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight))
+	tex := s.simra.NewImageTexture("bg.png", image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight))
 	s.background[0].ReplaceTexture(tex)
 
 	tex = s.simra.NewImageTexture("bg.png", image.Rect(0, 0, config.ScreenWidth, config.ScreenHeight))
@@ -209,8 +206,7 @@ func (s *sample) showGameover() {
 	s.gameovertext[1].SetScale(config.ScreenWidth, 65)
 	s.simra.AddSprite(s.gameovertext[1])
 
-	var tex *simra.Texture
-	tex = s.simra.NewTextTexture("GAME OVER", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
+	tex := s.simra.NewTextTexture("GAME OVER", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
 	s.gameovertext[0].ReplaceTexture(tex)
 	tex = s.simra.NewTextTexture("RESTART!!", 60, color.RGBA{255, 0, 0, 255}, image.Rect(0, 0, config.ScreenWidth, 65))
 	s.gameovertext[1].ReplaceTexture(tex)

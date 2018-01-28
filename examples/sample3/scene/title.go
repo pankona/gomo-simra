@@ -37,8 +37,7 @@ func (t *Title) initialize() {
 	t.simra.AddSprite(t.text)
 
 	p := t.background.GetScale()
-	var tex *simra.Texture
-	tex = t.simra.NewImageTexture("t.png", image.Rect(0, 0, p.W, p.H))
+	tex := t.simra.NewImageTexture("t.png", image.Rect(0, 0, p.W, p.H))
 	t.background.ReplaceTexture(tex)
 
 	p = t.text.GetScale()

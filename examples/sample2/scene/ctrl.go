@@ -137,10 +137,8 @@ func (s *sample) initctrlDown() {
 }
 
 func (s *sample) replaceButtonColor() {
-	var tex *simra.Texture
-
 	// red changes to blue
-	tex = s.simra.NewImageTexture("blue_circle.png",
+	tex := s.simra.NewImageTexture("blue_circle.png",
 		image.Rect(0, 0, s.buttonBlue.GetScale().W, s.buttonBlue.GetScale().H))
 	s.buttonRed.ReplaceTexture(tex)
 
@@ -153,10 +151,8 @@ func (s *sample) replaceButtonColor() {
 }
 
 func (s *sample) originalButtonColor() {
-	var tex *simra.Texture
-
 	// set red button to buttonRed
-	tex = s.simra.NewImageTexture("red_circle.png",
+	tex := s.simra.NewImageTexture("red_circle.png",
 		image.Rect(0, 0, s.buttonBlue.GetScale().W, s.buttonBlue.GetScale().H))
 	s.buttonRed.ReplaceTexture(tex)
 
