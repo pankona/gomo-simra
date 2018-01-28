@@ -4,7 +4,6 @@ import "sync"
 
 var (
 	fpsTimerContainer sync.Map
-	opQueue           = make(chan op)
 	timerID           int
 )
 
@@ -13,11 +12,6 @@ type fps struct {
 	timeToFire int64
 	elapsed    int64
 	c          chan struct{}
-}
-
-type op struct {
-	op    string
-	value interface{}
 }
 
 // After waits for the duration (fps based) to elapse

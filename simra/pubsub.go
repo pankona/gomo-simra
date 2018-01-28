@@ -23,7 +23,7 @@ type PubSub struct {
 // NewPubSub returns new PubSub instance
 func NewPubSub() *PubSub {
 	return &PubSub{
-		subscribers: make(map[string]Subscriber, 0),
+		subscribers: make(map[string]Subscriber),
 	}
 }
 

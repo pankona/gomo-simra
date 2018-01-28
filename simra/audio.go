@@ -56,7 +56,7 @@ func (a *audio) Play(resource asset.File, loop bool, doneCallback func(err error
 	return nil
 }
 
-func (a *audio) doPlay(player *oto.Player, r io.ReadSeeker, f asset.File, loop bool) error {
+func (a *audio) doPlay(player io.Writer, r io.Reader, f io.Seeker, loop bool) error {
 	var written int64
 	var err error
 	readByte := (int64)(8192)
@@ -85,7 +85,11 @@ loop:
 			<-time.After(1 * time.Second)
 			break loop
 		}
-		f.Seek(0, io.SeekStart)
+		_, err = f.Seek(0, io.SeekStart)
+		if err != nil {
+			return err
+		}
+
 	}
 	return err
 }

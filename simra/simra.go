@@ -55,8 +55,6 @@ type simra struct {
 	comap           []*collisionMap
 	gl              peer.GLer
 	spritecontainer peer.SpriteContainerer
-	onStart         func()
-	onStop          func()
 }
 
 // NewSimra returns an instance of Simraer
@@ -72,13 +70,6 @@ func (sim *simra) onUpdate() {
 	}
 	sim.collisionCheckAndNotify()
 	sim.gl.Update(sim.spritecontainer)
-}
-
-func (sim *simra) onStopped() {
-	simlog.FuncIn()
-	sim.driver = nil
-	sim.gl.Finalize()
-	simlog.FuncOut()
 }
 
 func (sim *simra) onGomoStart(glc *peer.GLContext) {
@@ -121,7 +112,12 @@ func (sim *simra) SetScene(driver Driver) {
 
 	sim.driver = driver
 	sim.spritecontainer.Initialize(sim.gl)
-	sim.spritecontainer.AddSprite(&peer.Sprite{}, nil, fps.Progress)
+	err := sim.spritecontainer.AddSprite(&peer.Sprite{}, nil, fps.Progress)
+	if err != nil {
+		simlog.Errorf("failed to add sprite. err: %s", err.Error())
+		return
+	}
+
 	driver.Initialize(sim)
 
 	simlog.FuncOut()
@@ -138,7 +134,11 @@ func (sim *simra) NewSprite() Spriter {
 // AddSprite adds a sprite to current scene with empty texture.
 func (sim *simra) AddSprite(s Spriter) {
 	sp := s.(*sprite)
-	sim.spritecontainer.AddSprite(&sp.Sprite, nil, nil)
+	err := sim.spritecontainer.AddSprite(&sp.Sprite, nil, nil)
+	if err != nil {
+		simlog.Errorf("failed to add sprite. err: %s", err.Error())
+	}
+
 }
 
 // RemoveSprite removes specified sprite from current scene.
@@ -234,34 +234,21 @@ type point struct {
 func (sim *simra) collisionCheckAndNotify() {
 	// check collision
 	for _, v := range sim.comap {
-		// TODO: refactor around here...
+		// TODO: refactoring around here...
 		x1, y1, w1, h1 := v.c1.GetXYWH()
 		x2, y2, w2, h2 := v.c2.GetXYWH()
-
-		p1 := &point{x1 - w1/2, y1 + h1/2}
-		p2 := &point{x1 + w1/2, y1 + h1/2}
-		p3 := &point{x1 - w1/2, y1 - h1/2}
-		p4 := &point{x1 + w1/2, y1 - h1/2}
-
-		if p1.x >= (x2-w2/2) && p1.x <= (x2+w2/2) &&
-			p1.y >= (y2-h2/2) && p1.y <= (y2+h2/2) {
-			v.listener.OnCollision(v.c1, v.c2)
-			return
+		ps := []*point{
+			&point{x1 - w1/2, y1 + h1/2},
+			&point{x1 + w1/2, y1 + h1/2},
+			&point{x1 - w1/2, y1 - h1/2},
+			&point{x1 + w1/2, y1 - h1/2},
 		}
-		if p2.x >= (x2-w2/2) && p2.x <= (x2+w2/2) &&
-			p2.y >= (y2-h2/2) && p2.y <= (y2+h2/2) {
-			v.listener.OnCollision(v.c1, v.c2)
-			return
-		}
-		if p3.x >= (x2-w2/2) && p3.x <= (x2+w2/2) &&
-			p3.y >= (y2-h2/2) && p3.y <= (y2+h2/2) {
-			v.listener.OnCollision(v.c1, v.c2)
-			return
-		}
-		if p4.x >= (x2-w2/2) && p4.x <= (x2+w2/2) &&
-			p4.y >= (y2-h2/2) && p4.y <= (y2+h2/2) {
-			v.listener.OnCollision(v.c1, v.c2)
-			return
+		for _, p := range ps {
+			if p.x >= (x2-w2/2) && p.x <= (x2+w2/2) &&
+				p.y >= (y2-h2/2) && p.y <= (y2+h2/2) {
+				v.listener.OnCollision(v.c1, v.c2)
+				return
+			}
 		}
 	}
 }

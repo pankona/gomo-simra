@@ -24,7 +24,7 @@ func (b *Ball) setPosition(x, y float32) {
 
 func (b *Ball) getPosition() (x, y float32) {
 	p := b.GetPosition()
-	return (float32)(p.X), (float32)(p.Y)
+	return p.X, p.Y
 }
 
 func (b *Ball) setRotate(r float32) {
@@ -32,7 +32,7 @@ func (b *Ball) setRotate(r float32) {
 }
 
 func (b *Ball) getRotate() float32 {
-	return (float32)(b.GetRotate())
+	return b.GetRotate()
 }
 
 func (b *Ball) setDirection(d float64) {

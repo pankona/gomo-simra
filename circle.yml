@@ -32,13 +32,15 @@ dependencies:
                 mv ./$NDK $HOME/.
                 ls $HOME
             fi
-        - go get golang.org/x/mobile/cmd/gomobile
-        - go get github.com/golang/freetype/truetype
-        - go get github.com/boltdb/bolt
-        - go get github.com/hajimehoshi/oto
-        - go get github.com/hajimehoshi/go-mp3
+        - go get -u golang.org/x/mobile/cmd/gomobile
+        - go get -u github.com/golang/freetype/truetype
+        - go get -u github.com/boltdb/bolt
+        - go get -u github.com/hajimehoshi/oto
+        - go get -u github.com/hajimehoshi/go-mp3
+        - go get -u github.com/golang/lint/golint
+        - go get -u gopkg.in/alecthomas/gometalinter.v2
+        - gometalinter.v2 --install --update
         - gomobile init --ndk $NDK_ROOT
-        - go get github.com/golang/lint/golint
 
     override:
         - echo "$GOPATH/src/$IMPORT_PATH"
@@ -54,3 +56,4 @@ test:
         - cd "$GOPATH/src/$IMPORT_PATH/examples" && test -z "$(golint ./... | tee /dev/stderr)"
         - cd "$GOPATH/src/$IMPORT_PATH/simra"    && test -z "$(golint ./... | tee /dev/stderr)"
         - cd "$GOPATH/src/$IMPORT_PATH/simra"    && go test ./...
+        - cd "$GOPATH/src/$IMPORT_PATH"          && make gometalinter

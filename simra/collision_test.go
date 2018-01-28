@@ -37,14 +37,14 @@ func waitOnCollision(t *testing.T, shouldCallback bool) {
 
 func TestAddCollisionListener(t *testing.T) {
 	var c1, c2 c
-	var l l
+	var li l
 
 	simra := &simra{}
 	simra.RemoveAllCollisionListener()
 	if simra.comapLength() != 0 {
 		t.Error("unexpected comap length. comapLength() =", simra.comapLength())
 	}
-	simra.AddCollisionListener(&c1, &c2, &l)
+	simra.AddCollisionListener(&c1, &c2, &li)
 	if simra.comapLength() != 1 {
 		t.Error("unexpected comap length. comapLength() =", simra.comapLength())
 	}
@@ -53,7 +53,7 @@ func TestAddCollisionListener(t *testing.T) {
 	if simra.comapLength() != 1 {
 		t.Error("unexpected comap length. comapLength() =", simra.comapLength())
 	}
-	simra.AddCollisionListener(&c1, &c2, &l)
+	simra.AddCollisionListener(&c1, &c2, &li)
 	if simra.comapLength() != 2 {
 		t.Error("unexpected comap length. comapLength() =", simra.comapLength())
 	}
@@ -66,7 +66,7 @@ func TestAddCollisionListener(t *testing.T) {
 func TestRemoveCollisionListener(t *testing.T) {
 
 	var c1, c2 c
-	var l l
+	var li l
 
 	simra := &simra{}
 	simra.RemoveAllCollisionListener()
@@ -74,7 +74,7 @@ func TestRemoveCollisionListener(t *testing.T) {
 		t.Error("unexpected comap length. comapLength() =", simra.comapLength())
 	}
 
-	simra.AddCollisionListener(&c1, &c2, &l)
+	simra.AddCollisionListener(&c1, &c2, &li)
 	if simra.comapLength() != 1 {
 		t.Error("unexpected comap length. comapLength() =", simra.comapLength())
 	}
@@ -92,7 +92,7 @@ func TestRemoveCollisionListener(t *testing.T) {
 		t.Error("unexpected comap length. comapLength() =", simra.comapLength())
 	}
 
-	simra.AddCollisionListener(&c1, &c2, &l)
+	simra.AddCollisionListener(&c1, &c2, &li)
 	if simra.comapLength() != 1 {
 		t.Error("unexpected comap length. comapLength() =", simra.comapLength())
 	}
@@ -104,7 +104,7 @@ func TestRemoveCollisionListener(t *testing.T) {
 		t.Error("unexpected comap length. comapLength() =", simra.comapLength())
 	}
 
-	simra.AddCollisionListener(&c1, &c2, &l)
+	simra.AddCollisionListener(&c1, &c2, &li)
 	if simra.comapLength() != 1 {
 		t.Error("unexpected comap length. comapLength() =", simra.comapLength())
 	}

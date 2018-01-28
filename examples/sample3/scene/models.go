@@ -68,7 +68,7 @@ func (m *models) Progress(isKeyTouching bool) {
 			degree = 0
 		}
 
-		b.setRotate(float32(degree) * math.Pi / 180)
+		b.setRotate(degree * math.Pi / 180)
 
 		if isKeyTouching {
 			dx := b.getSpeed() * math.Cos(b.getDirection()*math.Pi/180)

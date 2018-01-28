@@ -1,6 +1,6 @@
 package simra
 
-import "fmt"
+import "github.com/pankona/gomo-simra/simra/simlog"
 
 // Databaser represents interface of database
 type Databaser interface {
@@ -19,7 +19,7 @@ type Database struct {
 func OpenDB(databaser Databaser, dirpath string) *Database {
 	err := databaser.Open(dirpath)
 	if err != nil {
-		_ = fmt.Errorf("failed to open database. err = %s", err)
+		simlog.Errorf("failed to open database. err = %s", err)
 		return nil
 	}
 	return &Database{databaser}
