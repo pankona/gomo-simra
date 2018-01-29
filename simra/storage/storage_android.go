@@ -3,10 +3,8 @@
 package storage
 
 /*
-#cgo LDFLAGS: -landroid -llog
 #include <jni.h>
 #include <stdlib.h>
-#include <android/log.h>
 
 static const char *
 getFilesDir(uintptr_t java_vm, uintptr_t jni_env, uintptr_t jni_ctx) {
@@ -67,7 +65,7 @@ func (s *storageAndroid) DirectoryPath() string {
 			cpath := C.getFilesDir(C.uintptr_t(vm), C.uintptr_t(env), C.uintptr_t(ctx))
 			if cpath == nil {
 				simlog.Errorf("failed to get FilesDir!")
-			)}
+			}
 			path = C.GoString(cpath)
 			C.free(unsafe.Pointer(cpath))
 			return nil
