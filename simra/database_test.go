@@ -44,7 +44,7 @@ func (db *mock) Get(key string) interface{} {
 func TestMock(t *testing.T) {
 	db, err := OpenDB(&mock{}, filepath.Join("."))
 	if err != nil {
-		t.Error("failed to open database. err: %s", err.Error())
+		t.Errorf("failed to open database. err: %s", err.Error())
 		return
 	}
 	defer db.Close()
@@ -67,7 +67,7 @@ func TestBolt(t *testing.T) {
 
 	db, err := OpenDB(&database.Boltdb{}, filepath.Join(tmpdir))
 	if err != nil {
-		t.Error("failed to open database. err: %s", err.Error())
+		t.Errorf("failed to open database. err: %s", err.Error())
 		return
 	}
 	defer db.Close()

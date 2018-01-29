@@ -67,7 +67,7 @@ func (s *storageAndroid) DirectoryPath() string {
 				simlog.Errorf("failed to get FilesDir!")
 			}
 			path = C.GoString(cpath)
-			C.free(unsafe.Pointer(cpath))
+			C.free(unsafe.Pointer(cpath)) // #nosec
 			return nil
 		})
 	return path

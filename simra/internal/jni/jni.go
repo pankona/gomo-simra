@@ -84,7 +84,7 @@ func RunOnJVM(fn func(vm, env, ctx uintptr) error) error {
 			defer C._unlockJNI()
 		}
 
-		vm := uintptr(unsafe.Pointer(C.current_vm))
+		vm := uintptr(unsafe.Pointer(C.current_vm)) // #nosec
 		if err := fn(vm, uintptr(env), uintptr(C.current_ctx)); err != nil {
 			errch <- err
 			return
@@ -92,7 +92,7 @@ func RunOnJVM(fn func(vm, env, ctx uintptr) error) error {
 
 		if exc := C._checkException(env); exc != nil {
 			errch <- errors.New(C.GoString(exc))
-			C.free(unsafe.Pointer(exc))
+			C.free(unsafe.Pointer(exc)) // #nosec
 			return
 		}
 		errch <- nil
