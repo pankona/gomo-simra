@@ -27,8 +27,14 @@ type filestore struct {
 func (f *filestore) Initialize(sim simra.Simraer) {
 	f.simra = sim
 	f.simra.SetDesiredScreenSize(1080/2, 1920/2)
-	f.db = simra.OpenDB(&database.Boltdb{}, storage.NewStorage().DirectoryPath()) // TODO: when to call Close...?
-	f.db.Close()
+
+	var err error
+	f.db, err = simra.OpenDB(&database.Boltdb{}, storage.NewStorage().DirectoryPath())
+	if err != nil {
+		simlog.Errorf("failed to open database. fatal.")
+		return
+	}
+
 	f.initSprite()
 	go func() {
 		for {
@@ -36,22 +42,20 @@ func (f *filestore) Initialize(sim simra.Simraer) {
 			f.storeCurrentPosition()
 		}
 	}()
+	sim.SetOnStopCallback(func() {
+		simlog.Debugf("onStop")
+		f.db.Close()
+	})
 }
 
 func (f *filestore) storeCurrentPosition() {
-	f.db = simra.OpenDB(&database.Boltdb{}, storage.NewStorage().DirectoryPath()) // TODO: when to call Close...?
-	defer f.db.Close()
-
 	p := f.gopher.GetPosition()
-	pstr := fmt.Sprintf("%d,%d", p.X, p.Y)
+	pstr := fmt.Sprintf("%f,%f", p.X, p.Y)
 	simlog.Debugf("store: %s", pstr)
 	f.db.Put("position", pstr)
 }
 
 func (f *filestore) fetchCurrentPosition() {
-	f.db = simra.OpenDB(&database.Boltdb{}, storage.NewStorage().DirectoryPath()) // TODO: when to call Close...?
-	defer f.db.Close()
-
 	pstr := (string)(f.db.Get("position").([]uint8))
 	p := simra.Position{}
 	_, err := fmt.Sscanf(pstr, "%f,%f", &p.X, &p.Y)

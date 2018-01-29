@@ -16,13 +16,13 @@ type Database struct {
 }
 
 // OpenDB opens database connection
-func OpenDB(databaser Databaser, dirpath string) *Database {
+func OpenDB(databaser Databaser, dirpath string) (*Database, error) {
 	err := databaser.Open(dirpath)
 	if err != nil {
 		simlog.Errorf("failed to open database. err = %s", err)
-		return nil
+		return nil, err
 	}
-	return &Database{databaser}
+	return &Database{databaser}, nil
 }
 
 // Close closes database connection

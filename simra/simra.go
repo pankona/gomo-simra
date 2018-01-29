@@ -41,6 +41,8 @@ type Simraer interface {
 	NewImageTexture(assetName string, rect image.Rectangle) *Texture
 	// NewImageTexture returns a texture instance of text
 	NewTextTexture(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle) *Texture
+	// SetOnStopCallback sets a callback function that will be called on application goes invisible
+	SetOnStopCallback(f func())
 }
 
 type collisionMap struct {
@@ -55,6 +57,7 @@ type simra struct {
 	comap           []*collisionMap
 	gl              peer.GLer
 	spritecontainer peer.SpriteContainerer
+	onStop          func()
 }
 
 // NewSimra returns an instance of Simraer
@@ -78,6 +81,9 @@ func (sim *simra) onGomoStart(glc *peer.GLContext) {
 }
 
 func (sim *simra) onGomoStop() {
+	if sim.onStop != nil {
+		sim.onStop()
+	}
 	sim.spritecontainer.Initialize(sim.gl)
 	sim.gl.Finalize()
 }
@@ -263,4 +269,8 @@ func (sim *simra) RemoveCollisionListener(c1, c2 Collider) {
 
 func (sim *simra) comapLength() int {
 	return len(sim.comap)
+}
+
+func (sim *simra) SetOnStopCallback(f func()) {
+	sim.onStop = f
 }

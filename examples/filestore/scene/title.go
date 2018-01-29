@@ -19,6 +19,9 @@ func (t *Title) Initialize(sim simra.Simraer) {
 	t.simra = sim
 	t.simra.SetDesiredScreenSize(1080/2, 1920/2)
 	t.initialize()
+	sim.SetOnStopCallback(func() {
+		// nop
+	})
 }
 
 func (t *Title) initialize() {
