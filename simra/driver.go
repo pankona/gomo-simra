@@ -7,6 +7,6 @@ type Driver interface {
 
 	// Drive is called about 60 times per 1 sec.
 	// It is the chance to update sprite information like
-	// position, appear/disapper, and change scene.
+	// position, appear/disappear, and change scene.
 	Drive()
 }
