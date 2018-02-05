@@ -29,9 +29,9 @@ type Simraer interface {
 	SetDesiredScreenSize(w, h float32)
 	// AddTouchListener registers a listener for notifying touch event.
 	// Event is notified when "screen" is touched.
-	AddTouchListener(listener peer.TouchListener)
+	AddTouchListener(listener TouchListener)
 	// RemoveTouchListener unregisters a listener for notifying touch event.
-	RemoveTouchListener(listener peer.TouchListener)
+	RemoveTouchListener(listener TouchListener)
 	// AddCollisionListener add a callback function that is called on
 	// collision is detected between c1 and c2.
 	AddCollisionListener(c1, c2 Collider, listener CollisionListener)
@@ -44,6 +44,9 @@ type Simraer interface {
 	// SetOnStopCallback sets a callback function that will be called on application goes invisible
 	SetOnStopCallback(f func())
 }
+
+// TouchListener is interface to receive touch event
+type TouchListener peer.TouchListener
 
 type collisionMap struct {
 	c1       Collider
