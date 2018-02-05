@@ -2,7 +2,7 @@ package peer
 
 import "github.com/pankona/gomo-simra/simra/simlog"
 
-// Toucher reporesents an interface for touch controller
+// Toucher represents an interface for touch controller
 type Toucher interface {
 	// AddTouchListener registers a listener to notify touch event.
 	AddTouchListener(listener TouchListener)
@@ -30,7 +30,7 @@ type TouchPeer struct {
 
 var touchPeer = &TouchPeer{}
 
-// TouchListener is interface to be notifed touch event.
+// TouchListener is interface to be notified touch event.
 type TouchListener interface {
 	OnTouchBegin(x, y float32)
 	OnTouchMove(x, y float32)

@@ -164,19 +164,19 @@ func (sim *simra) SetDesiredScreenSize(w, h float32) {
 
 // AddTouchListener registers a listener for notifying touch event.
 // Event is notified when "screen" is touched.
-func (sim *simra) AddTouchListener(listener peer.TouchListener) {
+func (sim *simra) AddTouchListener(listener TouchListener) {
 	peer.GetTouchPeer().AddTouchListener(listener)
 }
 
 // RemoveTouchListener unregisters a listener for notifying touch event.
-func (sim *simra) RemoveTouchListener(listener peer.TouchListener) {
+func (sim *simra) RemoveTouchListener(listener TouchListener) {
 	peer.GetTouchPeer().RemoveTouchListener(listener)
 }
 
 // AddCollisionListener add a callback function that is called on
 // collision is detected between c1 and c2.
 func (sim *simra) AddCollisionListener(c1, c2 Collider, listener CollisionListener) {
-	// TODO: exclusiveee control
+	// TODO: exclusive control
 	simlog.FuncIn()
 	sim.comap = append(sim.comap, &collisionMap{c1, c2, listener})
 	simlog.FuncOut()
