@@ -45,7 +45,7 @@
     ".",
     "internal/jni"
   ]
-  revision = "3680d211ad669453474fc5622a8cc4d346accedb"
+  revision = "7a1d13b19d823f7672135569e7a2d040046252e8"
 
 [[projects]]
   branch = "master"
