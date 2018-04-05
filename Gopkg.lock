@@ -20,7 +20,7 @@
   branch = "master"
   name = "github.com/gopherjs/gopherjs"
   packages = ["js"]
-  revision = "178c176a91fe05e3e6c58fa5c989bad19e6cdcb3"
+  revision = "82b322028c96512b15077093b16a5f1c7ea897ac"
 
 [[projects]]
   branch = "master"
@@ -36,7 +36,7 @@
     "internal/maindata",
     "internal/sideinfo"
   ]
-  revision = "a843108de7dee367a459b0f5e9989edef201daf5"
+  revision = "3c185f92b8dbceefa913b64cae634ba47f452769"
 
 [[projects]]
   branch = "master"
@@ -60,7 +60,7 @@
     "shiny/driver/internal/x11key",
     "shiny/screen"
   ]
-  revision = "072991165226c11c888c881218850e8318c2b32e"
+  revision = "8460e604b9de9da5834c9f198cadf9dca4b05cac"
 
 [[projects]]
   branch = "master"
@@ -71,7 +71,7 @@
     "math/f64",
     "math/fixed"
   ]
-  revision = "12117c17ca67ffa1ce22e9409f3b0b0a93ac08c7"
+  revision = "f315e440302883054d0c2bd85486878cb4f8572c"
 
 [[projects]]
   branch = "master"
@@ -96,7 +96,7 @@
     "gl",
     "internal/mobileinit"
   ]
-  revision = "5704e182c7003d4b7e94c23373f3fad4e5ceb25a"
+  revision = "3a7f1138ab81be19733b7c831f2b622f965c2dd1"
 
 [[projects]]
   branch = "master"
@@ -105,7 +105,7 @@
     "unix",
     "windows"
   ]
-  revision = "af9a21289d0040306ecc55fa668c95246f1f8425"
+  revision = "1d206c9fa8975fb4cf00df1dc8bf3283dc24ba0e"
 
 [solve-meta]
   analyzer-name = "dep"
