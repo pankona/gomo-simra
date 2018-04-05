@@ -2,7 +2,6 @@ package simra
 
 import (
 	"io"
-	"time"
 
 	mp3 "github.com/hajimehoshi/go-mp3"
 	"github.com/hajimehoshi/oto"
@@ -77,12 +76,6 @@ loop:
 			}
 		}
 		if !loop || err != io.EOF {
-			// dirty hack
-			// If player.Close() is called immediately,
-			// last part of audio will not be playbacked.
-			// Wait until the playback is finished (about 1 sec?).
-			// This problem seems to be occurred only on Android.
-			<-time.After(1 * time.Second)
 			break loop
 		}
 		_, err = f.Seek(0, io.SeekStart)
