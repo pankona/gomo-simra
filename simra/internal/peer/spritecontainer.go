@@ -24,6 +24,8 @@ type SpriteContainerer interface {
 	RemoveSprite(remove *Sprite)
 	// RemoveSprites removes all registered sprites from SpriteContainer.
 	RemoveSprites()
+	// SetZIndex sets specified zindex to specified Sprite
+	SetZIndex(s *Sprite, z int)
 	// GetSpriteNodePairs returns map representation of sprite and node pair
 	GetSpriteNodePairs() *sync.Map
 	// ReplaceTexture replaces sprite's texture to specified one.
