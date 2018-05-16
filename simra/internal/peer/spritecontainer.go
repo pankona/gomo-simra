@@ -52,6 +52,7 @@ type spriteNodePair struct {
 type SpriteContainer struct {
 	spriteNodePairs sync.Map // map[*Sprite]*spriteNodePair
 	gl              GLer
+	zindexDirty     bool
 }
 
 // GetSpriteContainer returns SpriteContainer.
@@ -127,6 +128,19 @@ func (sc *SpriteContainer) RemoveSprites() {
 	simlog.FuncIn()
 	sc.spriteNodePairs = sync.Map{}
 	simlog.FuncOut()
+}
+
+func (sc *SpriteContainer) SetZIndex(s *Sprite, z int) {
+	simlog.FuncIn()
+	i, ok := sc.spriteNodePairs.Load(s)
+	if !ok {
+		return
+	}
+	sn := i.(*spriteNodePair)
+	if sn.znode.ZIndex != z {
+		sn.znode.ZIndex = z
+		sc.zindexDirty = true
+	}
 }
 
 // GetSpriteNodePairs returns map representation of sprite and node pair
