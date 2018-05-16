@@ -10,21 +10,21 @@ import (
 	"golang.org/x/mobile/exp/sprite/clock"
 )
 
-// SpriteContainerer represetnts an interface of SpriteContaienr
+// SpriteContainerer represents an interface of SpriteContaienr
 type SpriteContainerer interface {
 	// Initialize initializes SpriteContainer object.
 	// This must be called to use all SpriteContainer's function in advance.
 	Initialize(gl GLer)
 	// AddSprite adds a sprite to SpriteContainer.
 	AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCallback func()) error
-	// RemoveSprite removes a spcified sprite from SpriteContainer.
+	// RemoveSprite removes a specified sprite from SpriteContainer.
 	// Since Unregister of Node is not implemented by gomobile, this function just
 	// marks the specified sprite as "not in use".
 	// The sprite marked as "not in use" will be reused at AddSprite.
 	RemoveSprite(remove *Sprite)
 	// RemoveSprites removes all registered sprites from SpriteContainer.
 	RemoveSprites()
-	// GetSpriteNodePairs returns map represntation of sprite and node pair
+	// GetSpriteNodePairs returns map representation of sprite and node pair
 	GetSpriteNodePairs() *sync.Map
 	// ReplaceTexture replaces sprite's texture to specified one.
 	ReplaceTexture(sprite *Sprite, texture *Texture)
@@ -103,7 +103,7 @@ func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCa
 	return nil
 }
 
-// RemoveSprite removes a spcified sprite from SpriteContainer.
+// RemoveSprite removes a specified sprite from SpriteContainer.
 // Since Unregister of Node is not implemented by gomobile, this function just
 // marks the specified sprite as "not in use".
 // The sprite marked as "not in use" will be reused at AddSprite.
@@ -130,7 +130,7 @@ func (sc *SpriteContainer) RemoveSprites() {
 	simlog.FuncOut()
 }
 
-// GetSpriteNodePairs returns map represntation of sprite and node pair
+// GetSpriteNodePairs returns map representation of sprite and node pair
 func (sc *SpriteContainer) GetSpriteNodePairs() *sync.Map {
 	return &sc.spriteNodePairs
 }
