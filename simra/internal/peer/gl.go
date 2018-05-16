@@ -54,10 +54,10 @@ type GLer interface {
 	ReleaseTexture(t *Texture)
 	// NewNode returns new node
 	NewNode(fn arrangerFunc) *sprite.Node
-	// AppendChild adds specified node as a child
-	AppendChild(n *sprite.Node)
-	// RemoveChild removes specified node
-	RemoveChild(n *sprite.Node)
+	// AppendNode adds specified node as a child
+	AppendNode(n *sprite.Node)
+	// RemoveNode removes specified node
+	RemoveNode(n *sprite.Node)
 	// SetSubTex registers subtexture to specified node
 	SetSubTex(n *sprite.Node, subTex *sprite.SubTex)
 }
@@ -129,15 +129,15 @@ func (glpeer *GLPeer) NewNode(fn arrangerFunc) *sprite.Node {
 	return n
 }
 
-// AppendChild adds specified node as a child
-func (glpeer *GLPeer) AppendChild(n *sprite.Node) {
+// AppendNode adds specified node as a child
+func (glpeer *GLPeer) AppendNode(n *sprite.Node) {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 	glpeer.nodes = append(glpeer.nodes, n)
 }
 
-// RemoveChild removes specified node
-func (glpeer *GLPeer) RemoveChild(n *sprite.Node) {
+// RemoveNode removes specified node
+func (glpeer *GLPeer) RemoveNode(n *sprite.Node) {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 	nodes := make([]*sprite.Node, len(glpeer.nodes)-1)

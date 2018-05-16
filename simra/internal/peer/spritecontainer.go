@@ -93,7 +93,7 @@ func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCa
 		})
 		sc.spriteNodePairs.Store(s, sn)
 	}
-	sc.gl.AppendChild(sn.node)
+	sc.gl.AppendNode(sn.node)
 	sn.inuse = true
 	if subTex != nil {
 		sc.gl.SetSubTex(sn.node, subTex)
@@ -118,7 +118,7 @@ func (sc *SpriteContainer) RemoveSprite(remove *Sprite) {
 		return
 	}
 	sn.inuse = false
-	sc.gl.RemoveChild(sn.node)
+	sc.gl.RemoveNode(sn.node)
 	simlog.FuncOut()
 }
 
