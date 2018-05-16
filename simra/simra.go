@@ -159,6 +159,8 @@ func (sim *simra) RemoveSprite(s Spriter) {
 	sim.spritecontainer.RemoveSprite(&sp.Sprite)
 }
 
+// SetZIndex sets specified zindex to specified Spriter
+// bigger number of zindex means far side
 func (sim *simra) SetZIndex(s Spriter, z int) {
 	sp := s.(*sprite)
 	sim.spritecontainer.SetZIndex(&sp.Sprite, z)
