@@ -131,7 +131,6 @@ func (glpeer *GLPeer) NewNode(fn arrangerFunc) *sprite.Node {
 	defer glpeer.mu.Unlock()
 	n := &sprite.Node{Arranger: fn}
 	glpeer.eng.Register(n)
-	glpeer.scene.AppendChild(n)
 	return n
 }
 

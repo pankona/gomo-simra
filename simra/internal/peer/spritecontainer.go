@@ -92,9 +92,8 @@ func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCa
 			}
 		})
 		sc.spriteNodePairs.Store(s, sn)
-	} else {
-		sc.gl.AppendChild(sn.node)
 	}
+	sc.gl.AppendChild(sn.node)
 	sn.inuse = true
 	if subTex != nil {
 		sc.gl.SetSubTex(sn.node, subTex)
