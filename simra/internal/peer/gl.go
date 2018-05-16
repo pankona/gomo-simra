@@ -181,7 +181,7 @@ func (glpeer *GLPeer) LoadTexture(assetName string, rect image.Rectangle) sprite
 	return sprite.SubTex{T: t, R: rect}
 }
 
-// MakeTextureByText createst and return texture by speicied text
+// MakeTextureByText create and return texture by specified text
 // Loaded texture can assign using AddSprite function.
 // TODO: font parameterize
 func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle) sprite.SubTex {
