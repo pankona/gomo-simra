@@ -24,6 +24,8 @@ type SpriteContainerer interface {
 	RemoveSprite(remove *Sprite)
 	// RemoveSprites removes all registered sprites from SpriteContainer.
 	RemoveSprites()
+	// SetZIndex sets specified zindex to specified Sprite
+	SetZIndex(sprite *Sprite, z int)
 	// GetSpriteNodePairs returns map representation of sprite and node pair
 	GetSpriteNodePairs() *sync.Map
 	// ReplaceTexture replaces sprite's texture to specified one.
@@ -44,7 +46,7 @@ type SpriteContainerer interface {
 
 type spriteNodePair struct {
 	sprite *Sprite
-	node   *sprite.Node
+	znode  *ZNode
 	inuse  bool
 }
 
@@ -85,18 +87,18 @@ func (sc *SpriteContainer) AddSprite(s *Sprite, subTex *sprite.SubTex, arrangeCa
 	}
 
 	sn.sprite = s
-	if sn.node == nil {
-		sn.node = sc.gl.NewNode(func(eng sprite.Engine, n *sprite.Node, t clock.Time) {
+	if sn.znode == nil {
+		sn.znode = sc.gl.NewNode(func(eng sprite.Engine, n *sprite.Node, t clock.Time) {
 			if arrangeCallback != nil {
 				arrangeCallback()
 			}
 		})
 		sc.spriteNodePairs.Store(s, sn)
 	}
-	sc.gl.AppendChild(sn.node)
+	sc.gl.AppendNode(sn.znode)
 	sn.inuse = true
 	if subTex != nil {
-		sc.gl.SetSubTex(sn.node, subTex)
+		sc.gl.SetSubTex(sn.znode, subTex)
 	}
 	simlog.FuncOut()
 	return nil
@@ -118,7 +120,7 @@ func (sc *SpriteContainer) RemoveSprite(remove *Sprite) {
 		return
 	}
 	sn.inuse = false
-	sc.gl.RemoveChild(sn.node)
+	sc.gl.RemoveNode(sn.znode)
 	simlog.FuncOut()
 }
 
@@ -127,6 +129,20 @@ func (sc *SpriteContainer) RemoveSprites() {
 	simlog.FuncIn()
 	sc.spriteNodePairs = sync.Map{}
 	simlog.FuncOut()
+}
+
+// SetZIndex sets specified zindex to specified Sprite
+func (sc *SpriteContainer) SetZIndex(s *Sprite, z int) {
+	simlog.FuncIn()
+	i, ok := sc.spriteNodePairs.Load(s)
+	if !ok {
+		return
+	}
+	sn := i.(*spriteNodePair)
+	if sn.znode.ZIndex != z {
+		sn.znode.ZIndex = z
+		sc.gl.ZIndexDirty()
+	}
 }
 
 // GetSpriteNodePairs returns map representation of sprite and node pair
@@ -138,7 +154,7 @@ func (sc *SpriteContainer) GetSpriteNodePairs() *sync.Map {
 func (sc *SpriteContainer) ReplaceTexture(sprite *Sprite, texture *Texture) {
 	simlog.FuncIn()
 	if i, ok := sc.spriteNodePairs.Load(sprite); ok {
-		node := i.(*spriteNodePair).node
+		node := i.(*spriteNodePair).znode
 		sc.gl.SetSubTex(node, &texture.subTex)
 	}
 	simlog.FuncOut()

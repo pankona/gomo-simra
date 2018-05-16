@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"image/draw"
 	"log"
+	"sort"
 	"sync"
 	"time"
 
@@ -53,25 +54,50 @@ type GLer interface {
 	// ReleaseTexture releases specified texture
 	ReleaseTexture(t *Texture)
 	// NewNode returns new node
-	NewNode(fn arrangerFunc) *sprite.Node
-	// AppendChild adds specified node as a child
-	AppendChild(n *sprite.Node)
-	// RemoveChild removes specified node
-	RemoveChild(n *sprite.Node)
+	NewNode(fn arrangerFunc) *ZNode
+	// AppendNode adds specified node as a child
+	AppendNode(n *ZNode)
+	// RemoveNode removes specified node
+	RemoveNode(n *ZNode)
 	// SetSubTex registers subtexture to specified node
-	SetSubTex(n *sprite.Node, subTex *sprite.SubTex)
+	SetSubTex(n *ZNode, subTex *sprite.SubTex)
+	// ZIndexDirty updates dirty flag with specified argument
+	ZIndexDirty()
 }
 
 // GLPeer represents gl context.
 // Singleton.
 type GLPeer struct {
-	glc       *GLContext
-	startTime time.Time
-	images    *glutil.Images
-	fps       *debug.FPS
-	eng       sprite.Engine
-	nodes     []*sprite.Node
-	mu        sync.Mutex
+	glc         *GLContext
+	startTime   time.Time
+	images      *glutil.Images
+	fps         *debug.FPS
+	eng         sprite.Engine
+	znodes      ZNodes
+	mu          sync.Mutex
+	zindexDirty bool
+}
+
+// ZNode represents node with zindex
+type ZNode struct {
+	Node   *sprite.Node
+	ZIndex int
+}
+
+// ZNodes represents array of ZNode
+type ZNodes []*ZNode
+
+func (zns ZNodes) Len() int {
+	return len(zns)
+}
+
+func (zns ZNodes) Less(i, j int) bool {
+	// bigger zindex goes far side
+	return zns[i].ZIndex > zns[j].ZIndex
+}
+
+func (zns ZNodes) Swap(i, j int) {
+	zns[i], zns[j] = zns[j], zns[i]
 }
 
 // NewGLPeer returns a instance of GLPeer
@@ -113,7 +139,7 @@ func (glpeer *GLPeer) initEng() {
 		glpeer.eng.Release()
 	}
 	glpeer.eng = glsprite.Engine(glpeer.images)
-	glpeer.nodes = make([]*sprite.Node, 0)
+	glpeer.znodes = make([]*ZNode, 0)
 }
 
 type arrangerFunc func(e sprite.Engine, n *sprite.Node, t clock.Time)
@@ -121,32 +147,32 @@ type arrangerFunc func(e sprite.Engine, n *sprite.Node, t clock.Time)
 func (a arrangerFunc) Arrange(e sprite.Engine, n *sprite.Node, t clock.Time) { a(e, n, t) }
 
 // NewNode returns new node
-func (glpeer *GLPeer) NewNode(fn arrangerFunc) *sprite.Node {
+func (glpeer *GLPeer) NewNode(fn arrangerFunc) *ZNode {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 	n := &sprite.Node{Arranger: fn}
 	glpeer.eng.Register(n)
-	return n
+	return &ZNode{Node: n}
 }
 
-// AppendChild adds specified node as a child
-func (glpeer *GLPeer) AppendChild(n *sprite.Node) {
+// AppendNode adds specified node as a child
+func (glpeer *GLPeer) AppendNode(zn *ZNode) {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
-	glpeer.nodes = append(glpeer.nodes, n)
+	glpeer.znodes = append(glpeer.znodes, zn)
 }
 
-// RemoveChild removes specified node
-func (glpeer *GLPeer) RemoveChild(n *sprite.Node) {
+// RemoveNode removes specified node
+func (glpeer *GLPeer) RemoveNode(n *ZNode) {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
-	nodes := make([]*sprite.Node, len(glpeer.nodes)-1)
-	for i, node := range glpeer.nodes {
-		if n != node {
-			nodes[i] = n
+	znodes := make([]*ZNode, len(glpeer.znodes)-1)
+	for i, zn := range glpeer.znodes {
+		if n != zn {
+			znodes[i] = n
 		}
 	}
-	glpeer.nodes = nodes
+	glpeer.znodes = znodes
 }
 
 // LoadTexture return texture that is loaded by the information of arguments.
@@ -262,8 +288,13 @@ func (glpeer *GLPeer) Update(sc SpriteContainerer) {
 
 	glpeer.apply(sc)
 
-	for _, n := range glpeer.nodes {
-		glpeer.eng.Render(n, now, screensize.sz)
+	if glpeer.zindexDirty {
+		sort.Sort(glpeer.znodes)
+		glpeer.zindexDirty = false
+		simlog.Debug("nodes sorted by zindex!")
+	}
+	for _, zn := range glpeer.znodes {
+		glpeer.eng.Render(zn.Node, now, screensize.sz)
 	}
 	if config.DEBUG {
 		glpeer.fps.Draw(screensize.sz)
@@ -272,6 +303,12 @@ func (glpeer *GLPeer) Update(sc SpriteContainerer) {
 	// app.Publish() calls glctx.Flush,
 	// it must be called within this mutex locking.
 	glpeer.glc.publish()
+}
+
+// ZIndexDirty enables dirty flag. It indicates sorting of znodes is necessary
+// because at least one of their zindex has been updated.
+func (glpeer *GLPeer) ZIndexDirty() {
+	glpeer.zindexDirty = true
 }
 
 // Reset resets current gl context.
@@ -289,8 +326,8 @@ func (glpeer *GLPeer) Reset() {
 }
 
 // SetSubTex registers subtexture to specified node
-func (glpeer *GLPeer) SetSubTex(n *sprite.Node, subTex *sprite.SubTex) {
-	glpeer.eng.SetSubTex(n, *subTex)
+func (glpeer *GLPeer) SetSubTex(zn *ZNode, subTex *sprite.SubTex) {
+	glpeer.eng.SetSubTex(zn.Node, *subTex)
 }
 
 func (glpeer *GLPeer) apply(sc SpriteContainerer) {
@@ -321,7 +358,7 @@ func (glpeer *GLPeer) apply(sc SpriteContainerer) {
 		affine.Scale(affine,
 			s.W*screensize.scale,
 			s.H*screensize.scale)
-		glpeer.eng.SetTransform(sn.node, *affine)
+		glpeer.eng.SetTransform(sn.znode.Node, *affine)
 		return true
 	})
 }

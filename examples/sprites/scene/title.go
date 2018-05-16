@@ -110,7 +110,6 @@ func (t *Title) OnTouchEnd(x, y float32) {
 }
 
 func (t *Title) spawnKokeshi(x, y float32) {
-	// scene end. go to next scene
 	sprite := t.simra.NewSprite()
 	sprite.SetPosition(x, y)
 	sprite.SetScale(128, 128)
@@ -121,4 +120,7 @@ func (t *Title) spawnKokeshi(x, y float32) {
 	tex := t.simra.NewTextTexture(strconv.Itoa(len(t.sprites)),
 		60, color.RGBA{255, 255, 255, 255}, image.Rect(0, 0, float32(t.screenWidth), 80))
 	t.numOfSprite.ReplaceTexture(tex)
+
+	// later sprite goes far side
+	t.simra.SetZIndex(sprite, len(t.sprites))
 }
