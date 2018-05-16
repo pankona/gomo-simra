@@ -35,6 +35,10 @@ func (m *mockGLer) RemoveNode(n *ZNode) {
 	// nop
 }
 
+func (m *mockGLer) ZIndexDirty() {
+	// nop
+}
+
 func mapLen(m *sync.Map) int {
 	count := 0
 	m.Range(func(k, v interface{}) bool {
@@ -170,6 +174,38 @@ func TestReplaceTexture(t *testing.T) {
 	}
 	tex := &Texture{}
 	sc.ReplaceTexture(s, tex)
+}
+
+func TestSetZIndex(t *testing.T) {
+	sc := &SpriteContainer{}
+	sc.gl = &mockGLer{}
+
+	tcs := []struct {
+		s *Sprite
+		z int
+	}{
+		{s: &Sprite{}, z: 0},
+		{s: &Sprite{}, z: 1},
+	}
+	for _, tc := range tcs {
+		err := sc.AddSprite(tc.s, nil, nil)
+		if err != nil {
+			t.Fatalf(err.Error())
+		}
+		sc.SetZIndex(tc.s, tc.z)
+	}
+
+	snpairs := sc.GetSpriteNodePairs()
+	for _, tc := range tcs {
+		i, ok := snpairs.Load(tc.s)
+		if !ok {
+			t.Fatalf("failed to load spritenodepair")
+		}
+		sn := i.(*spriteNodePair)
+		if sn.znode.ZIndex != tc.z {
+			t.Errorf("unexpected result. [want] %d [got] %d", tc.z, sn.znode.ZIndex)
+		}
+	}
 }
 
 type listener struct {
