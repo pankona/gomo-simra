@@ -139,7 +139,7 @@ func (sc *SpriteContainer) SetZIndex(s *Sprite, z int) {
 	sn := i.(*spriteNodePair)
 	if sn.znode.ZIndex != z {
 		sn.znode.ZIndex = z
-		sc.zindexDirty = true
+		sc.gl.ZIndexDirty()
 	}
 }
 

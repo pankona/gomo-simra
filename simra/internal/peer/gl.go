@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"image/draw"
 	"log"
+	"sort"
 	"sync"
 	"time"
 
@@ -60,24 +61,41 @@ type GLer interface {
 	RemoveNode(n *ZNode)
 	// SetSubTex registers subtexture to specified node
 	SetSubTex(n *ZNode, subTex *sprite.SubTex)
+	// ZIndexDirty updates dirty flag with specified argument
+	ZIndexDirty()
 }
 
 // GLPeer represents gl context.
 // Singleton.
 type GLPeer struct {
-	glc       *GLContext
-	startTime time.Time
-	images    *glutil.Images
-	fps       *debug.FPS
-	eng       sprite.Engine
-	znodes    []*ZNode
-	mu        sync.Mutex
+	glc         *GLContext
+	startTime   time.Time
+	images      *glutil.Images
+	fps         *debug.FPS
+	eng         sprite.Engine
+	znodes      ZNodes
+	mu          sync.Mutex
+	zindexDirty bool
 }
 
 // znode is node with zindex
 type ZNode struct {
 	Node   *sprite.Node
 	ZIndex int
+}
+
+type ZNodes []*ZNode
+
+func (zns ZNodes) Len() int {
+	return len(zns)
+}
+
+func (zns ZNodes) Less(i, j int) bool {
+	return zns[i].ZIndex < zns[j].ZIndex
+}
+
+func (zns ZNodes) Swap(i, j int) {
+	zns[i], zns[j] = zns[j], zns[i]
 }
 
 // NewGLPeer returns a instance of GLPeer
@@ -268,6 +286,10 @@ func (glpeer *GLPeer) Update(sc SpriteContainerer) {
 
 	glpeer.apply(sc)
 
+	if glpeer.zindexDirty {
+		sort.Sort(glpeer.znodes)
+		glpeer.zindexDirty = false
+	}
 	for _, zn := range glpeer.znodes {
 		glpeer.eng.Render(zn.Node, now, screensize.sz)
 	}
@@ -278,6 +300,10 @@ func (glpeer *GLPeer) Update(sc SpriteContainerer) {
 	// app.Publish() calls glctx.Flush,
 	// it must be called within this mutex locking.
 	glpeer.glc.publish()
+}
+
+func (glpeer *GLPeer) ZIndexDirty() {
+	glpeer.zindexDirty = true
 }
 
 // Reset resets current gl context.
