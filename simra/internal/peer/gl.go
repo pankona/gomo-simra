@@ -92,7 +92,8 @@ func (zns ZNodes) Len() int {
 }
 
 func (zns ZNodes) Less(i, j int) bool {
-	return zns[i].ZIndex < zns[j].ZIndex
+	// bigger zindex goes far side
+	return zns[i].ZIndex > zns[j].ZIndex
 }
 
 func (zns ZNodes) Swap(i, j int) {
@@ -290,6 +291,7 @@ func (glpeer *GLPeer) Update(sc SpriteContainerer) {
 	if glpeer.zindexDirty {
 		sort.Sort(glpeer.znodes)
 		glpeer.zindexDirty = false
+		simlog.Debug("nodes sorted by zindex!")
 	}
 	for _, zn := range glpeer.znodes {
 		glpeer.eng.Render(zn.Node, now, screensize.sz)
