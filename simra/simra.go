@@ -24,6 +24,8 @@ type Simraer interface {
 	// RemoveSprite removes specified sprite from current scene.
 	// Removed sprite will be disappeared.
 	RemoveSprite(s Spriter)
+	// SetZIndex sets specified zindex to specified Spriter.
+	SetZIndex(s Spriter, z int)
 	// SetDesiredScreenSize configures virtual screen size.
 	// This function must be called at least once before calling Start.
 	SetDesiredScreenSize(w, h float32)
@@ -155,6 +157,11 @@ func (sim *simra) RemoveSprite(s Spriter) {
 	sp := s.(*sprite)
 	sp.texture = nil
 	sim.spritecontainer.RemoveSprite(&sp.Sprite)
+}
+
+func (sim *simra) SetZIndex(s Spriter, z int) {
+	sp := s.(*sprite)
+	sim.spritecontainer.SetZIndex(&sp.Sprite, z)
 }
 
 // SetDesiredScreenSize configures virtual screen size.
