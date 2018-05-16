@@ -52,7 +52,6 @@ type spriteNodePair struct {
 type SpriteContainer struct {
 	spriteNodePairs sync.Map // map[*Sprite]*spriteNodePair
 	gl              GLer
-	zindexDirty     bool
 }
 
 // GetSpriteContainer returns SpriteContainer.
@@ -130,6 +129,7 @@ func (sc *SpriteContainer) RemoveSprites() {
 	simlog.FuncOut()
 }
 
+// SetZIndex sets specified zindex to specified Sprite
 func (sc *SpriteContainer) SetZIndex(s *Sprite, z int) {
 	simlog.FuncIn()
 	i, ok := sc.spriteNodePairs.Load(s)

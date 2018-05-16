@@ -78,12 +78,13 @@ type GLPeer struct {
 	zindexDirty bool
 }
 
-// znode is node with zindex
+// ZNode represents node with zindex
 type ZNode struct {
 	Node   *sprite.Node
 	ZIndex int
 }
 
+// ZNodes represents array of ZNode
 type ZNodes []*ZNode
 
 func (zns ZNodes) Len() int {
@@ -302,6 +303,8 @@ func (glpeer *GLPeer) Update(sc SpriteContainerer) {
 	glpeer.glc.publish()
 }
 
+// ZIndexDirty enables dirty flag. It indicates sorting of znodes is necessary
+// because at least one of their zindex has been updated.
 func (glpeer *GLPeer) ZIndexDirty() {
 	glpeer.zindexDirty = true
 }
