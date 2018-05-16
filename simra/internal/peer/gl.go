@@ -53,13 +53,13 @@ type GLer interface {
 	// ReleaseTexture releases specified texture
 	ReleaseTexture(t *Texture)
 	// NewNode returns new node
-	NewNode(fn arrangerFunc) *sprite.Node
+	NewNode(fn arrangerFunc) *ZNode
 	// AppendNode adds specified node as a child
-	AppendNode(n *sprite.Node)
+	AppendNode(n *ZNode)
 	// RemoveNode removes specified node
-	RemoveNode(n *sprite.Node)
+	RemoveNode(n *ZNode)
 	// SetSubTex registers subtexture to specified node
-	SetSubTex(n *sprite.Node, subTex *sprite.SubTex)
+	SetSubTex(n *ZNode, subTex *sprite.SubTex)
 }
 
 // GLPeer represents gl context.
@@ -70,14 +70,14 @@ type GLPeer struct {
 	images    *glutil.Images
 	fps       *debug.FPS
 	eng       sprite.Engine
-	znodes    []*znode
+	znodes    []*ZNode
 	mu        sync.Mutex
 }
 
 // znode is node with zindex
-type znode struct {
-	node   *sprite.Node
-	zindex int
+type ZNode struct {
+	Node   *sprite.Node
+	ZIndex int
 }
 
 // NewGLPeer returns a instance of GLPeer
@@ -119,7 +119,7 @@ func (glpeer *GLPeer) initEng() {
 		glpeer.eng.Release()
 	}
 	glpeer.eng = glsprite.Engine(glpeer.images)
-	glpeer.znodes = make([]*znode, 0)
+	glpeer.znodes = make([]*ZNode, 0)
 }
 
 type arrangerFunc func(e sprite.Engine, n *sprite.Node, t clock.Time)
@@ -127,29 +127,29 @@ type arrangerFunc func(e sprite.Engine, n *sprite.Node, t clock.Time)
 func (a arrangerFunc) Arrange(e sprite.Engine, n *sprite.Node, t clock.Time) { a(e, n, t) }
 
 // NewNode returns new node
-func (glpeer *GLPeer) NewNode(fn arrangerFunc) *sprite.Node {
+func (glpeer *GLPeer) NewNode(fn arrangerFunc) *ZNode {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 	n := &sprite.Node{Arranger: fn}
 	glpeer.eng.Register(n)
-	return n
+	return &ZNode{Node: n}
 }
 
 // AppendNode adds specified node as a child
-func (glpeer *GLPeer) AppendNode(n *sprite.Node) {
+func (glpeer *GLPeer) AppendNode(zn *ZNode) {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
-	glpeer.znodes = append(glpeer.znodes, &znode{node: n})
+	glpeer.znodes = append(glpeer.znodes, zn)
 }
 
 // RemoveNode removes specified node
-func (glpeer *GLPeer) RemoveNode(n *sprite.Node) {
+func (glpeer *GLPeer) RemoveNode(n *ZNode) {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
-	znodes := make([]*znode, len(glpeer.znodes)-1)
+	znodes := make([]*ZNode, len(glpeer.znodes)-1)
 	for i, zn := range glpeer.znodes {
-		if n != zn.node {
-			znodes[i].node = n
+		if n != zn {
+			znodes[i] = n
 		}
 	}
 	glpeer.znodes = znodes
@@ -269,7 +269,7 @@ func (glpeer *GLPeer) Update(sc SpriteContainerer) {
 	glpeer.apply(sc)
 
 	for _, zn := range glpeer.znodes {
-		glpeer.eng.Render(zn.node, now, screensize.sz)
+		glpeer.eng.Render(zn.Node, now, screensize.sz)
 	}
 	if config.DEBUG {
 		glpeer.fps.Draw(screensize.sz)
@@ -295,8 +295,8 @@ func (glpeer *GLPeer) Reset() {
 }
 
 // SetSubTex registers subtexture to specified node
-func (glpeer *GLPeer) SetSubTex(n *sprite.Node, subTex *sprite.SubTex) {
-	glpeer.eng.SetSubTex(n, *subTex)
+func (glpeer *GLPeer) SetSubTex(zn *ZNode, subTex *sprite.SubTex) {
+	glpeer.eng.SetSubTex(zn.Node, *subTex)
 }
 
 func (glpeer *GLPeer) apply(sc SpriteContainerer) {
@@ -327,7 +327,7 @@ func (glpeer *GLPeer) apply(sc SpriteContainerer) {
 		affine.Scale(affine,
 			s.W*screensize.scale,
 			s.H*screensize.scale)
-		glpeer.eng.SetTransform(sn.node, *affine)
+		glpeer.eng.SetTransform(sn.znode.Node, *affine)
 		return true
 	})
 }

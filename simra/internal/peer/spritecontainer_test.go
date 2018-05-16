@@ -19,19 +19,19 @@ type mockGLer struct {
 	GLer
 }
 
-func (m *mockGLer) NewNode(fn arrangerFunc) *sprite.Node {
-	return &sprite.Node{}
+func (m *mockGLer) NewNode(fn arrangerFunc) *ZNode {
+	return &ZNode{}
 }
 
-func (m *mockGLer) SetSubTex(n *sprite.Node, subTex *sprite.SubTex) {
+func (m *mockGLer) SetSubTex(n *ZNode, subTex *sprite.SubTex) {
 	// nop
 }
 
-func (m *mockGLer) AppendNode(n *sprite.Node) {
+func (m *mockGLer) AppendNode(n *ZNode) {
 	// nop
 }
 
-func (m *mockGLer) RemoveNode(n *sprite.Node) {
+func (m *mockGLer) RemoveNode(n *ZNode) {
 	// nop
 }
 
