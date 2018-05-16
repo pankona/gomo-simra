@@ -110,7 +110,6 @@ func (t *Title) OnTouchEnd(x, y float32) {
 }
 
 func (t *Title) spawnKokeshi(x, y float32) {
-	// scene end. go to next scene
 	sprite := t.simra.NewSprite()
 	sprite.SetPosition(x, y)
 	sprite.SetScale(128, 128)
