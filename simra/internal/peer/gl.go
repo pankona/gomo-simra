@@ -28,12 +28,12 @@ import (
 // GLer interface represents interface of GL
 type GLer interface {
 	// Initialize initializes GLPeer.
-	// This function must be called inadvance of using GLPeer
+	// This function must be called in advance of using GLPeer
 	Initialize(glc *GLContext)
 	// LoadTexture return texture that is loaded by the information of arguments.
 	// Loaded texture can assign using AddSprite function.
 	LoadTexture(assetName string, rect image.Rectangle) sprite.SubTex
-	// MakeTextureByText createst and return texture by speicied text
+	// MakeTextureByText create and return texture by specified text
 	// Loaded texture can assign using AddSprite function.
 	// TODO: font parameterize
 	MakeTextureByText(text string, fontsize float64, fontcolor color.RGBA, rect image.Rectangle) sprite.SubTex
@@ -86,7 +86,7 @@ type GLContext struct {
 }
 
 // Initialize initializes GLPeer.
-// This function must be called inadvance of using GLPeer
+// This function must be called in advance of using GLPeer
 func (glpeer *GLPeer) Initialize(glc *GLContext) {
 	simlog.FuncIn()
 
