@@ -27,11 +27,11 @@ func (m *mockGLer) SetSubTex(n *sprite.Node, subTex *sprite.SubTex) {
 	// nop
 }
 
-func (m *mockGLer) AppendChild(n *sprite.Node) {
+func (m *mockGLer) AppendNode(n *sprite.Node) {
 	// nop
 }
 
-func (m *mockGLer) RemoveChild(n *sprite.Node) {
+func (m *mockGLer) RemoveNode(n *sprite.Node) {
 	// nop
 }
 

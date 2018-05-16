@@ -70,8 +70,14 @@ type GLPeer struct {
 	images    *glutil.Images
 	fps       *debug.FPS
 	eng       sprite.Engine
-	nodes     []*sprite.Node
+	znodes    []*znode
 	mu        sync.Mutex
+}
+
+// znode is node with zindex
+type znode struct {
+	node   *sprite.Node
+	zindex int
 }
 
 // NewGLPeer returns a instance of GLPeer
@@ -113,7 +119,7 @@ func (glpeer *GLPeer) initEng() {
 		glpeer.eng.Release()
 	}
 	glpeer.eng = glsprite.Engine(glpeer.images)
-	glpeer.nodes = make([]*sprite.Node, 0)
+	glpeer.znodes = make([]*znode, 0)
 }
 
 type arrangerFunc func(e sprite.Engine, n *sprite.Node, t clock.Time)
@@ -133,20 +139,20 @@ func (glpeer *GLPeer) NewNode(fn arrangerFunc) *sprite.Node {
 func (glpeer *GLPeer) AppendNode(n *sprite.Node) {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
-	glpeer.nodes = append(glpeer.nodes, n)
+	glpeer.znodes = append(glpeer.znodes, &znode{node: n})
 }
 
 // RemoveNode removes specified node
 func (glpeer *GLPeer) RemoveNode(n *sprite.Node) {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
-	nodes := make([]*sprite.Node, len(glpeer.nodes)-1)
-	for i, node := range glpeer.nodes {
-		if n != node {
-			nodes[i] = n
+	znodes := make([]*znode, len(glpeer.znodes)-1)
+	for i, zn := range glpeer.znodes {
+		if n != zn.node {
+			znodes[i].node = n
 		}
 	}
-	glpeer.nodes = nodes
+	glpeer.znodes = znodes
 }
 
 // LoadTexture return texture that is loaded by the information of arguments.
@@ -262,8 +268,8 @@ func (glpeer *GLPeer) Update(sc SpriteContainerer) {
 
 	glpeer.apply(sc)
 
-	for _, n := range glpeer.nodes {
-		glpeer.eng.Render(n, now, screensize.sz)
+	for _, zn := range glpeer.znodes {
+		glpeer.eng.Render(zn.node, now, screensize.sz)
 	}
 	if config.DEBUG {
 		glpeer.fps.Draw(screensize.sz)
