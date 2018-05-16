@@ -147,7 +147,6 @@ func (sim *simra) AddSprite(s Spriter) {
 	if err != nil {
 		simlog.Errorf("failed to add sprite. err: %s", err.Error())
 	}
-
 }
 
 // RemoveSprite removes specified sprite from current scene.
