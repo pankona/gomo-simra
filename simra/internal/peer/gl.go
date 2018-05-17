@@ -167,9 +167,11 @@ func (glpeer *GLPeer) RemoveNode(n *ZNode) {
 	glpeer.mu.Lock()
 	defer glpeer.mu.Unlock()
 	znodes := make([]*ZNode, len(glpeer.znodes)-1)
-	for i, zn := range glpeer.znodes {
+	var count int
+	for _, zn := range glpeer.znodes {
 		if n != zn {
-			znodes[i] = n
+			znodes[count] = zn
+			count++
 		}
 	}
 	glpeer.znodes = znodes
