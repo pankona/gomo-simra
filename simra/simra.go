@@ -25,6 +25,9 @@ type Simraer interface {
 	// Removed sprite will be disappeared.
 	RemoveSprite(s Spriter)
 	// SetZIndex sets specified zindex to specified Spriter.
+	// All Spriter has 0 as zindex as default.
+	// Spriters will be draw as the order of zindex in ascending.
+	// Spriter that has lesser number of zindex will be draw latter.
 	SetZIndex(s Spriter, z int)
 	// SetDesiredScreenSize configures virtual screen size.
 	// This function must be called at least once before calling Start.
@@ -159,8 +162,10 @@ func (sim *simra) RemoveSprite(s Spriter) {
 	sim.spritecontainer.RemoveSprite(&sp.Sprite)
 }
 
-// SetZIndex sets specified zindex to specified Spriter
-// bigger number of zindex means far side
+// SetZIndex sets specified zindex to specified Spriter.
+// All Spriter has 0 as zindex as default.
+// Spriters will be draw as the order of zindex in ascending.
+// Spriter that has lesser number of zindex will be draw latter.
 func (sim *simra) SetZIndex(s Spriter, z int) {
 	sp := s.(*sprite)
 	sim.spritecontainer.SetZIndex(&sp.Sprite, z)
