@@ -29,6 +29,8 @@ type Simraer interface {
 	// Spriters will be draw as the order of zindex in ascending.
 	// Spriter that has lesser number of zindex will be draw latter.
 	SetZIndex(s Spriter, z int)
+	// GetZIndex returns specified Spriter's zindex
+	GetZIndex(s Spriter) (int, error)
 	// SetDesiredScreenSize configures virtual screen size.
 	// This function must be called at least once before calling Start.
 	SetDesiredScreenSize(w, h float32)
@@ -169,6 +171,11 @@ func (sim *simra) RemoveSprite(s Spriter) {
 func (sim *simra) SetZIndex(s Spriter, z int) {
 	sp := s.(*sprite)
 	sim.spritecontainer.SetZIndex(&sp.Sprite, z)
+}
+
+func (sim *simra) GetZIndex(s Spriter) (int, error) {
+	sp := s.(*sprite)
+	return sim.spritecontainer.GetZIndex(&sp.Sprite)
 }
 
 // SetDesiredScreenSize configures virtual screen size.
