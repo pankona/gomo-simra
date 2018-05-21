@@ -25,7 +25,7 @@ type SpriteContainerer interface {
 	// RemoveSprites removes all registered sprites from SpriteContainer.
 	RemoveSprites()
 	// SetZIndex sets specified zindex to specified Sprite
-	SetZIndex(sprite *Sprite, z int)
+	SetZIndex(sprite *Sprite, z int) error
 	// GetZIndex returns specified sprite's zindex
 	GetZIndex(sprite *Sprite) (int, error)
 	// GetSpriteNodePairs returns map representation of sprite and node pair
@@ -134,17 +134,18 @@ func (sc *SpriteContainer) RemoveSprites() {
 }
 
 // SetZIndex sets specified zindex to specified Sprite
-func (sc *SpriteContainer) SetZIndex(s *Sprite, z int) {
+func (sc *SpriteContainer) SetZIndex(s *Sprite, z int) error {
 	simlog.FuncIn()
 	i, ok := sc.spriteNodePairs.Load(s)
 	if !ok {
-		return
+		return fmt.Errorf("specified sprite [%p] not found", s)
 	}
 	sn := i.(*spriteNodePair)
 	if sn.znode.ZIndex != z {
 		sn.znode.ZIndex = z
 		sc.gl.ZIndexDirty()
 	}
+	return nil
 }
 
 // GetZIndex returns specified sprite's zindex
