@@ -9,6 +9,7 @@ import (
 
 	"github.com/pankona/gomo-simra/simra"
 	"github.com/pankona/gomo-simra/simra/image"
+	"github.com/pankona/gomo-simra/simra/simlog"
 )
 
 // Title represents a scene object for Title
@@ -122,5 +123,9 @@ func (t *Title) spawnKokeshi(x, y float32) {
 	t.numOfSprite.ReplaceTexture(tex)
 
 	// later sprite goes far side
-	t.simra.SetZIndex(sprite, len(t.sprites))
+	err := t.simra.SetZIndex(sprite, len(t.sprites))
+	if err != nil {
+		simlog.Error(err.Error())
+	}
+
 }
