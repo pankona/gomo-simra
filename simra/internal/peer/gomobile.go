@@ -26,7 +26,6 @@ type Gomoer interface {
 }
 
 // Gomo represents gomobile instance.
-// Singleton.
 type Gomo struct {
 	app            app.App
 	screensize     ScreenSizer
