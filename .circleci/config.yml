@@ -50,6 +50,7 @@ jobs:
       - run:
           name: move GOPATH to tmp
           command: |
+              rm -rf /tmp/go
               mkdir -p /tmp/go
               mv $GOPATH/* /tmp/go/.
       - save_cache:
