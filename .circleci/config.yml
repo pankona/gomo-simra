@@ -149,6 +149,9 @@ workflows:
   build:
     jobs:
       - prepare
+      - lint:
+          requires:
+            - prepare
       - build:
           requires:
             - prepare
