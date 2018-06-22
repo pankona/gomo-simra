@@ -15,6 +15,7 @@ jobs:
       - restore_cache:
           keys:
             - ndk
+            - go
       - run:
           name: install dependencies by apt-get
           command: sudo apt-get update; sudo apt-get install -y libegl1-mesa-dev libgles2-mesa-dev libx11-dev libasound2-dev
@@ -30,10 +31,6 @@ jobs:
             if [ ! -e $NDK_ROOT ]; then
               cd $HOME && unzip -q $NDK-linux-x86_64.zip
             fi
-      - save_cache:
-          key: ndk
-          paths:
-            - /home/circleci/android-ndk-r15c
       - run:
           name: download dependencies by go get
           command: |
@@ -50,24 +47,28 @@ jobs:
       - run:
           name: gomobile init
           command: gomobile init --ndk $NDK_ROOT
-      - persist_to_workspace:
-          root: /
+      - save_cache:
+          key: ndk
           paths:
-            - home/circleci/$NDK
-            - go
+            - /home/circleci/android-ndk-r15c
+      - save_cache:
+          key: go
+          paths:
+            - /go
 
   build:
     working_directory: /go/src/github.com/pankona/gomo-simra
     docker:
       - image: circleci/golang:1.10.3
     steps:
-      - attach_workspace: # workspaceをアタッチする
-          at: /
       - checkout
       - run:
           name: configure environment variables
           command: |
             echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
+      - restore_cache:
+          keys:
+            - go
       - run: find /go
       - run:
           name: make example for linux
@@ -85,12 +86,13 @@ jobs:
     docker:
       - image: circleci/golang:1.10.3
     steps:
-      - attach_workspace: # workspaceをアタッチする
-          at: /
       - checkout
       - run:
           name: configure environment variables
           command: echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
+      - restore_cache:
+          keys:
+            - go
       - run:
           name: go lint for simra examples
           command: cd examples && golint ./...
@@ -106,12 +108,13 @@ jobs:
     docker:
       - image: circleci/golang:1.10.3
     steps:
-      - attach_workspace: # workspaceをアタッチする
-          at: /
       - checkout
       - run:
           name: configure environment variables
           command: echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
+      - restore_cache:
+          keys:
+            - go
       - run:
           name: go test
           command: cd simra && go test ./...
