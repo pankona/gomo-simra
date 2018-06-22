@@ -30,8 +30,6 @@ jobs:
           command: |
             if [ ! -e $NDK_ROOT ]; then
               unzip -q $NDK-linux-x86_64.zip
-              pwd
-              ls
             fi
       - save_cache:
           key: ndk
@@ -68,7 +66,11 @@ jobs:
       - image: circleci/golang:1.10.3
     steps:
       - checkout
-      - run: echo 'export PATH=/go/bin:$PATH' >> $BASH_ENV
+      - run:
+          name: configure environment variables
+          command: |
+            echo 'export GOPATH=$HOME/go' >> $BASH_ENV
+            echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
       - run:
           name: make example for linux
           command: |
@@ -86,7 +88,11 @@ jobs:
       - image: circleci/golang:1.10.3
     steps:
       - checkout
-      - run: echo 'export PATH=/go/bin:$PATH' >> $BASH_ENV
+      - run:
+          name: configure environment variables
+          command: |
+            echo 'export GOPATH=$HOME/go' >> $BASH_ENV
+            echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
       - run:
           name: go lint for simra examples
           command: cd examples && golint ./...
