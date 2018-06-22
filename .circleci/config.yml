@@ -61,13 +61,13 @@ jobs:
     docker:
       - image: circleci/golang:1.10.3
     steps:
+      - attach_workspace: # workspaceをアタッチする
+          at: /
       - checkout
       - run:
           name: configure environment variables
           command: |
             echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
-      - attach_workspace: # workspaceをアタッチする
-          at: /
       - run: find /go
       - run:
           name: make example for linux
@@ -85,12 +85,12 @@ jobs:
     docker:
       - image: circleci/golang:1.10.3
     steps:
+      - attach_workspace: # workspaceをアタッチする
+          at: /
       - checkout
       - run:
           name: configure environment variables
           command: echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
-      - attach_workspace: # workspaceをアタッチする
-          at: /
       - run:
           name: go lint for simra examples
           command: cd examples && golint ./...
@@ -106,9 +106,9 @@ jobs:
     docker:
       - image: circleci/golang:1.10.3
     steps:
-      - checkout
       - attach_workspace: # workspaceをアタッチする
           at: /
+      - checkout
       - run:
           name: configure environment variables
           command: echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
