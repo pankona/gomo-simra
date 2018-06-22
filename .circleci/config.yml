@@ -47,6 +47,11 @@ jobs:
       - run:
           name: gomobile init
           command: gomobile init --ndk $NDK_ROOT
+      - run:
+          name: move GOPATH to tmp
+          command: |
+              mkdir -p /tmp/go
+              mv $GOPATH/* /tmp/go/.
       - save_cache:
           key: ndk
           paths:
@@ -54,7 +59,7 @@ jobs:
       - save_cache:
           key: go
           paths:
-            - /go
+            - /tmp/go
 
   build:
     working_directory: /go/src/github.com/pankona/gomo-simra
@@ -69,7 +74,11 @@ jobs:
       - restore_cache:
           keys:
             - go
-      - run: find /go
+      - run: find /tmp/go
+      - run:
+          name: restore GOPATH
+          command: |
+              cp -r /tmp/go/* $GOPATH/.
       - run:
           name: make example for linux
           command: |
@@ -94,6 +103,10 @@ jobs:
           keys:
             - go
       - run:
+          name: restore GOPATH
+          command: |
+              cp -r /tmp/go/* $GOPATH/.
+      - run:
           name: go lint for simra examples
           command: cd examples && golint ./...
       - run:
@@ -115,6 +128,10 @@ jobs:
       - restore_cache:
           keys:
             - go
+      - run:
+          name: restore GOPATH
+          command: |
+              cp -r /tmp/go/* $GOPATH/.
       - run:
           name: go test
           command: cd simra && go test ./...
