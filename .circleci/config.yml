@@ -74,11 +74,13 @@ jobs:
       - restore_cache:
           keys:
             - gocache-v1
-      - run: find /tmp/go
       - run:
           name: restore GOPATH
           command: |
               cp -r /tmp/go/* $GOPATH/.
+      - run:
+          name: install dependencies by apt-get
+          command: sudo apt-get update; sudo apt-get install -y libegl1-mesa-dev libgles2-mesa-dev libx11-dev libasound2-dev
       - run:
           name: make example for linux
           command: |
@@ -107,6 +109,9 @@ jobs:
           command: |
               cp -r /tmp/go/* $GOPATH/.
       - run:
+          name: install dependencies by apt-get
+          command: sudo apt-get update; sudo apt-get install -y libegl1-mesa-dev libgles2-mesa-dev libx11-dev libasound2-dev
+      - run:
           name: go lint for simra examples
           command: cd examples && golint ./...
       - run:
@@ -132,6 +137,9 @@ jobs:
           name: restore GOPATH
           command: |
               cp -r /tmp/go/* $GOPATH/.
+      - run:
+          name: install dependencies by apt-get
+          command: sudo apt-get update; sudo apt-get install -y libegl1-mesa-dev libgles2-mesa-dev libx11-dev libasound2-dev
       - run:
           name: go test
           command: cd simra && go test ./...
