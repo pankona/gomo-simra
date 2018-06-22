@@ -33,7 +33,7 @@ jobs:
       - save_cache:
           key: ndk
           paths:
-            - $NDK_ROOT
+            - /home/circleci/$NDK
       - run:
           name: download dependencies by go get
           command: |
@@ -66,6 +66,7 @@ jobs:
           name: configure environment variables
           command: |
             echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
+      - run: find /go
       - run:
           name: make example for linux
           command: |
