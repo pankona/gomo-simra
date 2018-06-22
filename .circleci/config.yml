@@ -1,0 +1,157 @@
+version: 2
+jobs:
+  prepare:
+    working_directory: /
+    docker:
+      - image: circleci/golang:1.10.3
+    environment:
+      - NDK: "android-ndk-r15c"
+    steps:
+      - run:
+          name: configure environment variables
+          command: |
+            echo 'export NDK_ROOT=$HOME/$NDK' >> $BASH_ENV
+            echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
+      - restore_cache:
+          keys:
+            - ndk-r15c
+      - run:
+          name: install dependencies by apt-get
+          command: sudo apt-get update; sudo apt-get install -y libegl1-mesa-dev libgles2-mesa-dev libx11-dev libasound2-dev
+      - run:
+          name: download ndk
+          command: |
+            if [ ! -e $NDK_ROOT ]; then
+              cd $HOME && wget https://dl.google.com/android/repository/$NDK-linux-x86_64.zip
+            fi
+      - run:
+          name: unzip ndk
+          command: |
+            if [ ! -e $NDK_ROOT ]; then
+              cd $HOME && unzip -q $NDK-linux-x86_64.zip
+            fi
+      - save_cache:
+          key: ndk-r15c
+          paths:
+            - /home/circleci/android-ndk-r15c
+      - run:
+          name: download dependencies by go get
+          command: |
+            go get -u golang.org/x/mobile/cmd/gomobile
+            go get -u github.com/golang/freetype/truetype
+            go get -u github.com/boltdb/bolt
+            go get -u github.com/hajimehoshi/oto
+            go get -u github.com/hajimehoshi/go-mp3
+            go get -u github.com/golang/lint/golint
+            go get -u gopkg.in/alecthomas/gometalinter.v2
+      - run:
+          name: install gometalinter
+          command: gometalinter.v2 --install --update
+      - run:
+          name: gomobile init
+          command: gomobile init --ndk $NDK_ROOT
+      - run:
+          name: move GOPATH to tmp
+          command: |
+              rm -rf /tmp/go
+              mkdir -p /tmp/go
+              mv $GOPATH/* /tmp/go/.
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - go
+
+  build:
+    working_directory: /go/src/github.com/pankona/gomo-simra
+    docker:
+      - image: circleci/golang:1.10.3
+    steps:
+      - checkout
+      - run:
+          name: configure environment variables
+          command: |
+            echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: restore GOPATH
+          command: |
+              cp -r /tmp/go/* $GOPATH/.
+      - run:
+          name: install dependencies by apt-get
+          command: sudo apt-get update; sudo apt-get install -y libegl1-mesa-dev libgles2-mesa-dev libx11-dev libasound2-dev
+      - run:
+          name: make example for linux
+          command: |
+            make -C examples
+            make -C examples BUILD_TAGS=release
+      - run:
+          name: make example for mobile
+          command: |
+            make mobile -C examples
+            make mobile -C examples BUILD_TAGS=release
+
+  lint:
+    working_directory: /go/src/github.com/pankona/gomo-simra
+    docker:
+      - image: circleci/golang:1.10.3
+    steps:
+      - checkout
+      - run:
+          name: configure environment variables
+          command: echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: restore GOPATH
+          command: |
+              cp -r /tmp/go/* $GOPATH/.
+      - run:
+          name: install dependencies by apt-get
+          command: sudo apt-get update; sudo apt-get install -y libegl1-mesa-dev libgles2-mesa-dev libx11-dev libasound2-dev
+      - run:
+          name: go lint for simra examples
+          command: cd examples && golint ./...
+      - run:
+          name: go lint for simra lib
+          command: cd simra && golint ./...
+      - run:
+          name: run gometalinter
+          command: make gometalinter
+
+  test:
+    working_directory: /go/src/github.com/pankona/gomo-simra
+    docker:
+      - image: circleci/golang:1.10.3
+    steps:
+      - checkout
+      - run:
+          name: configure environment variables
+          command: echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: restore GOPATH
+          command: |
+              cp -r /tmp/go/* $GOPATH/.
+      - run:
+          name: install dependencies by apt-get
+          command: sudo apt-get update; sudo apt-get install -y libegl1-mesa-dev libgles2-mesa-dev libx11-dev libasound2-dev
+      - run:
+          name: go test
+          command: cd simra && go test ./...
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - prepare
+      - lint:
+          requires:
+            - prepare
+      - build:
+          requires:
+            - prepare
+      - test:
+          requires:
+            - prepare
