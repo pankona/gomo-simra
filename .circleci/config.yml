@@ -57,7 +57,7 @@ jobs:
             ls $NDK_ROOT
             gomobile init --ndk $NDK_ROOT
       - persist_to_workspace:
-          root: $HOME
+          root: .
           paths:
             - $NDK
             - go
