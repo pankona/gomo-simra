@@ -14,7 +14,7 @@ jobs:
             echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
       - restore_cache:
           keys:
-            - ndk
+            - ndk-r15c
             - gocache-v1
       - run:
           name: install dependencies by apt-get
@@ -53,7 +53,7 @@ jobs:
               mkdir -p /tmp/go
               mv $GOPATH/* /tmp/go/.
       - save_cache:
-          key: ndk
+          key: ndk-r15c
           paths:
             - /home/circleci/android-ndk-r15c
       - save_cache:
