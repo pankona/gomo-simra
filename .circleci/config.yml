@@ -1,7 +1,7 @@
 version: 2
 jobs:
   prepare:
-    working_directory: /home/circleci # $HOME
+    working_directory: /
     docker:
       - image: circleci/golang:1.10.3
     environment:
@@ -11,7 +11,6 @@ jobs:
           name: configure environment variables
           command: |
             echo 'export NDK_ROOT=$HOME/$NDK' >> $BASH_ENV
-            echo 'export GOPATH=$HOME/go' >> $BASH_ENV
             echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
       - restore_cache:
           keys:
@@ -23,13 +22,13 @@ jobs:
           name: download ndk
           command: |
             if [ ! -e $NDK_ROOT ]; then
-              wget https://dl.google.com/android/repository/$NDK-linux-x86_64.zip
+              cd $HOME && wget https://dl.google.com/android/repository/$NDK-linux-x86_64.zip
             fi
       - run:
           name: unzip ndk
           command: |
             if [ ! -e $NDK_ROOT ]; then
-              unzip -q $NDK-linux-x86_64.zip
+              cd $HOME && unzip -q $NDK-linux-x86_64.zip
             fi
       - save_cache:
           key: ndk
@@ -50,14 +49,11 @@ jobs:
           command: gometalinter.v2 --install --update
       - run:
           name: gomobile init
-          command: |
-            echo $NDK_ROOT
-            ls $NDK_ROOT
-            gomobile init --ndk $NDK_ROOT
+          command: gomobile init --ndk $NDK_ROOT
       - persist_to_workspace:
-          root: .
+          root: /
           paths:
-            - $NDK
+            - home/circleci/$NDK
             - go
 
   build:
@@ -69,7 +65,6 @@ jobs:
       - run:
           name: configure environment variables
           command: |
-            echo 'export GOPATH=$HOME/go' >> $BASH_ENV
             echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
       - run:
           name: make example for linux
@@ -90,9 +85,7 @@ jobs:
       - checkout
       - run:
           name: configure environment variables
-          command: |
-            echo 'export GOPATH=$HOME/go' >> $BASH_ENV
-            echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
+          command: echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
       - run:
           name: go lint for simra examples
           command: cd examples && golint ./...
@@ -110,9 +103,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: configure environment variables
+          command: echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
+      - run:
           name: go test
-          command: |
-            cd simra && go test ./...
+          command: cd simra && go test ./...
 
 workflows:
   version: 2
