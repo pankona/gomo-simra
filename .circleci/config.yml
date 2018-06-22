@@ -33,7 +33,7 @@ jobs:
       - save_cache:
           key: ndk
           paths:
-            - /home/circleci/$NDK
+            - /home/circleci/android-ndk-r15c
       - run:
           name: download dependencies by go get
           command: |
