@@ -9,7 +9,6 @@ jobs:
      <<: *defaults
      steps:
       - checkout
-      - run: pwd
       - run:
           name: go lint for simra examples
           command: cd examples && golint ./...
