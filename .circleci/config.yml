@@ -1,13 +1,10 @@
-defaults: &defaults
-  working_directory: /go/src/github.com/pankona/gomo-simra
-  docker:
-    - image: pankona/gomo-simra
-
 version: 2
 jobs:
-  lint:
-     <<: *defaults
-     steps:
+  build:
+    working_directory: /go/src/github.com/pankona/gomo-simra
+    docker:
+      - image: pankona/gomo-simra
+    steps:
       - checkout
       - run:
           name: dep ensure
@@ -21,14 +18,6 @@ jobs:
       - run:
           name: run gometalinter
           command: make gometalinter
-
-  build:
-    <<: *defaults
-    steps:
-      - checkout
-      - run:
-          name: dep ensure
-          command: dep ensure
       - run:
           name: make example for linux
           command: |
@@ -39,14 +28,6 @@ jobs:
           command: |
             make mobile -C examples
             make mobile -C examples BUILD_TAGS=release
-
-  test:
-    <<: *defaults
-    steps:
-      - checkout
-      - run:
-          name: dep ensure
-          command: dep ensure
       - run:
           name: go test
           command: cd simra && go test ./...
@@ -55,6 +36,4 @@ workflows:
   version: 2
   build:
     jobs:
-      - lint
       - build
-      - test
