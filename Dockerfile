@@ -24,4 +24,3 @@ RUN go get -u gopkg.in/alecthomas/gometalinter.v2
 RUN gometalinter.v2 --install
 RUN gomobile init --ndk $NDK_ROOT
 
-
