@@ -20,7 +20,6 @@ RUN go get -u github.com/boltdb/bolt
 RUN go get -u github.com/hajimehoshi/oto
 RUN go get -u github.com/hajimehoshi/go-mp3
 RUN go get -u github.com/golang/lint/golint
-RUN go get -u gopkg.in/alecthomas/gometalinter.v2
-RUN gometalinter.v2 --install
 RUN gomobile init --ndk $NDK_ROOT
-
+RUN curl -L https://git.io/vp6lP | sh # install gometalinter
+RUN mv ./bin/* $GOPATH/bin/.
