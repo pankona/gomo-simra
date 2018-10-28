@@ -89,7 +89,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:22f1816a759a0e0570cf06be2c41609ec37c724c02a91212d59259ff32ed245a"
+  digest = "1:1ce20fd97dbe5b05292791bc7a0ca1c55345d35c9d8fe98952050fdfb26edb19"
   name = "golang.org/x/mobile"
   packages = [
     "app",
@@ -112,7 +112,7 @@
     "internal/mobileinit",
   ]
   pruneopts = ""
-  revision = "3a7f1138ab81be19733b7c831f2b622f965c2dd1"
+  revision = "a27dd33d354d004b2de14a791df5af8a00f68b8e"
 
 [[projects]]
   branch = "master"
