@@ -2,28 +2,35 @@
 
 
 [[projects]]
+  digest = "1:ed112122ed4a920d944cc99b9d00b0441c11685939c28462c719488d36fe29aa"
   name = "github.com/boltdb/bolt"
   packages = ["."]
+  pruneopts = ""
   revision = "2f1ce7a837dcb8da3ec595b1dac9d0632f0f99e8"
   version = "v1.3.1"
 
 [[projects]]
   branch = "master"
+  digest = "1:05f7dd1dc7530cd6b959f8b49660cd898f8dc9601b4e764ef9bdf211e6318774"
   name = "github.com/golang/freetype"
   packages = [
     "raster",
-    "truetype"
+    "truetype",
   ]
+  pruneopts = ""
   revision = "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4"
 
 [[projects]]
   branch = "master"
+  digest = "1:80b134ce14a5242e2bfd70bb6a3eae8b9a21c27d29f609226b0caea430ff7918"
   name = "github.com/gopherjs/gopherjs"
   packages = ["js"]
+  pruneopts = ""
   revision = "82b322028c96512b15077093b16a5f1c7ea897ac"
 
 [[projects]]
   branch = "master"
+  digest = "1:99ad0c8fcc3cd944ee52b8bf966d9b5eb177b770160cd27403c36703370024c8"
   name = "github.com/hajimehoshi/go-mp3"
   packages = [
     ".",
@@ -34,21 +41,25 @@
     "internal/huffman",
     "internal/imdct",
     "internal/maindata",
-    "internal/sideinfo"
+    "internal/sideinfo",
   ]
+  pruneopts = ""
   revision = "3c185f92b8dbceefa913b64cae634ba47f452769"
 
 [[projects]]
   branch = "master"
+  digest = "1:b44d171a3be27a3e3660bcac5d7e031e6788f08df307799b377d61ba28356068"
   name = "github.com/hajimehoshi/oto"
   packages = [
     ".",
-    "internal/jni"
+    "internal/jni",
   ]
+  pruneopts = ""
   revision = "7a1d13b19d823f7672135569e7a2d040046252e8"
 
 [[projects]]
   branch = "master"
+  digest = "1:b4a828fca29924f2979a387f6696697c01cfa44f2968a9438fd889b683152b7d"
   name = "golang.org/x/exp"
   packages = [
     "shiny/driver/gldriver",
@@ -58,23 +69,27 @@
     "shiny/driver/internal/lifecycler",
     "shiny/driver/internal/win32",
     "shiny/driver/internal/x11key",
-    "shiny/screen"
+    "shiny/screen",
   ]
+  pruneopts = ""
   revision = "8460e604b9de9da5834c9f198cadf9dca4b05cac"
 
 [[projects]]
   branch = "master"
+  digest = "1:d9435f69fcdbb0952490645c271dfdf3a0e82722ee8afbb3c0fc7b6f6facc644"
   name = "golang.org/x/image"
   packages = [
     "font",
     "font/gofont/goregular",
     "math/f64",
-    "math/fixed"
+    "math/fixed",
   ]
-  revision = "f315e440302883054d0c2bd85486878cb4f8572c"
+  pruneopts = ""
+  revision = "2a2258ff36e99cf9156acfc715e3f83d47d6f0fd"
 
 [[projects]]
   branch = "master"
+  digest = "1:22f1816a759a0e0570cf06be2c41609ec37c724c02a91212d59259ff32ed245a"
   name = "golang.org/x/mobile"
   packages = [
     "app",
@@ -94,22 +109,63 @@
     "exp/sprite/glsprite",
     "geom",
     "gl",
-    "internal/mobileinit"
+    "internal/mobileinit",
   ]
+  pruneopts = ""
   revision = "3a7f1138ab81be19733b7c831f2b622f965c2dd1"
 
 [[projects]]
   branch = "master"
+  digest = "1:267aa6124260d0e48d1ebf8bb84dce97caa133406b3caabc076cfc7a9e85ffe4"
   name = "golang.org/x/sys"
   packages = [
     "unix",
-    "windows"
+    "windows",
   ]
+  pruneopts = ""
   revision = "1d206c9fa8975fb4cf00df1dc8bf3283dc24ba0e"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "2d015282ad4282a2b2aed1e7794b00dc9b1ceb4da2c82aa2c84f3e5e79ab8ba8"
+  input-imports = [
+    "github.com/boltdb/bolt",
+    "github.com/golang/freetype/raster",
+    "github.com/golang/freetype/truetype",
+    "github.com/gopherjs/gopherjs/js",
+    "github.com/hajimehoshi/go-mp3",
+    "github.com/hajimehoshi/oto",
+    "golang.org/x/exp/shiny/driver/gldriver",
+    "golang.org/x/exp/shiny/driver/internal/drawer",
+    "golang.org/x/exp/shiny/driver/internal/errscreen",
+    "golang.org/x/exp/shiny/driver/internal/event",
+    "golang.org/x/exp/shiny/driver/internal/lifecycler",
+    "golang.org/x/exp/shiny/driver/internal/win32",
+    "golang.org/x/exp/shiny/driver/internal/x11key",
+    "golang.org/x/exp/shiny/screen",
+    "golang.org/x/image/font",
+    "golang.org/x/image/font/gofont/goregular",
+    "golang.org/x/image/math/f64",
+    "golang.org/x/image/math/fixed",
+    "golang.org/x/mobile/app",
+    "golang.org/x/mobile/app/internal/callfn",
+    "golang.org/x/mobile/asset",
+    "golang.org/x/mobile/event/key",
+    "golang.org/x/mobile/event/lifecycle",
+    "golang.org/x/mobile/event/mouse",
+    "golang.org/x/mobile/event/paint",
+    "golang.org/x/mobile/event/size",
+    "golang.org/x/mobile/event/touch",
+    "golang.org/x/mobile/exp/app/debug",
+    "golang.org/x/mobile/exp/f32",
+    "golang.org/x/mobile/exp/gl/glutil",
+    "golang.org/x/mobile/exp/sprite",
+    "golang.org/x/mobile/exp/sprite/clock",
+    "golang.org/x/mobile/exp/sprite/glsprite",
+    "golang.org/x/mobile/geom",
+    "golang.org/x/mobile/gl",
+    "golang.org/x/sys/unix",
+    "golang.org/x/sys/windows",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
