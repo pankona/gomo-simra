@@ -11,6 +11,7 @@ mobile:
 
 build: $(DIRECTORIES)
 $(DIRECTORIES):
+	@go version
 	cd $@; $(BUILD_COMMAND) build -tags=$(BUILD_TAGS)
 
 .PHONY: all $(DIRECTORIES)
