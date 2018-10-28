@@ -30,7 +30,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:99ad0c8fcc3cd944ee52b8bf966d9b5eb177b770160cd27403c36703370024c8"
+  digest = "1:52bed41228992c80d86368302be2ea2840c515a45cba5aeb01293d9c7b277ff2"
   name = "github.com/hajimehoshi/go-mp3"
   packages = [
     ".",
@@ -44,7 +44,7 @@
     "internal/sideinfo",
   ]
   pruneopts = ""
-  revision = "3c185f92b8dbceefa913b64cae634ba47f452769"
+  revision = "90191ee719ddc192865cd96bdc8013ef1ed6dbea"
 
 [[projects]]
   branch = "master"
