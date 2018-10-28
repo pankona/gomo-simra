@@ -29,6 +29,14 @@
   revision = "82b322028c96512b15077093b16a5f1c7ea897ac"
 
 [[projects]]
+  digest = "1:1c75d13f1f4021455394bf1106e2356db9e6e71443839def937cf96fe4d88c98"
+  name = "github.com/gopherjs/gopherwasm"
+  packages = ["js"]
+  pruneopts = ""
+  revision = "b0e1786f520333e4546f02930c5ca8a929b38841"
+  version = "v1.0.1"
+
+[[projects]]
   branch = "master"
   digest = "1:52bed41228992c80d86368302be2ea2840c515a45cba5aeb01293d9c7b277ff2"
   name = "github.com/hajimehoshi/go-mp3"
@@ -48,14 +56,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:b44d171a3be27a3e3660bcac5d7e031e6788f08df307799b377d61ba28356068"
+  digest = "1:7dbca992a0baa4051dbca01d73ef7a790b8838f159ddbabace2657b81aeafc43"
   name = "github.com/hajimehoshi/oto"
-  packages = [
-    ".",
-    "internal/jni",
-  ]
+  packages = ["."]
   pruneopts = ""
-  revision = "7a1d13b19d823f7672135569e7a2d040046252e8"
+  revision = "3a9bb05c78a0583c0f5a6c041eeb05a6ceec8ef9"
 
 [[projects]]
   branch = "master"
