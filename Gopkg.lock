@@ -81,7 +81,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:9e0df38b9ac3412e8200552553d86c3046a3248547ac98df580b4e4b3df0d63c"
+  digest = "1:1da7ae3598dc309aa0bfb82f6ea370a32dc184998aebe8f8a04e8702ed628cb1"
   name = "golang.org/x/image"
   packages = [
     "font",
@@ -90,7 +90,7 @@
     "math/fixed",
   ]
   pruneopts = ""
-  revision = "aa35264064ba97668fab8736503e428bde0b656c"
+  revision = "249dc8530c0efc2766606a940c1c50b434b2f1cd"
 
 [[projects]]
   branch = "master"
