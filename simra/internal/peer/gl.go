@@ -229,7 +229,10 @@ func (glpeer *GLPeer) MakeTextureByText(text string, fontsize float64, fontcolor
 	// Draw the text.
 	h := font.HintingNone
 
-	gofont, _ := truetype.Parse(goregular.TTF)
+	gofont, err := truetype.Parse(goregular.TTF)
+	if err != nil {
+		panic(err)
+	}
 
 	d := &font.Drawer{
 		Dst: img,
