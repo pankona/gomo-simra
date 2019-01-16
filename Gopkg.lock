@@ -56,11 +56,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:909939c7ad8d52b09a7fda414e4e95e6c944238c9992c6d71aff6f8df10d6f76"
+  digest = "1:7df44925424d1deef79b59f41690780ca0a17ced29922e3028662da574b919fe"
   name = "github.com/hajimehoshi/oto"
   packages = ["."]
   pruneopts = ""
-  revision = "69b46d84898282d901717ca51635af708da6c086"
+  revision = "55d4eb945e5a4c0620e554412f1b35e9eff82e5c"
 
 [[projects]]
   branch = "master"
