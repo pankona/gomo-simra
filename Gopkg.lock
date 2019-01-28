@@ -56,14 +56,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:857cfaf728b032dabd7371001cf23031b845689e36f526c2cfbb7b3f57aed82a"
+  digest = "1:0392550a69b70a0d7363b69ad48a35b9ff2137eddbdc0b025dc93f87956da478"
   name = "github.com/hajimehoshi/oto"
   packages = [
     ".",
     "internal/mux",
   ]
   pruneopts = ""
-  revision = "345927246826d1522bb3c191a01e93bca91ceabd"
+  revision = "5159380e3fae72c2532757a20446f10acfd96170"
 
 [[projects]]
   branch = "master"
