@@ -18,6 +18,8 @@ github.com/hajimehoshi/oto v0.2.1 h1:8mn8yNgLE/irztYCw8iBaGMb2oxXwaNqDh85j9fk+X8
 github.com/hajimehoshi/oto v0.2.1/go.mod h1:0ZepxT+2KLDrCm1gdkKBCQCxr+8fgQqoh0I7g+kr040=
 github.com/hajimehoshi/oto v0.2.2 h1:zxgxTpUtl5iXIG/i6mTPqq9nSDeqKORh+04bDY3IeBY=
 github.com/hajimehoshi/oto v0.2.2/go.mod h1:e9eTLBB9iZto045HLbzfHJIc+jP3xaKrjZTghvb6fdM=
+github.com/hajimehoshi/oto v0.3.0 h1:HX+K+raGB8L1b3UQAlUlYrHa2dj3jTHvahca5JGy10c=
+github.com/hajimehoshi/oto v0.3.0/go.mod h1:e9eTLBB9iZto045HLbzfHJIc+jP3xaKrjZTghvb6fdM=
 golang.org/x/exp v0.0.0-20180321215751-8460e604b9de/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
 golang.org/x/exp v0.0.0-20180710024300-14dda7b62fcd/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
 golang.org/x/image v0.0.0-20180403161127-f315e4403028 h1:jFFHllCVd24xe3zq5lxsTaMRYoTWSrdWOIA5PEltZ8I=
