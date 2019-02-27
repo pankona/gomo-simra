@@ -7,3 +7,11 @@ misspell:
 
 gometalinter:
 	gometalinter --vendor --deadline=300s ./...
+
+docker-build:
+	docker build . -t pankona/gomo-simra
+
+circleci:
+	circleci local execute
+
+.PHONY: docker-build
