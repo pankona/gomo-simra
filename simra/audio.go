@@ -42,10 +42,6 @@ func (a *audio) Play(resource asset.File, loop bool, doneCallback func(err error
 		if err != nil && err != io.EOF {
 			simlog.Error(err)
 		}
-		err = dec.Close()
-		if err != nil {
-			simlog.Error(err)
-		}
 		err = player.Close()
 		if err != nil {
 			simlog.Error(err)
