@@ -13,6 +13,8 @@ github.com/hajimehoshi/go-mp3 v0.1.1 h1:Y33fAdTma70fkrxnc9u50Uq0lV6eZ+bkAlssdMmC
 github.com/hajimehoshi/go-mp3 v0.1.1/go.mod h1:4i+c5pDNKDrxl1iu9iG90/+fhP37lio6gNhjCx9WBJw=
 github.com/hajimehoshi/go-mp3 v0.1.2 h1:mYwauvxfzffmge65glPtAyg0NWPftb8UmU+DPuxV2/s=
 github.com/hajimehoshi/go-mp3 v0.1.2/go.mod h1:4i+c5pDNKDrxl1iu9iG90/+fhP37lio6gNhjCx9WBJw=
+github.com/hajimehoshi/go-mp3 v0.2.0 h1:isy34iDg+96PsNuFbTdRRXzKr6a1gc2nhsPuFSfXacY=
+github.com/hajimehoshi/go-mp3 v0.2.0/go.mod h1:4i+c5pDNKDrxl1iu9iG90/+fhP37lio6gNhjCx9WBJw=
 github.com/hajimehoshi/oto v0.0.0-20180404145402-7a1d13b19d82 h1:Ub4U4W87BWF85gDemt36PiuitaO4LRVaQkDCgzp77hM=
 github.com/hajimehoshi/oto v0.0.0-20180404145402-7a1d13b19d82/go.mod h1:Co7jIdNa4+UYZF0whfBysf8qY6o7oV8dFC1Ld//5HmY=
 github.com/hajimehoshi/oto v0.1.1/go.mod h1:hUiLWeBQnbDu4pZsAhOnGqMI1ZGibS6e2qhQdfpwz04=
