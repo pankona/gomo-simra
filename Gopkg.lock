@@ -29,14 +29,6 @@
   revision = "82b322028c96512b15077093b16a5f1c7ea897ac"
 
 [[projects]]
-  digest = "1:1c75d13f1f4021455394bf1106e2356db9e6e71443839def937cf96fe4d88c98"
-  name = "github.com/gopherjs/gopherwasm"
-  packages = ["js"]
-  pruneopts = ""
-  revision = "b0e1786f520333e4546f02930c5ca8a929b38841"
-  version = "v1.0.1"
-
-[[projects]]
   branch = "master"
   digest = "1:0e2e308bc171f326d6606ed0a87cf438dd8426872fbd692625a9b859396472a4"
   name = "github.com/hajimehoshi/go-mp3"
@@ -56,14 +48,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:0a76021c31a4740ea1389356b2cf14498de64f411a43ce39e3058b98d969ca9b"
+  digest = "1:d726b6d954b27302678c43ca27f94f285e7a9f66a0e160c01507328ce2a1f323"
   name = "github.com/hajimehoshi/oto"
   packages = [
     ".",
     "internal/mux",
   ]
   pruneopts = ""
-  revision = "cf91156c812064f2fb98b7579c87f56c729263d9"
+  revision = "031fb1b9274d9d27238b9569c6914872926c9285"
 
 [[projects]]
   branch = "master"
