@@ -7,9 +7,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: dep ensure
-          command: dep ensure
-      - run:
           name: go lint for simra examples
           command: cd examples && golint ./...
       - run:
