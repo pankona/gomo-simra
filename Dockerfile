@@ -1,4 +1,4 @@
-FROM circleci/golang:1.11.5
+FROM circleci/golang:1.12.5
 
 ENV HOME /home/circleci
 WORKDIR $HOME
