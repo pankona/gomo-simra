@@ -11,11 +11,6 @@ RUN sudo apt-get install -y libgles2-mesa-dev
 RUN sudo apt-get install -y libx11-dev
 RUN sudo apt-get install -y libasound2-dev
 RUN go get -u golang.org/x/mobile/cmd/gomobile
-RUN go get -u github.com/golang/freetype/truetype
-RUN go get -u github.com/boltdb/bolt
-RUN go get -u github.com/hajimehoshi/oto
-RUN go get -u github.com/hajimehoshi/go-mp3
-RUN go get -u github.com/golang/lint/golint
 RUN curl -L https://git.io/vp6lP | sh # install gometalinter
 RUN mv ./bin/* $GOPATH/bin/.
 
