@@ -190,9 +190,12 @@ func TestSetZIndex(t *testing.T) {
 	for _, tc := range tcs {
 		err := sc.AddSprite(tc.s, nil, nil)
 		if err != nil {
-			t.Fatalf(err.Error())
+			t.Fatalf("unexpected error: %v", err)
 		}
-		sc.SetZIndex(tc.s, tc.z)
+		err = sc.SetZIndex(tc.s, tc.z)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
 	}
 
 	snpairs := sc.GetSpriteNodePairs()
