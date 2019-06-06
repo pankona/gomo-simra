@@ -11,8 +11,7 @@ RUN sudo apt-get install -y libgles2-mesa-dev
 RUN sudo apt-get install -y libx11-dev
 RUN sudo apt-get install -y libasound2-dev
 RUN go get -u golang.org/x/mobile/cmd/gomobile
-RUN curl -L https://git.io/vp6lP | sh # install gometalinter
-RUN mv ./bin/* $GOPATH/bin/.
+RUN curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.16.0
 
 # install android sdk
 ENV ANDROID_SDK_VERSION=4333796
