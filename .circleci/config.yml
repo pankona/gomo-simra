@@ -4,17 +4,16 @@ jobs:
     working_directory: /go/src/github.com/pankona/gomo-simra
     docker:
       - image: pankona/gomo-simra
+    environment:
+      - GO111MODULE: "on"
     steps:
       - checkout
       - run:
-          name: go lint for simra examples
-          command: cd examples && golint ./...
+          name: go get
+          command: go get
       - run:
-          name: go lint for simra lib
-          command: cd simra && golint ./...
-      - run:
-          name: run gometalinter
-          command: make gometalinter
+          name: run golangci-lint
+          command: make lint
       - run:
           name: make example for linux
           command: |
@@ -22,11 +21,14 @@ jobs:
             make -C examples BUILD_TAGS=release
       - run:
           name: make example for mobile
+          environment:
           command: |
+            go mod vendor
+            export GO111MODULE=off
             make mobile -C examples
             make mobile -C examples BUILD_TAGS=release
       - run:
-          name: go test
+          name: run test
           command: cd simra && go test ./...
 
 workflows:
