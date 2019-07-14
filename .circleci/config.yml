@@ -36,3 +36,6 @@ workflows:
   build:
     jobs:
       - build
+    triggers:
+      - schedule:
+          cron: "0 5 * * *" # run at 05:00
