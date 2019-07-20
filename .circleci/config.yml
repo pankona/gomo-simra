@@ -41,7 +41,7 @@ workflows:
       - build
     triggers:
       - schedule:
-          cron: "0 5 * * *" # run at 05:00
+          cron: "0 20 * * *" # run at 05:00 JST
           filters:
             branches:
               only:
