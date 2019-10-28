@@ -13,6 +13,8 @@ github.com/hajimehoshi/oto v0.4.0 h1:5tyq4jKEYMEVYSL8YvKRCO3WPDLI7Calm1549IQGbMM
 github.com/hajimehoshi/oto v0.4.0/go.mod h1:0QXGEkbuJRohbJaxr7ZQSxnju7hEhseiPx2hrh6raOI=
 github.com/hajimehoshi/oto v0.5.0 h1:+zb46how+gD0SdQbjeYPYFmTKO0I0N7+J0erchiKfh4=
 github.com/hajimehoshi/oto v0.5.0/go.mod h1:0QXGEkbuJRohbJaxr7ZQSxnju7hEhseiPx2hrh6raOI=
+github.com/hajimehoshi/oto v0.5.1 h1:PjhsMhKlryVEeH8IlkaoFVBopZuOFCDXV2gsF6xXFBw=
+github.com/hajimehoshi/oto v0.5.1/go.mod h1:0QXGEkbuJRohbJaxr7ZQSxnju7hEhseiPx2hrh6raOI=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20190510104115-cbcb75029529/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/exp v0.0.0-20190306152737-a1d7652674e8/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
