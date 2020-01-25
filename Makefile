@@ -7,8 +7,14 @@ all:
 build-sample:
 	make -C $(CURDIR)/examples
 
-build-sample-mobile:
-	make mobile -C $(CURDIR)/examples
+build-sample-mobile-on-docker:
+	docker run \
+		-it \
+		-v $(CURDIR):/app \
+		-v gomo-simra-go-module-tmp:/go \
+		-w /app \
+		pankona/gomo-simra \
+		make mobile -C /app/examples
 
 test:
 	go test ./...
