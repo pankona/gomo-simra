@@ -3,7 +3,6 @@ all:
 	make test -C $(CURDIR)
 	make lint -C $(CURDIR)
 	make build-sample -C $(CURDIR)
-	make build-sample-mobile -C $(CURDIR)
 
 build-sample:
 	make -C $(CURDIR)/examples
