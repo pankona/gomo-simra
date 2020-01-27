@@ -9,6 +9,8 @@ import (
 	"golang.org/x/mobile/asset"
 )
 
+var theContext *oto.Context
+
 type audio struct {
 	isClosed chan bool
 }
@@ -32,10 +34,14 @@ func (a *audio) Play(resource asset.File, loop bool, doneCallback func(err error
 		return err
 	}
 
-	player, err := oto.NewPlayer(dec.SampleRate(), 2, 2, 8192)
-	if err != nil {
-		return err
+	if theContext == nil {
+		theContext, err = oto.NewContext(dec.SampleRate(), 2, 2, 8192)
+		if err != nil {
+			return err
+		}
 	}
+
+	player := theContext.NewPlayer()
 
 	go func() {
 		err := a.doPlay(player, dec, resource, loop)
