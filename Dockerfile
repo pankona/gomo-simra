@@ -16,7 +16,7 @@ RUN sudo apt-get install -y libegl1-mesa-dev
 RUN sudo apt-get install -y libgles2-mesa-dev
 RUN sudo apt-get install -y libx11-dev
 RUN sudo apt-get install -y libasound2-dev
-RUN curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.23.1
+RUN curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.39.0
 
 RUN wget https://dl.google.com/android/repository/android-ndk-r21e-linux-x86_64.zip
 RUN unzip -q android-ndk-r21e-linux-x86_64.zip

@@ -19,7 +19,6 @@ jobs:
             make -C examples BUILD_TAGS=release
       - run:
           name: make example for mobile
-          environment:
           command: |
             make mobile -C examples
             make mobile -C examples BUILD_TAGS=release
